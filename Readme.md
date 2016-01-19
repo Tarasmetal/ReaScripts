@@ -1,20 +1,29 @@
-#Michael Pilyavskiy's ReaScripts
+##Scripts for [Cockos REAPER](http://reaper.fm) by Michael Pilyavskiy
+There are also other repositories of user written scripts for REAPER, check here:
+- [common repo] (https://github.com/ReaTeam/ReaScripts)
+- [X-Raym repo] (https://github.com/X-Raym/REAPER-ReaScripts)
 
-##Scripts for [Cockos REAPER](http://reaper.fm)
-- Scripts written by Michael Pilyavskiy
-- Scripts modded by Michael Pilyavskiy
+Don`t forget to install last versions of REAPER and SWS/S&M Extension before using.
 
-This repo is for developement. 
-"Alpha" folder is scripts, which may not working or working bad.
+##How to download:
+- For one script: open script page, click "Raw" button, then open context menu in your browser and do File > Save > Delete ".txt" extension when saving > open Reaper > open Actions List > ReaScript > Load
+- For the whole archive: click on [Download Zip](https://github.com/MichaelPilyavskiy/ReaScripts/archive/master.zip) button on right side > open Reaper > open Actions List > ReaScript - Load
 
-Anyway, if you still wanna download scripts on this repo:
-- For one script: click on one script, then click on the Raw button, then File > Save (via Menu, Right Click or CTRL/CMD +S).
-- For the whole archive: click on Download Zip button on right side
+It is better for you to save all scripts to REAPER/Scripts folder, so you willn`t lost them while saving your REAPER configuration.
 
-##Helpers
+##Contact:
+- [VK](https://vk.com/michael_pilyavskiy)
+- [SoundCloud](https://soundcloud.com/mp57)
+- [Cockos Forum](http://forum.cockos.com/member.php?u=70694)
+- [RMM forum](http://rmmedia.ru/members/69811/)
+- [PromoDJ](http://promodj.com/michaelpilyavskiy)
+
+##Donations:
+- [PayPal](http://paypal.me/donate2mpl)
+
+##Contributors:
 - [X-Raym](http://forum.cockos.com/member.php?u=58284)
 - [spk77](http://forum.cockos.com/member.php?u=49553)
 - [Breeder](http://forum.cockos.com/member.php?u=27094)
-
-If you found bugs or you have some script request, you can post it in [Issues](https://github.com/MichaelPilyavskiy/ReaScripts/issues).
-
+- [heda](http://forum.cockos.com/member.php?u=47822)
+- [Xenakios](http://forum.cockos.com/member.php?u=3602)
