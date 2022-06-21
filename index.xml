@@ -14,7 +14,7 @@
         <link rel="donation">http://vk.com/tarasmetal</link>
       </metadata>
       <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/trs_LabelGUITools.lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/36a54724f90c5b0c4fffb7da1842580ffdc7850a/GUI%20Tools/trs_LabelGUITools.lua</source>
       </version>
     </reapack>
     <reapack name="trs_MarkerGUITools.lua" type="script" desc="Marker GUI Tools">
@@ -32,7 +32,7 @@
       </metadata>
       <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
         <changelog><![CDATA[+ Code Fixies]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/trs_MarkerGUITools.lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/36a54724f90c5b0c4fffb7da1842580ffdc7850a/GUI%20Tools/trs_MarkerGUITools.lua</source>
       </version>
     </reapack>
   </category>
