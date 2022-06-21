@@ -1,6 +1,5 @@
 [Marker GUI Tools](https://github.com/Tarasmetal/ReaScripts/raw/master/GUI%20Tools) создан для работы в [REAPER DAW](https://www.reaper.fm/download.php) WIN & OSX.
 ======
-[trs_MarkerGUITools.lua](https://github.com/Tarasmetal/ReaScripts/tree/master/GUI%20Tools) создан для работы в [REAPER DAW](https://www.reaper.fm/download.php) WIN & OSX.
 
 [![Marker GUI Tools Demo](https://github.com/Tarasmetal/ReaScripts/blob/master/img/Screenshot1.png)](https://github.com/Tarasmetal/ReaScripts/blob/master/img/Screenshot1.png)
 
