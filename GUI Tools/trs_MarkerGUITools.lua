@@ -46,8 +46,8 @@ dofile(scriptDir .. "Functions/" .. "MarkerFunctions.lua")
 
 local ctx = r.ImGui_CreateContext(windowTitle)
 local size = r.GetAppVersion():match('Win64') and 12 or 14
--- local font = r.ImGui_CreateFont('Consolas', 9)
-local font =  r.ImGui_CreateFont('Sedoe', 9)
+local font = r.ImGui_CreateFont('Consolas', 9)
+-- local font =  r.ImGui_CreateFont('Sedoe', 9)
 r.ImGui_AttachFont(ctx, font)
 
 markersToShow = parse_simple_preset_content(preset_read_simple(presetDir, defaultPresetName)) -- Дефолтный пресет
@@ -149,7 +149,7 @@ function frame(ctx)
                 r.ImGui_TextColored(ctx, hex2rgb('#C7C7C7'), 'Author URL:')r.ImGui_SameLine(ctx)r.ImGui_TextColored(ctx, hex2rgb('#FFFFFF'), 'http://vk.com/tarasmetal')
                 r.ImGui_Text(ctx, '')
                 r.ImGui_TextColored(ctx, hex2rgb('#FF0000'), '<3')r.ImGui_SameLine(ctx)r.ImGui_Text(ctx,'&')r.ImGui_SameLine(ctx)r.ImGui_TextColored(ctx, hex2rgb('#88FF00'), 'SPECIAL THX:')
-                r.ImGui_TextColored(ctx, hex2rgb('#FFFF00'), 'MPL,SuperMaximus,Aleksey Bezborodv.\n')
+                r.ImGui_TextColored(ctx, hex2rgb('#FFFF00'), 'MPL,SuperMaximus,Aleksey Bezborodov.\n')
                 r.ImGui_Spacing(ctx)
                 r.ImGui_PopTextWrapPos(ctx)
                 r.ImGui_EndTooltip(ctx)

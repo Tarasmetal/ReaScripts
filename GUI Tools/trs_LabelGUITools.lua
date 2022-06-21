@@ -34,7 +34,7 @@ dofile(scriptDir .. "Functions/" .. "LabelFunctions.lua")
 -----------------------------------------------------------------------------
 local ctx = r.ImGui_CreateContext(windowTitle)
 local size =  r.GetAppVersion():match('Win64') and 12 or 14
-local font =  r.ImGui_CreateFont('Sedoe', 9)
+local font =  r.ImGui_CreateFont('Consolas', 9)
 reaper.ImGui_AttachFont(ctx, font)
 click_count, text = 0, '/T /E'
 color = nil
