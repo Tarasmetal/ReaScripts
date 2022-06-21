@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="9be40262973d9231930742729023160f8d7e6081">
+<index version="1" name="Taras Scripts" commit="36a54724f90c5b0c4fffb7da1842580ffdc7850a">
   <category name="GUI Tools">
     <reapack name="trs_LabelGUITools.lua" type="script" desc="Label GUI Tools">
       <metadata>
@@ -202,13 +202,6 @@
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 {\field{\*\fldinst{HYPERLINK "https://github.com/Tarasmetal/ReaScripts/raw/master/GUI%20Tools"}}{\fldrslt{\ul
 Marker GUI Tools
-}}}
- \u1089?\u1086?\u1079?\u1076?\u1072?\u1085? \u1076?\u1083?\u1103? \u1088?\u1072?\u1073?\u1086?\u1090?\u1099? \u1074? {\field{\*\fldinst{HYPERLINK "https://www.reaper.fm/download.php"}}{\fldrslt{\ul
-REAPER DAW
-}}}
- WIN & OSX.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 {\field{\*\fldinst{HYPERLINK "https://github.com/Tarasmetal/ReaScripts/tree/master/GUI%20Tools"}}{\fldrslt{\ul
-trs_MarkerGUITools.lua
 }}}
  \u1089?\u1086?\u1079?\u1076?\u1072?\u1085? \u1076?\u1083?\u1103? \u1088?\u1072?\u1073?\u1086?\u1090?\u1099? \u1074? {\field{\*\fldinst{HYPERLINK "https://www.reaper.fm/download.php"}}{\fldrslt{\ul
 REAPER DAW
