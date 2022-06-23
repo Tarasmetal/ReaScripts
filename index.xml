@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="7f1b1f4ee1441b9d90600ddd9346b20697f7f1e6">
+<index version="1" name="Taras Scripts" commit="336fd951b836d0b3839c548a331b36735a572fa8">
   <category name="GUI Tools">
     <reapack name="trs_LabelGUITools.lua" type="script" desc="Label GUI Tools">
       <metadata>
@@ -14,7 +14,7 @@
         <link rel="donation">http://vk.com/tarasmetal</link>
       </metadata>
       <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/36a54724f90c5b0c4fffb7da1842580ffdc7850a/GUI%20Tools/trs_LabelGUITools.lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/3956ca391131c3474056632cdcda07229138c153/GUI%20Tools/trs_LabelGUITools.lua</source>
       </version>
     </reapack>
     <reapack name="trs_MarkerGUITools.lua" type="script" desc="Marker GUI Tools">
@@ -32,7 +32,7 @@
       </metadata>
       <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
         <changelog><![CDATA[+ Code Fixies]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/36a54724f90c5b0c4fffb7da1842580ffdc7850a/GUI%20Tools/trs_MarkerGUITools.lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/3956ca391131c3474056632cdcda07229138c153/GUI%20Tools/trs_MarkerGUITools.lua</source>
       </version>
     </reapack>
     <reapack name="trs_ReaImgGUI_script_load.lua" type="script" desc="ReaImgGUI_script_load">
@@ -109,12 +109,12 @@
   <category name="GUI Tools/MarkerPresets">
     <reapack name="Default.lua" type="script" desc="MarkerGUITools Preset">
       <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
-        <source>https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/MarkerPresets/Default.lua</source>
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/336fd951b836d0b3839c548a331b36735a572fa8/GUI%20Tools/MarkerPresets/Default.lua</source>
       </version>
     </reapack>
     <reapack name="Default_big.lua" type="script" desc="MarkerGUITools Preset">
       <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
-        <source>https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/MarkerPresets/Default_big.lua</source>
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/336fd951b836d0b3839c548a331b36735a572fa8/GUI%20Tools/MarkerPresets/Default_big.lua</source>
       </version>
     </reapack>
     <reapack name="PlayList.lua" type="script" desc="MarkerGUITools Preset">
