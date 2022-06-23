@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="36a54724f90c5b0c4fffb7da1842580ffdc7850a">
+<index version="1" name="Taras Scripts" commit="3956ca391131c3474056632cdcda07229138c153">
   <category name="GUI Tools">
     <reapack name="trs_LabelGUITools.lua" type="script" desc="Label GUI Tools">
       <metadata>
@@ -274,10 +274,9 @@ screenshot
 {\b SuperMaximus}
 }}}
 , {\field{\*\fldinst{HYPERLINK ""}}{\fldrslt{\ul
-{\b Aleksey} {\b Bezborodv}
+{\b Aleksey} {\b Bezborodov}
 }}}
 .\par}
-{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel5 \b \fs16 {\b \u1054?\u1073?\u1088?\u1072?\u1090?\u1085?\u1072?\u1103? \u1089?\u1074?\u1103?\u1079?\u1100?:} {\b {\field{\*\fldinst{HYPERLINK "http://vk.com/tarasmetal"}}{\fldrslt{\ul
 Vk
 }}}
@@ -285,7 +284,6 @@ Vk
 {\b Instagram}
 }}}
 \par}
-{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
 }
 ]]></description>
     <link rel="website">http://vk.com/tarasmetal</link>
