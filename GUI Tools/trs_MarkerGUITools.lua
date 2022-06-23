@@ -46,8 +46,8 @@ dofile(scriptDir .. "Functions/" .. "MarkerFunctions.lua")
 
 local ctx = r.ImGui_CreateContext(windowTitle)
 local size = r.GetAppVersion():match('Win64') and 12 or 14
-local font = r.ImGui_CreateFont('Consolas', 9)
--- local font =  r.ImGui_CreateFont('Sedoe', 9)
+-- local font = r.ImGui_CreateFont('Consolas', 9)
+local font =  r.ImGui_CreateFont('Tahoma', 9)
 r.ImGui_AttachFont(ctx, font)
 
 markersToShow = parse_simple_preset_content(preset_read_simple(presetDir, defaultPresetName)) -- Дефолтный пресет
