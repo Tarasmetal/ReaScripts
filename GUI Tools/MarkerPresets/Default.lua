@@ -3,17 +3,17 @@
 -- @version 1.0
 -- @provides [nomain] .
 Intro,green
-p.Verse,yellow
+p_Verse,yellow
 Verse,yellow
-p.Chorus,blue
+p_Chorus,blue
 Chorus,lime
 Fill,
 Bridge,
 BreakDown,
-p.Drop,
+p_Drop,
 Drop,
 Main,
-p.Beat,
+p_Beat,
 Beat,
 Silent,
 Outro,
