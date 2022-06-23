@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="336fd951b836d0b3839c548a331b36735a572fa8">
+<index version="1" name="Taras Scripts" commit="b601ddb1003fddfab56dc19cd6f9251d4d4c09ac">
   <category name="GUI Tools">
     <reapack name="trs_LabelGUITools.lua" type="script" desc="Label GUI Tools">
       <metadata>
@@ -124,7 +124,7 @@
     </reapack>
     <reapack name="Short.lua" type="script" desc="MarkerGUITools Preset">
       <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
-        <source>https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/MarkerPresets/Short.lua</source>
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/b601ddb1003fddfab56dc19cd6f9251d4d4c09ac/GUI%20Tools/MarkerPresets/Short.lua</source>
       </version>
     </reapack>
     <reapack name="Takes.lua" type="script" desc="MarkerGUITools Preset">
