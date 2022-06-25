@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="58a3e39ba95bd0f35846aa1f39aa4cb2574295e1">
+<index version="1" name="Taras Scripts" commit="06924310bd31d38675535cabda5095cfabf7f846">
   <category name="GUI Tools">
     <reapack name="cfillion_Hello world.lua" type="script" desc="Hello world">
       <metadata>
@@ -20,35 +20,422 @@ Markdown
         <source main="main">https://github.com/cfillion/reapack-repository-template/raw/58a3e39ba95bd0f35846aa1f39aa4cb2574295e1/Example/cfillion_Hello%20world.lua</source>
       </version>
     </reapack>
+    <reapack name="trs_LabelGUITools.lua" type="script" desc="Label GUI Tools">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Label GUI Tools\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">http://vk.com/tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/trs_LabelGUITools.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_MarkerGUITools.lua" type="script" desc="Marker GUI Tools">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 \u1050?\u1040?\u1050? \u1069?\u1058?\u1054? \u1056?\u1040?\u1041?\u1054?\u1058?\u1040?\u1045?\u1058??\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1054?\u1089?\u1085?\u1086?\u1074?\u1085?\u1072?\u1103? \u1080?\u1076?\u1077?\u1103? \u1080? \u1079?\u1072?\u1076?\u1072?\u1095?\u1072? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1072? \u8212- \u1084?\u1072?\u1082?\u1089?\u1080?\u1084?\u1072?\u1083?\u1100?\u1085?\u1086? \u1089?\u1086?\u1082?\u1088?\u1072?\u1090?\u1080?\u1090?\u1100? \u1074?\u1088?\u1077?\u1084?\u1103? \u1085?\u1072? \u1088?\u1072?\u1079?\u1084?\u1077?\u1090?\u1082?\u1091? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072?, \u1086?\u1089?\u1090?\u1072?\u1074?\u1083?\u1103?\u1103? \u1077?\u1075?\u1086? \u1082?\u1088?\u1072?\u1089?\u1080?\u1074?\u1099?\u1084? \u1080? \u1087?\u1086?\u1085?\u1103?\u1090?\u1085?\u1099?\u1084? \u1076?\u1083?\u1103? \u1074?\u1089?\u1077?\u1093?, \u1072? \u1075?\u1083?\u1072?\u1074?\u1085?\u1086?\u1077? \u1076?\u1083?\u1103? \u1089?\u1072?\u1084?\u1086?\u1075?\u1086? \u1089?\u1077?\u1073?\u1103?. \u1053?\u1077? \u1086?\u1090?\u1074?\u1083?\u1077?\u1082?\u1072?\u1081?\u1090?\u1077?\u1089?\u1100? \u1086?\u1090? \u1090?\u1074?\u1086?\u1088?\u1095?\u1077?\u1089?\u1082?\u1086?\u1075?\u1086? \u1087?\u1088?\u1086?\u1094?\u1077?\u1089?\u1089?\u1072?, \u1087?\u1077?\u1088?\u1077?\u1084?\u1077?\u1097?\u1072?\u1081?\u1090?\u1077?\u1089?\u1100? \u1074? \u1083?\u1102?\u1073?\u1091?\u1102? \u1090?\u1086?\u1095?\u1082?\u1091? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072? \u1079?\u1072? \u1087?\u1072?\u1088?\u1091? \u1089?\u1077?\u1082?\u1091?\u1085?\u1076?, \u1095?\u1090?\u1086?\u1073?\u1099? \u1079?\u1072?\u1087?\u1080?\u1089?\u1072?\u1090?\u1100?, \u1087?\u1088?\u1086?\u1089?\u1083?\u1091?\u1096?\u1072?\u1090?\u1100? \u1080?\u1083?\u1080? \u1074?\u1085?\u1077?\u1089?\u1090?\u1080? \u1082?\u1086?\u1088?\u1080?\u1082?\u1090?\u1077?\u1088?\u1086?\u1074?\u1082?\u1080? \u1074? \u1090?\u1088?\u1077?\u1082?\u1080?\u1085?\u1075?.\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://paypal.me/Tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
+        <changelog><![CDATA[+ Code Fixies]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/trs_MarkerGUITools.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_ReaImgGUI_script_load.lua" type="script" desc="ReaImgGUI_script_load">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Init Lua Script\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://paypal.me/Tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-23T20:58:02Z">
+        <changelog><![CDATA[+ Code optimizations]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/7f1b1f4ee1441b9d90600ddd9346b20697f7f1e6/GUI%20Tools/trs_ReaImgGUI_script_load.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_TrackGUITools.lua" type="script" desc="Tracks GUI Tools">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Tracks GUI Tools\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://paypal.me/Tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-25T22:22:25Z">
+        <changelog><![CDATA[+ Code optimizations]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/06924310bd31d38675535cabda5095cfabf7f846/GUI%20Tools/trs_TrackGUITools.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="GUI Tools/Functions">
+    <reapack name="LabelFunctions.lua" type="script" desc="Label Functions">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Label Functions\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://paypal.me/Tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
+        <changelog><![CDATA[+ Code optimizations]]></changelog>
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/Functions/LabelFunctions.lua</source>
+      </version>
+    </reapack>
+    <reapack name="MarkerFunctions.lua" type="script" desc="Marker Functions">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Marker Functions\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://paypal.me/Tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
+        <changelog><![CDATA[+ Code optimizations]]></changelog>
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/Functions/MarkerFunctions.lua</source>
+      </version>
+    </reapack>
+    <reapack name="PresetFileLoadFunctions.lua" type="script" desc="Presets Functions">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Presets Functions\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://paypal.me/Tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
+        <changelog><![CDATA[+ Code optimizations]]></changelog>
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/Functions/PresetFileLoadFunctions.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="GUI Tools/MarkerPresets">
+    <reapack name="Default.lua" type="script" desc="MarkerGUITools Preset">
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/MarkerPresets/Default.lua</source>
+      </version>
+    </reapack>
+    <reapack name="Default_big.lua" type="script" desc="MarkerGUITools Preset">
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/MarkerPresets/Default_big.lua</source>
+      </version>
+    </reapack>
+    <reapack name="PlayList.lua" type="script" desc="MarkerGUITools Preset">
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/MarkerPresets/PlayList.lua</source>
+      </version>
+    </reapack>
+    <reapack name="Short.lua" type="script" desc="MarkerGUITools Preset">
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/MarkerPresets/Short.lua</source>
+      </version>
+    </reapack>
+    <reapack name="Takes.lua" type="script" desc="MarkerGUITools Preset">
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/GUI%20Tools/MarkerPresets/Takes.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="Items">
+    <reapack name="trs_Change note length.lua" type="script" desc="Change note length (mousewheel)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Description\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab This script changes the note length via mousewheel\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab When there is no note selection, only the note under the mouse cursor is altered\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab This script only works in the MIDI Editor\sa180\par}
+}
+]]></description>
+        <link rel="website">https://forums.cockos.com/showthread.php?p=1923923</link>
+      </metadata>
+      <version name="1.21" author="Stephan Römer" time="2022-06-25T22:22:25Z">
+        <changelog><![CDATA[bug fix]]></changelog>
+        <source main="midi_editor">https://github.com/Tarasmetal/ReaScripts/raw/06924310bd31d38675535cabda5095cfabf7f846/Items/trs_Change%20note%20length.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Rename Items with BPM.lua" type="script" desc="kawa_MAIN_TakeNameFromTrackNameWithNumbering.">
+      <metadata>
+        <link rel="website">https://bitbucket.org/kawaCat/reascript-m2bpack/</link>
+      </metadata>
+      <version name="2017/02/03" author="kawa_" time="2022-06-25T22:22:25Z">
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/06924310bd31d38675535cabda5095cfabf7f846/Items/trs_Rename%20Items%20with%20BPM.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Rename Items.lua" type="script" desc="kawa_MAIN_TakeNameFromTrackNameWithNumbering.">
+      <metadata>
+        <link rel="website">https://bitbucket.org/kawaCat/reascript-m2bpack/</link>
+      </metadata>
+      <version name="2017/02/03" author="kawa_" time="2022-06-25T22:22:25Z">
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/06924310bd31d38675535cabda5095cfabf7f846/Items/trs_Rename%20Items.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="Markers">
+    <reapack name="trs_cfillion_Set timecode at edit cursor (set to 0).lua" type="script" desc="Set timecode at edit cursor">
+      <metadata>
+        <link rel="website" href="https://cfillion.ca">cfillion.ca</link>
+        <link rel="website" href="https://forum.cockos.com/showthread.php?t=202578">Request Thread</link>
+        <link rel="screenshot">https://i.imgur.com/uly6oy5.gif</link>
+        <link rel="donation">https://www.paypal.com/cgi-bin/webscr?business=T3DEWBQJAV7WL&amp;cmd=_donations&amp;currency_code=CAD</link>
+      </metadata>
+      <version name="1.2" author="cfillion (Taras MOD)" time="2022-06-21T06:50:07Z">
+        <changelog><![CDATA[Add a "set to 0" action]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/Markers/trs_cfillion_Set%20timecode%20at%20edit%20cursor%20(set%20to%200).lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Insert Marker go to REC 666.lua" type="script" desc="Go to start marker 666 MOD">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Code optimizations\sa180\par}
+}
+]]></description>
+        <link rel="website">https://forums.cockos.com/showthread.php?p=1923923</link>
+      </metadata>
+      <version name="1.1" author="Stephan Römer (Taras MOD)" time="2022-06-21T06:50:07Z">
+        <changelog><![CDATA[+ Code optimizations]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/Markers/trs_Insert%20Marker%20go%20to%20REC%20666.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Insert Marker REC 666.lua" type="script" desc="Insert recording marker 666 MOD">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Code optimizations\sa180\par}
+}
+]]></description>
+        <link rel="website">https://forums.cockos.com/showthread.php?p=1923923</link>
+      </metadata>
+      <version name="1.1" author="Stephan Römer (Taras MOD)" time="2022-06-21T06:50:07Z">
+        <changelog><![CDATA[+ Code optimizations]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/Markers/trs_Insert%20Marker%20REC%20666.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Marker =END to cursor position.lua" type="script" desc="trs_ Set Marker =END">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 trs_ Set Marker =END\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://paypal.me/Tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-23T20:58:02Z">
+        <changelog><![CDATA[+ Code Fixies]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/7f1b1f4ee1441b9d90600ddd9346b20697f7f1e6/Markers/trs_Marker%20=END%20to%20cursor%20position.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Marker =START to cursor position.lua" type="script" desc="trs_Marker START">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 trs_Marker START\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://paypal.me/Tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-23T20:58:02Z">
+        <changelog><![CDATA[+ Code Fixies]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/7f1b1f4ee1441b9d90600ddd9346b20697f7f1e6/Markers/trs_Marker%20=START%20to%20cursor%20position.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Reset project start time.lua" type="script" desc="Reset project start time">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Reset project start time\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab The script sets 0:00 time to start of project. It works the same as the option in Project settings.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Requires SWS extension to run.\sa180\par}
+}
+]]></description>
+        <link rel="website">https://forum.cockos.com/member.php?u=39350</link>
+      </metadata>
+      <version name="1.0" author="BenjyO" time="2022-06-21T06:50:07Z">
+        <changelog><![CDATA[Initial release]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/Markers/trs_Reset%20project%20start%20time.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Set project time back.lua" type="script" desc="Move edit cursor to time 0 or to project start">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Move edit cursor to time 0 if project start is negative or null. Move edit cursor to project start if project start is > 0.\par}
+}
+]]></description>
+      </metadata>
+      <version name="2.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
+        <changelog><![CDATA[+ More accurate]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/Markers/trs_Set%20project%20time%20back.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="Track">
+    <reapack name="trs_Send tracks background Taras MOD.lua" type="script" desc="Send tracks">
+      <metadata>
+        <link rel="website">http://forum.cockos.com/showthread.php?t=188335</link>
+      </metadata>
+      <version name="1.02" author="MPL (Mod by T@RvZ)" time="2022-06-25T22:22:25Z">
+        <changelog><![CDATA[# refresh matrix after changing
++ clear matrix button]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/06924310bd31d38675535cabda5095cfabf7f846/Track/trs_Send%20tracks%20background%20Taras%20MOD.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_tagirijus_FX list menu under mouse.lua" type="script" desc="FX list menu">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Description\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 This plugin will open a quick drop down menu on the mouse cursor listing all the FX for the selected track. A click on any FX will open its window floating.\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.3" author="Tagirijus (T@RvZ MOD)" time="2022-06-25T22:22:25Z">
+        <changelog><![CDATA[When shift+clicking TrackFXs bypass state is now being toggled and with ctrl+clicking a TrackXF gets removed.]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/06924310bd31d38675535cabda5095cfabf7f846/Track/trs_tagirijus_FX%20list%20menu%20under%20mouse.lua</source>
+      </version>
+    </reapack>
   </category>
   <metadata>
     <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 ReaPack Repository Template\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 A template for GitHub-hosted ReaPack repositories with automated {\field{\*\fldinst{HYPERLINK "https://github.com/cfillion/reapack-index"}}{\fldrslt{\ul
-reapack-index
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 {\field{\*\fldinst{HYPERLINK "https://github.com/Tarasmetal/ReaScripts/raw/master/GUI%20Tools"}}{\fldrslt{\ul
+Marker GUI Tools
 }}}
- running from GitHub Actions.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Replace the name of the repository in {\field{\*\fldinst{HYPERLINK "/index.xml"}}{\fldrslt{\ul
-index.xml
+ \u1089?\u1086?\u1079?\u1076?\u1072?\u1085? \u1076?\u1083?\u1103? \u1088?\u1072?\u1073?\u1086?\u1090?\u1099? \u1074? {\field{\*\fldinst{HYPERLINK "https://www.reaper.fm/download.php"}}{\fldrslt{\ul
+REAPER DAW
 }}}
- when using this template. This will be the name shown in ReaPack.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 \f1 <index version="1" name="Name of your repository here">\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Replace the contents of this file ({\field{\*\fldinst{HYPERLINK "/README.md"}}{\fldrslt{\ul
-README.md
+ WIN & OSX.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\field{\*\fldinst{HYPERLINK "https://github.com/Tarasmetal/ReaScripts/blob/master/img/Screenshot1.png"}}{\fldrslt{\ul
+{\cf1 [image: https://github.com/Tarasmetal/ReaScripts/blob/master/img/Screenshot1.png]\cf0}
 }}}
-). This will be the text shown when using ReaPack's "About this repository" feature.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 reapack-index looks for package files in subfolders. The folder tree represents the package categories shown in ReaPack.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Each package file is expected to begin with a metadata header. See {\field{\*\fldinst{HYPERLINK "https://github.com/cfillion/reapack-index/wiki/Packaging-Documentation"}}{\fldrslt{\ul
-Packaging Documentation
+\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\field{\*\fldinst{HYPERLINK "https://reapack.com/donate"}}{\fldrslt{\ul
+{\pict\pngblip\picw74\pich21\picwgoal1480\pichgoal420 89504e470d0a1a0a0000000d494844520000004a000000150803000000d6d68861000000017352474200aece1ce90000024f504c544547704cffe4acfff6e9fcb934dd921fffe1a2ffd98bffaa00ffdd97ffac05ffd57fffd071333333ffbe3affb92effcc63ffaf0dffc755ffc248ffb522ffb217ffd786d69927d6bf90ffd276b3924fffbc36f7a508ffd47ebf97486e5d3ebf974affd073ffbf3dbf9544ffca60ffc145ffc44ebfa1675d513c5d5445b3832ab39d70494134bf9a50cba355e9a227eba429eda62aefa82bf1ab2cf2ad2effdc97e79f26f4af2fe69d25d6c5a1ffd684ebc881f6b130e49b24e29923f7b3315d5342ffb216cb9b3fffe4adffc7565d4f37bf9b52bfa46d9a855cf3dab3e2a443ffe7b6e19825fff5e7e4a746ffe0a19a8969bf9f5e9a7b43494439494337a78340fcba36fee7bbfee6bbfbc255fdc556f9b634ffd2794942364941339a8865d6af64b3975f9a8e77b39458b39d72b39966bfae8cb392526e6451ffd98d9a7b425d4e36b3904c49443bf5daa4bf8a299a82557d6942bfa16549463ff5cc78ebc577ffce695d4c33b39c6d9a82548c7f65ffb51f5d5443ebab2fe99b15f4dbb5a79570dd9322b39d73a78a548c754ab39b69f5c15b5d54446e634ea78d5dbfa46ea78d59bf9b55ffb41dffca5efee8bcfee1aafccc6ff5ab19f4dab3e99c15dd93215d503b6e5e41ebb243ebc475e0b04fbfa675a796745d4d34fee1acfccd70fee7babf9f618c7a569a7e48d6a84dffc654b39e74cb9228e0c287ffcf6ea7884cbf9950cb9226d6a13cbf984cbfaa7e8c692eebb851a7894ee0c081ffd37bebbb5bcba55ce0af4e7d683fbf9037a7926ab39f78d69d2fffc54effda90f5ae236e5a39f5c86ed6aa55b39c6fbfa267494338c6caac540000000174524e530040e6d866000001f249444154388dadcf5573db401405e05b4adbe4d88a49b663660c3bd43033339799995366666666666e7f5857edd366464fd6f770747577ce8e44d4d3df3d296eddfd3d44c74ef4364d8c5b53efb5ebd477bca16242dc2a1aaef6d140cb1445b40c50c93485945061020f4c69ed8c0459724785949bc8c3acfcfc790b96ae4d94b10a3207b9949dc4c39c828285cb566f4c9271103207d99425f03097c5ba4dfb04a1da0e7b355b9857a2d32c08a97674de12ccecff53a5f9ac795c318b32353ccc94720f3436848d61d834e8d8601cc3c517f8687c86db172ec3f8c3f6276cbcdb61e38b9994a1e561b694bba00db43a3dced680163b9d9e413c7df769f0cd5b3cba73031e5f6064f4e7e8c839be9841e92a1ee64bb97bbf0a6decd906150e4bdbe89797c391f788aaa2606ffff1c5744a53f3b084c5561c5007dbd9d01e54c3216d1d9ff1eaeb6b363ba056077fc562b1fb97f8621ae5e87858248acbd76fd9abf3232486e0d7c12d6ddd4ff0417c8e2e9d1be237ff5048bc77a58b2fe6509e9e277df9e2156b36ebbd3555a8aaf1ea512e6dcb536a23c30f6f0e9d3c5f8ac7dedfdf1139a4e18b795494cc3330a6ca3236b94c06938b2d5292ff45a5d5ea3b6a2d3b6262b3eb81c1ea1b572ca2e2e90a29a6c6a90a69a4668b3237599a69fb3645eeb29c3e455457bf6372dcced4d7d15f01988cbc5c008dfd0000000049454e44ae426082}
 }}}
- on reapack-index's wiki.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 The URL to import in ReaPack is {\field{\*\fldinst{HYPERLINK "https://github.com/cfillion/reapack-repository-template/raw/master/index.xml"}}{\fldrslt{\ul
-https://github.com/{\f1 <your username>}/{\f1 <repository name>}/raw/master/index.xml
+\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1054?\u1089?\u1085?\u1086?\u1074?\u1085?\u1072?\u1103? \u1080?\u1076?\u1077?\u1103? \u1080? \u1079?\u1072?\u1076?\u1072?\u1095?\u1072? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1072? \u8212- \u1084?\u1072?\u1082?\u1089?\u1080?\u1084?\u1072?\u1083?\u1100?\u1085?\u1086? \u1089?\u1086?\u1082?\u1088?\u1072?\u1090?\u1080?\u1090?\u1100? \u1074?\u1088?\u1077?\u1084?\u1103? \u1085?\u1072? \u1088?\u1072?\u1079?\u1084?\u1077?\u1090?\u1082?\u1091? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072?, \u1086?\u1089?\u1090?\u1072?\u1074?\u1083?\u1103?\u1103? \u1077?\u1075?\u1086? \u1082?\u1088?\u1072?\u1089?\u1080?\u1074?\u1099?\u1084? \u1080? \u1087?\u1086?\u1085?\u1103?\u1090?\u1085?\u1099?\u1084? \u1076?\u1083?\u1103? \u1074?\u1089?\u1077?\u1093?, \u1072? \u1075?\u1083?\u1072?\u1074?\u1085?\u1086?\u1077? \u1076?\u1083?\u1103? \u1089?\u1072?\u1084?\u1086?\u1075?\u1086? \u1089?\u1077?\u1073?\u1103?. \u1053?\u1077? \u1086?\u1090?\u1074?\u1083?\u1077?\u1082?\u1072?\u1081?\u1090?\u1077?\u1089?\u1100? \u1086?\u1090? \u1090?\u1074?\u1086?\u1088?\u1095?\u1077?\u1089?\u1082?\u1086?\u1075?\u1086? \u1087?\u1088?\u1086?\u1094?\u1077?\u1089?\u1089?\u1072?, \u1087?\u1077?\u1088?\u1077?\u1084?\u1077?\u1097?\u1072?\u1081?\u1090?\u1077?\u1089?\u1100? \u1074? \u1083?\u1102?\u1073?\u1091?\u1102? \u1090?\u1086?\u1095?\u1082?\u1091? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072? \u1079?\u1072? \u1087?\u1072?\u1088?\u1091? \u1089?\u1077?\u1082?\u1091?\u1085?\u1076?, \u1095?\u1090?\u1086?\u1073?\u1099? \u1079?\u1072?\u1087?\u1080?\u1089?\u1072?\u1090?\u1100?, \u1087?\u1088?\u1086?\u1089?\u1083?\u1091?\u1096?\u1072?\u1090?\u1100? \u1080?\u1083?\u1080? \u1074?\u1085?\u1077?\u1089?\u1090?\u1080? \u1082?\u1086?\u1088?\u1088?\u1077?\u1082?\u1090?\u1080?\u1088?\u1086?\u1074?\u1082?\u1080? \u1074? \u1090?\u1088?\u1077?\u1082?\u1080?\u1085?\u1075?.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u9888?\u9888?\u9888? \u1063?\u1090?\u1086?\u1073?\u1099? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1091? \u1073?\u1099?\u1083?\u1086? \u1082?\u1086?\u1084?\u1092?\u1086?\u1088?\u1090?\u1085?\u1086? \u1085?\u1077?\u1086?\u1073?\u1093?\u1086?\u1076?\u1080?\u1084?\u1099? \u1076?\u1086?\u1087?\u1086?\u1083?\u1085?\u1080?\u1090?\u1077?\u1083?\u1100?\u1085?\u1099?\u1077? \u1073?\u1080?\u1073?\u1083?\u1080?\u1086?\u1090?\u1077?\u1082?\u1080?, \u1082?\u1086?\u1090?\u1086?\u1088?\u1099?\u1077? \u1084?\u1099? \u1089? \u1074?\u1072?\u1084?\u1080? \u1080? \u1090?\u1072?\u1082? \u1080?\u1089?\u1087?\u1086?\u1083?\u1100?\u1079?\u1091?\u1077?\u1084? \u1074? \u1087?\u1086?\u1074?\u1089?\u1077?\u1076?\u1085?\u1077?\u1074?\u1085?\u1086?\u1081? \u1088?\u1072?\u1073?\u1086?\u1090?\u1077?.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u9989? {\b \u1054?\u1089?\u1085?\u1086?\u1074?\u1085?\u1099?\u1077? \u1092?\u1091?\u1085?\u1082?\u1094?\u1080?\u1080? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1072?}\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1041?\u1099?\u1089?\u1090?\u1088?\u1072?\u1103? \u1088?\u1072?\u1079?\u1084?\u1077?\u1090?\u1082?\u1072? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072? \u1087?\u1086? \u1096?\u1072?\u1073?\u1083?\u1086?\u1085?\u1091?.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1059?\u1089?\u1090?\u1072?\u1085?\u1086?\u1074?\u1082?\u1072? \u1084?\u1072?\u1088?\u1082?\u1077?\u1088?\u1086?\u1074? \u1085?\u1072?\u1095?\u1072?\u1083?\u1072? / \u1082?\u1086?\u1085?\u1094?\u1072? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072?.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1059?\u1089?\u1090?\u1072?\u1085?\u1086?\u1074?\u1082?\u1072? \u1085?\u1091?\u1083?\u1077?\u1074?\u1086?\u1075?\u1086? 00:00:00 \u1090?\u1072?\u1081?\u1084?\u1080?\u1085?\u1075?\u1072? \u1074? \u1083?\u1102?\u1073?\u1086?\u1084? \u1084?\u1077?\u1089?\u1090?\u1077? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072?.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1057?\u1082?\u1088?\u1080?\u1087?\u1090? \u1079?\u1072?\u1087?\u1086?\u1084?\u1080?\u1085?\u1072?\u1077?\u1090? \u1080?\u1085?\u1076?\u1077?\u1082?\u1089?\u1072?\u1094?\u1080?\u1102? \u1082?\u1072?\u1078?\u1076?\u1086?\u1075?\u1086? \u1087?\u1086?\u1074?\u1090?\u1086?\u1088?\u1103?\u1102?\u1097?\u1077?\u1075?\u1086?\u1089?\u1103? \u1080?\u1084?\u1077?\u1085?\u1080?.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1042?\u1086?\u1079?\u1084?\u1086?\u1078?\u1085?\u1086?\u1089?\u1090?\u1100? ( \u1074?\u1082?\u1083? / \u1074?\u1099?\u1082?\u1083? ) \u1080?\u1085?\u1076?\u1077?\u1082?\u1089?\u1072?\u1094?\u1080?\u1102? / \u1087?\u1086?\u1088?\u1103?\u1076?\u1082?\u1086?\u1074?\u1099?\u1081? \u1085?\u1086?\u1084?\u1077?\u1088? \u1074? \u1080?\u1084?\u1077?\u1085?\u1080?.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1042?\u1086?\u1079?\u1084?\u1086?\u1078?\u1085?\u1086?\u1089?\u1090?\u1100? \u1080?\u1089?\u1087?\u1086?\u1083?\u1100?\u1079?\u1086?\u1074?\u1072?\u1090?\u1100? \u1082?\u1072?\u1089?\u1090?\u1086?\u1084?\u1085?\u1099?\u1077? \u1082?\u1085?\u1086?\u1087?\u1082?\u1080? \u1089? \u1083?\u1102?\u1073?\u1099?\u1084?\u1080? lua \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1072?\u1084?\u1080?.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1059?\u1076?\u1072?\u1083?\u1080?\u1090?\u1100? \u1074?\u1089?\u1077? \u1084?\u1072?\u1088?\u1082?\u1077?\u1088?\u1099? / \u1088?\u1077?\u1075?\u1080?\u1086?\u1085?\u1099?.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1055?\u1077?\u1088?\u1077?\u1089?\u1095?\u1080?\u1090?\u1072?\u1090?\u1100? \u1087?\u1086?\u1088?\u1103?\u1076?\u1082?\u1086?\u1074?\u1099?\u1077? \u1085?\u1086?\u1084?\u1077?\u1088?\u1072? \u1076?\u1083?\u1103? \u1084?\u1072?\u1088?\u1082?\u1077?\u1088?\u1086?\u1074? / \u1088?\u1077?\u1075?\u1080?\u1086?\u1085?\u1086?\u1074?.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1050?\u1086?\u1085?\u1074?\u1077?\u1088?\u1090?\u1080?\u1088?\u1086?\u1074?\u1072?\u1090?\u1100? \u1084?\u1072?\u1088?\u1082?\u1077?\u1088?\u1099? \u1074? \u1088?\u1077?\u1075?\u1080?\u1086?\u1085?\u1099? \u1080? \u1086?\u1073?\u1088?\u1072?\u1090?\u1085?\u1086?.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1047?\u1072?\u1075?\u1088?\u1091?\u1079?\u1082?\u1072? \u1080? \u1087?\u1088?\u1086?\u1089?\u1090?\u1086?\u1077? \u1088?\u1077?\u1076?\u1072?\u1082?\u1090?\u1080?\u1088?\u1086?\u1074?\u1072?\u1085?\u1080?\u1077? \u1087?\u1088?\u1077?\u1089?\u1077?\u1090?\u1086?\u1074?.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u9989? {\b \u1057?\u1082?\u1072?\u1095?\u1080?\u1074?\u1072?\u1077?\u1084? \u1080? \u1091?\u1089?\u1090?\u1072?\u1085?\u1072?\u1074?\u1083?\u1080?\u1074?\u1072?\u1077?\u1084?, \u1085?\u1091?\u1078?\u1085?\u1099?\u1077? \u1073?\u1080?\u1073?\u1083?\u1080?\u1086?\u1090?\u1077?\u1082?\u1080?}\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b WIN} Download: {\field{\*\fldinst{HYPERLINK "https://sws-extension.org/"}}{\fldrslt{\ul
+SWS
+}}}
+ & {\field{\*\fldinst{HYPERLINK "https://reapack.com/"}}{\fldrslt{\ul
+ReaPack
+}}}
+\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b OSX} Download: {\field{\*\fldinst{HYPERLINK "https://sws-extension.org/"}}{\fldrslt{\ul
+SWS
+}}}
+ & {\field{\*\fldinst{HYPERLINK "https://reapack.com/"}}{\fldrslt{\ul
+ReaPack
+}}}
+\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b LINUX} \u1053?\u1077? \u1090?\u1077?\u1089?\u1090?\u1080?\u1083?, \u1085?\u1086? \u1074?\u1086?\u1079?\u1084?\u1086?\u1078?\u1085?\u1086? \u8212- \u1074?\u1089?\u1077? \u1086?\u1082?.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u9989? \u1047?\u1072?\u1087?\u1091?\u1089?\u1082?\u1072?\u1077?\u1084? REAPER \u8226? {\field{\*\fldinst{HYPERLINK ""}}{\fldrslt{\ul
+screenshot
+}}}
+ \u1042? \u1075?\u1083?\u1072?\u1074?\u1085?\u1086?\u1084? {\b \u1052?\u1045?\u1053?\u1070?} ({\b File}, {\b Edit} \u1080? \u1090?.\u1076?) \u1076?\u1086?\u1083?\u1078?\u1077?\u1085? \u1087?\u1086?\u1103?\u1074?\u1080?\u1090?\u1089?\u1103? \u1088?\u1072?\u1079?\u1076?\u1077?\u1083? \u1089? \u1085?\u1072?\u1079?\u1074?\u1072?\u1085?\u1080?\u1077?\u1084? {\f1 Extensions} > {\f1 ReaPack} > {\f1 Import repositories}\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u9989? {\b \u1044?\u1077?\u1083?\u1072?\u1077?\u1084? \u1080?\u1084?\u1087?\u1086?\u1088?\u1090? \u1073?\u1080?\u1073?\u1083?\u1080?\u1086?\u1090?\u1077?\u1082?\u1080?} \u8226? {\field{\*\fldinst{HYPERLINK "https://github.com/Tarasmetal/ReaScripts/blob/master/img/Screenshot_help.png"}}{\fldrslt{\ul
+screenshot
+}}}
+ \u1054?\u1089?\u1090?\u1072?\u1083?\u1086?\u1089?\u1100? \u1074?\u1089?\u1090?\u1072?\u1074?\u1080?\u1090?\u1100? \u1089?\u1089?\u1099?\u1083?\u1082?\u1091? \u1074? \u1086?\u1082?\u1085?\u1086? \u1080?\u1084?\u1087?\u1086?\u1088?\u1090?\u1072? \u55357?\u56391?\u55357?\u56391?\u55357?\u56391?\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \f1     https://github.com/Tarasmetal/ReaScripts/raw/master/index.xml\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\field{\*\fldinst{HYPERLINK "https://github.com/Tarasmetal/ReaScripts/blob/master/img/Screenshot2.png"}}{\fldrslt{\ul
+{\cf1 [image: https://github.com/Tarasmetal/ReaScripts/blob/master/img/Screenshot2.png]\cf0}
+}}}
+\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u9989? {\b \u1055?\u1088?\u1080?\u1084?\u1077?\u1088? \u1088?\u1072?\u1073?\u1086?\u1090?\u1099? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1072?} \u9989?\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \f1 \u1053?\u1072?\u1087?\u1088?\u1080?\u1084?\u1077?\u1088?, \u1077?\u1089?\u1083?\u1080? \u1091? \u1074?\u1072?\u1089? \u1077?\u1089?\u1090?\u1100? 2 \u1084?\u1072?\u1088?\u1082?\u1077?\u1088?\u1072? \u1089? \u1085?\u1072?\u1079?\u1074?\u1072?\u1085?\u1080?\u1077?\u1084? [\u1055?\u1088?\u1080?\u1087?\u1077?\u1074? 1, \u1055?\u1088?\u1080?\u1087?\u1077?\u1074? 2] \u1090?\u1086?,\line
+\u1089?\u1083?\u1077?\u1076?\u1091?\u1102?\u1097?\u1080?\u1081? \u1084?\u1072?\u1088?\u1082?\u1077?\u1088? \u1073?\u1091?\u1076?\u1077?\u1090? \u1080?\u1084?\u1077?\u1090?\u1100? \u1085?\u1072?\u1079?\u1074?\u1072?\u1085?\u1080?\u1077? [\u1055?\u1088?\u1080?\u1087?\u1077?\u1074? 3]) - \u1074?\u1089?\u1077? \u1087?\u1088?\u1086?\u1089?\u1090?\u1086?.\line
+\u1057?\u1082?\u1088?\u1080?\u1087?\u1090? \u1089?\u1087?\u1077?\u1094?\u1080?\u1072?\u1083?\u1100?\u1085?\u1086? \u1089?\u1076?\u1077?\u1083?\u1072?\u1085? \u1090?\u1072?\u1082?, \u1095?\u1090?\u1086?\u1073?\u1099? \u1074?\u1099? \u1091?\u1076?\u1077?\u1083?\u1080?\u1083?\u1080?,\line
+\u1082?\u1072?\u1082? \u1084?\u1086?\u1078?\u1085?\u1086? \u1073?\u1086?\u1083?\u1100?\u1096?\u1077? \u1074?\u1088?\u1077?\u1084?\u1077?\u1085?\u1080? \u1090?\u1074?\u1086?\u1088?\u1095?\u1077?\u1089?\u1090?\u1074?\u1091?,\line
+\u1077?\u1089?\u1083?\u1080? \u1074?\u1099? \u1073?\u1091?\u1076?\u1077?\u1090?\u1077? \u1088?\u1072?\u1085?\u1076?\u1086?\u1084?\u1085?\u1086? \u1074?\u1099?\u1089?\u1090?\u1072?\u1074?\u1083?\u1103?\u1090?\u1100? \u1080?\u1084?\u1077?\u1085?\u1072? \u1084?\u1072?\u1088?\u1082?\u1077?\u1088?\u1086?\u1074?,\line
+\u1082?\u1072?\u1082? \u1074?\u1072?\u1084? \u1074?\u1079?\u1076?\u1091?\u1084?\u1072?\u1077?\u1090?\u1089?\u1103?, \u1090?\u1086? \u1080?\u1085?\u1076?\u1077?\u1082?\u1089?\u1099? \u1085?\u1077? \u1089?\u1086?\u1073?\u1100?\u1102?\u1089?\u1103?,\line
+\u1087?\u1086?\u1101?\u1090?\u1086?\u1084?\u1091? \u1087?\u1086?\u1088?\u1103?\u1076?\u1086?\u1082? \u1088?\u1072?\u1079?\u1084?\u1077?\u1090?\u1082?\u1080? \u1090?\u1088?\u1077?\u1082?\u1080?\u1085?\u1075?\u1072? - \u1074?\u1086?\u1086?\u1073?\u1097?\u1077? \u1085?\u1077? \u1074?\u1072?\u1078?\u1077?\u1085?.\line
+\u1044?\u1077?\u1083?\u1072?\u1081?\u1090?\u1077?, \u1082?\u1072?\u1082? \u1074?\u1072?\u1084? \u1091?\u1076?\u1086?\u1073?\u1085?\u1086? \u1080? \u1074?\u1089?\u1077?.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 {\f1 <3 Special THX:}\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\field{\*\fldinst{HYPERLINK ""}}{\fldrslt{\ul
+{\b MPL}
+}}}
+, {\field{\*\fldinst{HYPERLINK ""}}{\fldrslt{\ul
+{\b SuperMaximus}
+}}}
+, {\field{\*\fldinst{HYPERLINK ""}}{\fldrslt{\ul
+{\b Aleksey} {\b Bezborodov}
 }}}
 .\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel5 \b \fs16 {\b \u1054?\u1073?\u1088?\u1072?\u1090?\u1085?\u1072?\u1103? \u1089?\u1074?\u1103?\u1079?\u1100?:} {\b {\field{\*\fldinst{HYPERLINK "http://vk.com/tarasmetal"}}{\fldrslt{\ul
+Vk
+}}}
+} \u8226? {\field{\*\fldinst{HYPERLINK "http://instagram.com/Tarasmetal"}}{\fldrslt{\ul
+{\b Instagram}
+}}}
+\par}
 }
 ]]></description>
     <link rel="website">http://vk.com/tarasmetal</link>
