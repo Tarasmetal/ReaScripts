@@ -1,0 +1,98 @@
+SCR 4 0 trs_play_start "Custom: trs_Play start.lua" "Taras Scripts/Transport/trs_Play start.lua"
+SCR 260 0 trs_markerguitools "Custom: trs_MarkerGUITools.lua" "Taras Scripts/GUI Tools/trs_MarkerGUITools.lua"
+SCR 260 0 trs_trackguitools "Custom: trs_TrackGUITools.lua" "Taras Scripts/GUI Tools/trs_TrackGUITools.lua"
+SCR 4 0 trs_duplicate_track_and_remove_items "Custom: trs_Duplicate track and Remove items.lua" "Taras Scripts/Track/trs_Duplicate track and Remove items.lua"
+SCR 260 0 trs_zoom_and_inline_edit_item_toggle "Custom: trs_Zoom and inline Edit Item Toggle.lua" "Taras Scripts/Items/trs_Zoom and inline Edit Item Toggle.lua"
+SCR 260 0 trs_free_item_positions_sort "Custom: trs_Free item positions sort.lua" "Taras Scripts/Items/trs_Free item positions sort.lua"
+SCR 4 0 trs_set_note_length_32 "Custom: trs_Set Note Length 1-32.lua" "Taras Scripts/Items/trs_Set Note Length 1-32.lua"
+SCR 260 0 trs_all_items_norm "Custom: trs_selected item normalize -4.lua" "Taras Scripts/Items/trs_Selected item normalize -4 db.lua"
+SCR 4 0 trs_create_stereo_send_from_track_under_mouse_to_selected_tracks_via_channel_1-2 "Custom: trs_Create Stereo Send from track under mouse to selected tracks (via channel 1-2).lua" "Taras Scripts/Track/trs_Create Stereo Send from track under mouse to selected tracks (via channel 1-2).lua"
+SCR 260 0 trs_unsel_all_remove_time_sel "Custom: trs_Unselect all and remove time.sel.lua" "Taras Scripts/Project Properties/trs_Unselect all and remove time.sel.lua"
+SCR 4 0 trs_nxt_trns_to_srt_mrk "Custom: trs_Next Transient to stretch marker.lua" "Taras Scripts/Track/trs_Next Transient to stretch marker.lua"
+SCR 260 0 trs_set_grid_over_or_under "Custom: trs_Set_grid_over_or_under.lua" "Taras Scripts/Project Properties/trs_Set_grid_over_or_under.lua"
+SCR 260 0 trs_explode_implode_takes_toggle "Custom: trs_explode implode takes toggle.lua" "Taras Scripts/Takes/trs_explode implode takes toggle.lua"
+SCR 4 0 trs_insert_marker_rec_666 "Custom: trs_Insert Marker REC 666.lua" "Taras Scripts/Markers/trs_Insert Marker REC 666.lua"
+SCR 4 0 trs_insert_marker_go_to_rec_666 "Custom: trs_Insert Marker go to REC 666.lua" "Taras Scripts/Markers/trs_Insert Marker go to REC 666.lua"
+SCR 4 0 trs_recording "Custom: trs_Recording.lua" "Taras Scripts/Transport/trs_Recording.lua"
+SCR 4 0 trs_x-raym_add_text_to_selected_items_notes_items_processor "Custom: trs_X-Raym_Add text to selected items notes (Items Processor).lua" "Taras Scripts/Items/trs_X-Raym_Add text to selected items notes (Items Processor).lua"
+SCR 4 0 trs_rec_vox_&_master_output_mute "Custom: trs_REC Vox & Master output mute.lua" "Taras Scripts/Transport/trs_REC Vox & Master output mute.lua"
+SCR 4 0 trs_tagirijus_fx_list_menu_under_mouse "Custom: trs_tagirijus_FX list menu under mouse.lua" "Taras Scripts/Track/trs_tagirijus_FX list menu under mouse.lua"
+SCR 260 0 trs_reaimggui_script_load "Custom: trs_ReaImgGUI_script_load.lua" "Taras Scripts/GUI Tools/trs_ReaImgGUI_script_load.lua"
+SCR 4 0 trs_labelguitools "Custom: trs_LabelGUITools.lua" "Taras Scripts/GUI Tools/trs_LabelGUITools.lua"
+SCR 4 0 trs_label_processor "Custom: trs_Label Processor.lua" "Taras Scripts/Items/trs_Label Processor.lua"
+SCR 4 0 trs_set_startup_action "Custom: trs_Set_Startup_Action.lua" "Taras Scripts/Project Properties/trs_Set_Startup_Action.lua"
+SCR 4 0 trs_create_vca_master_from_selection "Custom: trs_Create VCA master from selection.lua" "Taras Scripts/Track/trs_Create VCA master from selection.lua"
+SCR 4 0 trs_set_monitor_off_to_all_tracks "Custom: trs_Set Monitor off to All Tracks.lua" "Taras Scripts/Track/trs_Set Monitor off to All Tracks.lua"
+SCR 4 0 trs_group_selected_tracks_with_rename "Custom: trs_Group Selected Tracks with Rename.lua" "Taras Scripts/Track/trs_Group Selected Tracks with Rename.lua"
+SCR 4 0 trs_insert_fx-fabfilter_pro-c_2 "Custom: trs_Insert FX - FabFilter Pro-C 2.lua" "Taras Scripts/FX/trs_Insert FX - FabFilter Pro-C 2.lua"
+SCR 4 0 trs_insert_fx-fabfilter_pro-g "Custom: trs_Insert FX - FabFilter Pro-G.lua" "Taras Scripts/FX/trs_Insert FX - FabFilter Pro-G.lua"
+SCR 4 0 trs_insert_fx-fabfilter_pro-mb "Custom: trs_Insert FX - FabFilter Pro-MB.lua" "Taras Scripts/FX/trs_Insert FX - FabFilter Pro-MB.lua"
+SCR 4 0 trs_insert_fx-fabfilter_pro-q_3 "Custom: trs_Insert FX - FabFilter Pro-Q 3.lua" "Taras Scripts/FX/trs_Insert FX - FabFilter Pro-Q 3.lua"
+SCR 4 0 trs_insert_fx-fabfilter_pro-r "Custom: trs_Insert FX - FabFilter Pro-R.lua" "Taras Scripts/FX/trs_Insert FX - FabFilter Pro-R.lua"
+SCR 4 0 trs_insert_fx-fabfilter_saturn_2 "Custom: trs_Insert FX - FabFilter Saturn 2.lua" "Taras Scripts/FX/trs_Insert FX - FabFilter Saturn 2.lua"
+SCR 4 0 trs_rename_items_with_bpm "Custom: trs_Rename Items with BPM.lua" "Taras Scripts/Items/trs_Rename Items with BPM.lua"
+SCR 4 0 trs_insert_fx-hornetvumeter "Custom: trs_Insert FX - HoRNetVUMeter.lua" "Taras Scripts/FX/trs_Insert FX - HoRNetVUMeter.lua"
+SCR 4 0 trs_insert_fx-libra "Custom: trs_Insert FX - Libra.lua" "Taras Scripts/FX/trs_Insert FX - Libra.lua"
+SCR 4 0 trs_insert_fx-nadir "Custom: trs_Insert FX - NadIR.lua" "Taras Scripts/FX/trs_Insert FX - NadIR.lua"
+SCR 4 0 trs_insert_fx-reference "Custom: trs_Insert FX - REFERENCE.lua" "Taras Scripts/FX/trs_Insert FX - REFERENCE.lua"
+SCR 4 0 trs_insert_fx-stl_tonality-andy_james "Custom: trs_Insert FX - STL Tonality - Andy James.lua" "Taras Scripts/FX/trs_Insert FX - STL Tonality - Andy James.lua"
+SCR 4 0 trs_set_selected_tracks_channels_2 "Custom: trs_Set selected tracks channels 2.lua" "Taras Scripts/Track/trs_Set selected tracks channels 2.lua"
+SCR 4 0 trs_insert_fx-stl_tonality-will_putney "Custom: trs_Insert FX - STL Tonality - Will Putney.lua" "Taras Scripts/FX/trs_Insert FX - STL Tonality - Will Putney.lua"
+SCR 4 0 trs_insert_fx-virtual_mix_rack_x64 "Custom: trs_Insert FX - Virtual Mix Rack x64.lua" "Taras Scripts/FX/trs_Insert FX - Virtual Mix Rack x64.lua"
+SCR 4 0 trs_insert_fx-mixir3 "Custom: trs_Insert FX - mixIR3.lua" "Taras Scripts/FX/trs_Insert FX - mixIR3.lua"
+SCR 4 0 trs_insert_fx-soothe2 "Custom: trs_Insert FX - soothe2.lua" "Taras Scripts/FX/trs_Insert FX - soothe2.lua"
+SCR 4 0 trs_insert_fx-spiff "Custom: trs_Insert FX - spiff.lua" "Taras Scripts/FX/trs_Insert FX - spiff.lua"
+SCR 4 0 trs_set_all_items_rate "Custom: trs_Set all items rate 1.lua" "Taras Scripts/Items/trs_Set all items rate 1.0.lua"
+SCR 4 0 trs_set_sel_items_rate "Custom: trs_Set sel. items rate 1.lua" "Taras Scripts/Items/trs_Set selected items rate 1.0.lua"
+SCR 4 0 trs_project_render_metadata "Custom: trs_Project Render Metadata.lua" "Taras Scripts/MetaData/trs_Project Render Metadata.lua"
+SCR 4 0 trs_quantize_stretch_marker_positions_by_x_percent "Custom: trs_Quantize stretch marker positions by X percent.eel" "Taras Scripts/Track/trs_Quantize stretch marker positions by X percent.eel"
+SCR 260 0 trs_free_item_positions_sort_on_all_tracks "Custom: trs_Free item positions Sort on all Tracks.lua" "Taras Scripts/Items/trs_Free item positions Sort on all Tracks.lua"
+SCR 4 0 trs_render_tracks_to_stereo_post-fader_stem_tracks_and_mute_originals_unmute_all_tracks "Custom: trs_Render tracks to stereo post-fader stem tracks (and mute originals) Unmute all tracks.lua" "Taras Scripts/Items/trs_Render tracks to stereo post-fader stem tracks (and mute originals) Unmute all tracks.lua"
+SCR 4 0 trs_render_tracks_to_stereo_post-fader_stem_tracks_and_mute_originals "Custom: trs_Render tracks to stereo post-fader stem tracks (and mute originals).lua" "Taras Scripts/Items/trs_Render tracks to stereo post-fader stem tracks (and mute originals).lua"
+SCR 4 0 trs_save_track_fx_chains_for_all_tracks "Custom: trs_Save track FX chains (for All tracks).lua" "Taras Scripts/FX/trs_Save track FX chains (for All tracks).lua"
+SCR 4 0 trs_save_track_fx_chains_for_selected_tracks "Custom: trs_Save track FX chains (for selected tracks).lua" "Taras Scripts/FX/trs_Save track FX chains (for selected tracks).lua"
+SCR 4 0 trs_save_track_fx_chains_self_dir_for_selected_tracks "Custom: trs_Save track FX chains self dir (for selected tracks).lua" "Taras Scripts/FX/trs_Save track FX chains self dir (for selected tracks).lua"
+SCR 260 0 trs_select_all_tracks "Custom: trs_Select All Tracks.lua" "Taras Scripts/Track/trs_Select All Tracks.lua"
+SCR 4 0 trs_bypass_trackfxs_except_vstis "Custom: trs_Bypass trackFXs (except VSTis).eel" "Taras Scripts/Track/trs_Bypass trackFXs (except VSTis).eel"
+SCR 4 0 trs_set_selected_tracks_channels_number "Custom: trs_Set selected tracks channels number.lua" "Taras Scripts/Track/trs_Set selected tracks channels number.lua"
+SCR 260 0 trs_toggle_items_group "Custom: trs_Toggle Items Group.lua" "Taras Scripts/Items/trs_Toggle Items Group.lua"
+SCR 4 0 trs_trackfxs_routing_matrix "Custom: trs_TrackFXs Routing Matrix.lua" "Taras Scripts/FX/trs_TrackFXs Routing Matrix.lua"
+SCR 4 0 trs_sort_presets_of_focused_fx "Custom: trs_Sort presets of focused FX.lua" "Taras Scripts/Presets/trs_Sort presets of focused FX.lua"
+SCR 4 0 trs_insert_fx-stl_tonality-howard_benson "Custom: trs_Insert FX - STL Tonality - Howard Benson.lua" "Taras Scripts/FX/trs_Insert FX - STL Tonality - Howard Benson.lua"
+SCR 4 0 trs_insert_fx-smash_and_grab "Custom: trs_Insert FX - Smash And Grab.lua" "Taras Scripts/FX/trs_Insert FX - Smash And Grab.lua"
+SCR 4 0 trs_set_selected_tracks_channels_4 "Custom: trs_Set selected tracks channels 4.lua" "Taras Scripts/Track/trs_Set selected tracks channels 4.lua"
+SCR 4 0 trs_x-raym_add_text_to_selected_items_notes_items_notes_processor "Custom: trs_X-Raym_Add text to selected items notes (Items Notes Processor).lua" "Taras Scripts/Items/trs_X-Raym_Add text to selected items notes (Items Notes Processor).lua"
+SCR 4 0 trs_insert_fx-gainmatch "Custom: trs_Insert FX - GainMatch.lua" "Taras Scripts/FX/trs_Insert FX - GainMatch.lua"
+SCR 4 0 trs_cfillion_set_timecode_at_edit_cursor_set_to_0 "Custom: trs_cfillion_Set timecode at edit cursor (set to 0).lua" "Taras Scripts/Markers/trs_cfillion_Set timecode at edit cursor (set to 0).lua"
+SCR 4 0 trs_send_tracks_background_taras_mod "Custom: trs_Send tracks background Taras MOD.lua" "Taras Scripts/Track/trs_Send tracks background Taras MOD.lua"
+SCR 4 0 trs_marker_=end_to_cursor_position "Custom: trs_Marker =END to cursor position.lua" "Taras Scripts/Markers/trs_Marker =END to cursor position.lua"
+SCR 4 0 trs_marker_=start_to_cursor_position "Custom: trs_Marker =START to cursor position.lua" "Taras Scripts/Markers/trs_Marker =START to cursor position.lua"
+SCR 4 0 trs_reset_project_start_time "Custom: trs_Reset project start time.lua" "Taras Scripts/Markers/trs_Reset project start time.lua"
+SCR 4 0 trs_set_project_time_back "Custom: trs_Set project time back.lua" "Taras Scripts/Markers/trs_Set project time back.lua"
+SCR 4 0 RS1ee9bb229dabffe151848d7efa3c10f748e1a1cf "Custom: lyrics.lua" Cockos/lyrics.lua
+SCR 4 32060 RS7d3c_1ee9bb229dabffe151848d7efa3c10f748e1a1cf "Custom: lyrics.lua" Cockos/lyrics.lua
+SCR 4 0 RS1cbf05b0c4f875518496f34a5ce45adefe05cb67 "Custom: Default_6.0_theme_adjuster.lua" Cockos/Default_6.0_theme_adjuster.lua
+KEY 25 191 41060 0
+KEY 17 191 41061 0
+KEY 17 222 41898 0
+KEY 13 191 41931 0
+KEY 1 32 _trs_play_start 0
+KEY 5 77 _trs_markerguitools 0
+KEY 17 82 _trs_trackguitools 0
+KEY 21 68 _trs_duplicate_track_and_remove_items 0
+KEY 1 69 _trs_zoom_and_inline_edit_item_toggle 0
+KEY 1 72 _trs_free_item_positions_sort 0
+KEY 13 76 _trs_set_note_length_32 0
+KEY 17 78 _trs_all_items_norm 0
+KEY 21 82 _trs_create_stereo_send_from_track_under_mouse_to_selected_tracks_via_channel_1-2 0
+KEY 1 85 _trs_unsel_all_remove_time_sel 0
+KEY 1 27 _trs_unsel_all_remove_time_sel 0
+KEY 17 87 _trs_nxt_trns_to_srt_mrk 0
+KEY 1 89 _trs_set_grid_over_or_under 0
+KEY 17 89 _trs_explode_implode_takes_toggle 0
+KEY 1 103 _trs_insert_marker_rec_666 0
+KEY 1 105 _trs_insert_marker_go_to_rec_666 0
+KEY 1 106 _trs_recording 0
+KEY 9 107 _trs_x-raym_add_text_to_selected_items_notes_items_processor 0
+KEY 1 110 _trs_rec_vox_&_master_output_mute 0
+KEY 1 191 _trs_tagirijus_fx_list_menu_under_mouse 0
