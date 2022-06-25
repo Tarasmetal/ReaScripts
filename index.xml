@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="b601ddb1003fddfab56dc19cd6f9251d4d4c09ac">
+<index version="1" name="Taras Scripts" commit="2f228d714fb5721e873bb7956725fd1804c04d7a">
   <category name="GUI Tools">
     <reapack name="trs_LabelGUITools.lua" type="script" desc="Label GUI Tools">
       <metadata>
@@ -49,7 +49,7 @@
       </metadata>
       <version name="1.0" author="Taras Umanskiy" time="2022-06-23T20:58:02Z">
         <changelog><![CDATA[+ Code optimizations]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/7f1b1f4ee1441b9d90600ddd9346b20697f7f1e6/GUI%20Tools/trs_ReaImgGUI_script_load.lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/2f228d714fb5721e873bb7956725fd1804c04d7a/GUI%20Tools/trs_ReaImgGUI_script_load.lua</source>
       </version>
     </reapack>
   </category>
