@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <index version="1" name="Taras Scripts" commit="39e20180bc56a98c6a97b5b876dbd0f5a23ab582">
   <category name="GUI Tools">
-    <reapack name="cfillion.lua" type="script" desc="Hello world">
+    <reapack name="cfillion_Hello world.lua" type="script" desc="Hello world">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
