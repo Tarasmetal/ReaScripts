@@ -56,8 +56,7 @@
 
 # `<3 Special THX:`
 
-[**MPL**](), [**SuperMaximus**](), [**Aleksey** **Bezborodov**]().
-
+[**MPL**](https://vk.com/michael_pilyavskiy), [**SuperMaximus**](https://vk.com/maxsalkov), [**Aleksey** **Bezborodov**](https://vk.com/epitaph666).
 
 ###### **Обратная связь:** **[Vk](http://vk.com/tarasmetal)** • [**Instagram**](http://instagram.com/Tarasmetal)
 
