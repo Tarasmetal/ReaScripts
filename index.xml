@@ -47,7 +47,7 @@
         <link rel="website">http://vk.com/tarasmetal</link>
         <link rel="donation">https://paypal.me/Tarasmetal</link>
       </metadata>
-      <version name="1.0" author="Taras Umanskiy" time="2022-06-26T21:01:01Z">
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-23T20:58:02Z">
         <changelog><![CDATA[+ Code optimizations]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/2f228d714fb5721e873bb7956725fd1804c04d7a/GUI%20Tools/trs_ReaImgGUI_script_load.lua</source>
       </version>
@@ -190,7 +190,7 @@
         <link rel="website">http://vk.com/tarasmetal</link>
         <link rel="donation">https://paypal.me/Tarasmetal</link>
       </metadata>
-      <version name="1.0" author="Taras Umanskiy" time="2022-06-26T21:01:01Z">
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-23T20:58:02Z">
         <changelog><![CDATA[+ Code Fixies]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/7f1b1f4ee1441b9d90600ddd9346b20697f7f1e6/Markers/trs_Marker%20=END%20to%20cursor%20position.lua</source>
       </version>
@@ -207,7 +207,7 @@
         <link rel="website">http://vk.com/tarasmetal</link>
         <link rel="donation">https://paypal.me/Tarasmetal</link>
       </metadata>
-      <version name="1.0" author="Taras Umanskiy" time="2022-06-26T21:01:01Z">
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-23T20:58:02Z">
         <changelog><![CDATA[+ Code Fixies]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/7f1b1f4ee1441b9d90600ddd9346b20697f7f1e6/Markers/trs_Marker%20=START%20to%20cursor%20position.lua</source>
       </version>
