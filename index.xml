@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="2f228d714fb5721e873bb7956725fd1804c04d7a">
+<index version="1" name="Taras Scripts" commit="8d786472871fa30b01d49405ab22627e5030aeb4">
   <category name="GUI Tools">
     <reapack name="trs_LabelGUITools.lua" type="script" desc="Label GUI Tools">
       <metadata>
@@ -318,17 +318,16 @@ screenshot
 \u1087?\u1086?\u1101?\u1090?\u1086?\u1084?\u1091? \u1087?\u1086?\u1088?\u1103?\u1076?\u1086?\u1082? \u1088?\u1072?\u1079?\u1084?\u1077?\u1090?\u1082?\u1080? \u1090?\u1088?\u1077?\u1082?\u1080?\u1085?\u1075?\u1072? - \u1074?\u1086?\u1086?\u1073?\u1097?\u1077? \u1085?\u1077? \u1074?\u1072?\u1078?\u1077?\u1085?.\line
 \u1044?\u1077?\u1083?\u1072?\u1081?\u1090?\u1077?, \u1082?\u1072?\u1082? \u1074?\u1072?\u1084? \u1091?\u1076?\u1086?\u1073?\u1085?\u1086? \u1080? \u1074?\u1089?\u1077?.\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 {\f1 <3 Special THX:}\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 {\field{\*\fldinst{HYPERLINK ""}}{\fldrslt{\ul
+{\pard \ql \f0 \sa180 \li0 \fi0 {\field{\*\fldinst{HYPERLINK "https://vk.com/michael_pilyavskiy"}}{\fldrslt{\ul
 {\b MPL}
 }}}
-, {\field{\*\fldinst{HYPERLINK ""}}{\fldrslt{\ul
+, {\field{\*\fldinst{HYPERLINK "https://vk.com/maxsalkov"}}{\fldrslt{\ul
 {\b SuperMaximus}
 }}}
-, {\field{\*\fldinst{HYPERLINK ""}}{\fldrslt{\ul
-{\b Aleksey} {\b Bezborodv}
+, {\field{\*\fldinst{HYPERLINK "https://vk.com/epitaph666"}}{\fldrslt{\ul
+{\b Aleksey} {\b Bezborodov}
 }}}
 .\par}
-{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel5 \b \fs16 {\b \u1054?\u1073?\u1088?\u1072?\u1090?\u1085?\u1072?\u1103? \u1089?\u1074?\u1103?\u1079?\u1100?:} {\b {\field{\*\fldinst{HYPERLINK "http://vk.com/tarasmetal"}}{\fldrslt{\ul
 Vk
 }}}
@@ -336,7 +335,6 @@ Vk
 {\b Instagram}
 }}}
 \par}
-{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
 }
 ]]></description>
     <link rel="website">http://vk.com/tarasmetal</link>
