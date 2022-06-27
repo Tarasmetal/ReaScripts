@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="39e20180bc56a98c6a97b5b876dbd0f5a23ab582">
+<index version="1" name="Taras Scripts" commit="bc97f1cb7a728d3579943cd51c35204036908a1f">
+  <category name="GUI Tools">
+    <reapack name="trs_LabelGUITools.lua" type="script" desc="Label GUI Tools">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Label GUI Tools\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">http://vk.com/tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-25T22:22:25Z">
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/06924310bd31d38675535cabda5095cfabf7f846/GUI%20Tools/trs_LabelGUITools.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_MarkerGUITools.lua" type="script" desc="Marker GUI Tools">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 \u1050?\u1040?\u1050? \u1069?\u1058?\u1054? \u1056?\u1040?\u1041?\u1054?\u1058?\u1040?\u1045?\u1058??\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1054?\u1089?\u1085?\u1086?\u1074?\u1085?\u1072?\u1103? \u1080?\u1076?\u1077?\u1103? \u1080? \u1079?\u1072?\u1076?\u1072?\u1095?\u1072? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1072? \u8212- \u1084?\u1072?\u1082?\u1089?\u1080?\u1084?\u1072?\u1083?\u1100?\u1085?\u1086? \u1089?\u1086?\u1082?\u1088?\u1072?\u1090?\u1080?\u1090?\u1100? \u1074?\u1088?\u1077?\u1084?\u1103? \u1085?\u1072? \u1088?\u1072?\u1079?\u1084?\u1077?\u1090?\u1082?\u1091? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072?, \u1086?\u1089?\u1090?\u1072?\u1074?\u1083?\u1103?\u1103? \u1077?\u1075?\u1086? \u1082?\u1088?\u1072?\u1089?\u1080?\u1074?\u1099?\u1084? \u1080? \u1087?\u1086?\u1085?\u1103?\u1090?\u1085?\u1099?\u1084? \u1076?\u1083?\u1103? \u1074?\u1089?\u1077?\u1093?, \u1072? \u1075?\u1083?\u1072?\u1074?\u1085?\u1086?\u1077? \u1076?\u1083?\u1103? \u1089?\u1072?\u1084?\u1086?\u1075?\u1086? \u1089?\u1077?\u1073?\u1103?. \u1053?\u1077? \u1086?\u1090?\u1074?\u1083?\u1077?\u1082?\u1072?\u1081?\u1090?\u1077?\u1089?\u1100? \u1086?\u1090? \u1090?\u1074?\u1086?\u1088?\u1095?\u1077?\u1089?\u1082?\u1086?\u1075?\u1086? \u1087?\u1088?\u1086?\u1094?\u1077?\u1089?\u1089?\u1072?, \u1087?\u1077?\u1088?\u1077?\u1084?\u1077?\u1097?\u1072?\u1081?\u1090?\u1077?\u1089?\u1100? \u1074? \u1083?\u1102?\u1073?\u1091?\u1102? \u1090?\u1086?\u1095?\u1082?\u1091? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072? \u1079?\u1072? \u1087?\u1072?\u1088?\u1091? \u1089?\u1077?\u1082?\u1091?\u1085?\u1076?, \u1095?\u1090?\u1086?\u1073?\u1099? \u1079?\u1072?\u1087?\u1080?\u1089?\u1072?\u1090?\u1100?, \u1087?\u1088?\u1086?\u1089?\u1083?\u1091?\u1096?\u1072?\u1090?\u1100? \u1080?\u1083?\u1080? \u1074?\u1085?\u1077?\u1089?\u1090?\u1080? \u1082?\u1086?\u1088?\u1080?\u1082?\u1090?\u1077?\u1088?\u1086?\u1074?\u1082?\u1080? \u1074? \u1090?\u1088?\u1077?\u1082?\u1080?\u1085?\u1075?.\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://paypal.me/Tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-25T22:22:25Z">
+        <changelog><![CDATA[+ Code Fixies]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/06924310bd31d38675535cabda5095cfabf7f846/GUI%20Tools/trs_MarkerGUITools.lua</source>
+      </version>
+    </reapack>
+  </category>
   <category name="GUI Tools/Functions">
     <reapack name="LabelFunctions.lua" type="script" desc="Label Functions">
       <metadata>
@@ -54,6 +90,11 @@
     </reapack>
   </category>
   <category name="GUI Tools/MarkerPresets">
+    <reapack name="Default.lua" type="script" desc="MarkerGUITools Preset">
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-25T22:22:25Z">
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/06924310bd31d38675535cabda5095cfabf7f846/GUI%20Tools/MarkerPresets/Default.lua</source>
+      </version>
+    </reapack>
     <reapack name="Default_big.lua" type="script" desc="MarkerGUITools Preset">
       <version name="1.0" author="Taras Umanskiy" time="2022-06-26T22:03:01Z">
         <source>https://github.com/Tarasmetal/ReaScripts/raw/39e20180bc56a98c6a97b5b876dbd0f5a23ab582/GUI%20Tools/MarkerPresets/Default_big.lua</source>
