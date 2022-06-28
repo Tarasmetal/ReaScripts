@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="35260e086c02bc0f5e810b102a0245a67ba89d3b">
+<index version="1" name="Taras Scripts" commit="19240bbe8d0b85a5122b00f449ed33abac8bbe0b">
   <category name="GUI Tools">
     <reapack name="trs_MarkerGUITools.lua" type="script" desc="Marker GUI Tools">
       <metadata>
@@ -17,6 +17,40 @@
       <version name="1.0" author="Taras Umanskiy" time="2022-06-28T07:33:29Z">
         <changelog><![CDATA[+ Code Fixies]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9cf93fe0dcffda8bb29b18c6f93043212c1a8ec4/GUI%20Tools/trs_MarkerGUITools.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_ReaImgGUI_script_load.lua" type="script" desc="ReaImgGUI_script_load">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Init Lua Script\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://paypal.me/Tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-28T08:01:30Z">
+        <changelog><![CDATA[+ Code optimizations]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/19240bbe8d0b85a5122b00f449ed33abac8bbe0b/GUI%20Tools/trs_ReaImgGUI_script_load.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_TrackGUITools.lua" type="script" desc="Tracks GUI Tools">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Tracks GUI Tools\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://paypal.me/Tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-28T08:01:30Z">
+        <changelog><![CDATA[+ Code optimizations]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/19240bbe8d0b85a5122b00f449ed33abac8bbe0b/GUI%20Tools/trs_TrackGUITools.lua</source>
       </version>
     </reapack>
   </category>
