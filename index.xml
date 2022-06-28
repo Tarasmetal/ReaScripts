@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="3bfc231915f84d8b69acd1b66dbd1339b3936430">
+<index version="1" name="Taras Scripts" commit="ced2bc8f84d1046bf78f66dfc87ac860bcd721d2">
   <category name="GUI Tools">
+    <reapack name="trs_LabelGUITools.lua" type="script" desc="Label GUI Tools">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Label GUI Tools\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">http://vk.com/tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-28T23:58:46Z">
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/ced2bc8f84d1046bf78f66dfc87ac860bcd721d2/GUI%20Tools/trs_LabelGUITools.lua</source>
+      </version>
+    </reapack>
     <reapack name="trs_MarkerGUITools.lua" type="script" desc="Marker GUI Tools">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
@@ -19,40 +35,6 @@
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/3bfc231915f84d8b69acd1b66dbd1339b3936430/GUI%20Tools/trs_MarkerGUITools.lua</source>
       </version>
     </reapack>
-    <reapack name="trs_ReaImgGUI_script_load.lua" type="script" desc="ReaImgGUI_script_load">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Init Lua Script\par}
-}
-]]></description>
-        <link rel="website">http://vk.com/tarasmetal</link>
-        <link rel="donation">https://paypal.me/Tarasmetal</link>
-      </metadata>
-      <version name="1.0" author="Taras Umanskiy" time="2022-06-28T23:37:13Z">
-        <changelog><![CDATA[+ Code optimizations]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/3bfc231915f84d8b69acd1b66dbd1339b3936430/GUI%20Tools/trs_ReaImgGUI_script_load.lua</source>
-      </version>
-    </reapack>
-    <reapack name="trs_TrackGUITools.lua" type="script" desc="Tracks GUI Tools">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Tracks GUI Tools\par}
-}
-]]></description>
-        <link rel="website">http://vk.com/tarasmetal</link>
-        <link rel="donation">https://paypal.me/Tarasmetal</link>
-      </metadata>
-      <version name="1.0" author="Taras Umanskiy" time="2022-06-28T23:37:13Z">
-        <changelog><![CDATA[+ Code optimizations]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/3bfc231915f84d8b69acd1b66dbd1339b3936430/GUI%20Tools/trs_TrackGUITools.lua</source>
-      </version>
-    </reapack>
   </category>
   <category name="GUI Tools/Functions">
     <reapack name="LabelFunctions.lua" type="script" desc="Label Functions">
@@ -67,9 +49,9 @@
         <link rel="website">http://vk.com/tarasmetal</link>
         <link rel="donation">https://paypal.me/Tarasmetal</link>
       </metadata>
-      <version name="1.0" author="Taras Umanskiy" time="2022-06-26T22:03:01Z">
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-28T23:58:46Z">
         <changelog><![CDATA[+ Code optimizations]]></changelog>
-        <source>https://github.com/Tarasmetal/ReaScripts/raw/39e20180bc56a98c6a97b5b876dbd0f5a23ab582/GUI%20Tools/Functions/LabelFunctions.lua</source>
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/ced2bc8f84d1046bf78f66dfc87ac860bcd721d2/GUI%20Tools/Functions/LabelFunctions.lua</source>
       </version>
     </reapack>
     <reapack name="MarkerFunctions.lua" type="script" desc="Marker Functions">
@@ -84,9 +66,9 @@
         <link rel="website">http://vk.com/tarasmetal</link>
         <link rel="donation">https://paypal.me/Tarasmetal</link>
       </metadata>
-      <version name="1.0" author="Taras Umanskiy" time="2022-06-26T22:03:01Z">
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-28T23:58:46Z">
         <changelog><![CDATA[+ Code optimizations]]></changelog>
-        <source>https://github.com/Tarasmetal/ReaScripts/raw/39e20180bc56a98c6a97b5b876dbd0f5a23ab582/GUI%20Tools/Functions/MarkerFunctions.lua</source>
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/ced2bc8f84d1046bf78f66dfc87ac860bcd721d2/GUI%20Tools/Functions/MarkerFunctions.lua</source>
       </version>
     </reapack>
     <reapack name="PresetFileLoadFunctions.lua" type="script" desc="Presets Functions">
@@ -101,9 +83,9 @@
         <link rel="website">http://vk.com/tarasmetal</link>
         <link rel="donation">https://paypal.me/Tarasmetal</link>
       </metadata>
-      <version name="1.0" author="Taras Umanskiy" time="2022-06-26T22:03:01Z">
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-28T23:58:46Z">
         <changelog><![CDATA[+ Code optimizations]]></changelog>
-        <source>https://github.com/Tarasmetal/ReaScripts/raw/39e20180bc56a98c6a97b5b876dbd0f5a23ab582/GUI%20Tools/Functions/PresetFileLoadFunctions.lua</source>
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/ced2bc8f84d1046bf78f66dfc87ac860bcd721d2/GUI%20Tools/Functions/PresetFileLoadFunctions.lua</source>
       </version>
     </reapack>
   </category>
@@ -119,8 +101,8 @@
       </version>
     </reapack>
     <reapack name="PlayList.lua" type="script" desc="MarkerGUITools Preset">
-      <version name="1.0" author="Taras Umanskiy" time="2022-06-26T22:03:01Z">
-        <source>https://github.com/Tarasmetal/ReaScripts/raw/39e20180bc56a98c6a97b5b876dbd0f5a23ab582/GUI%20Tools/MarkerPresets/PlayList.lua</source>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-28T23:58:46Z">
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/ced2bc8f84d1046bf78f66dfc87ac860bcd721d2/GUI%20Tools/MarkerPresets/PlayList.lua</source>
       </version>
     </reapack>
     <reapack name="Short.lua" type="script" desc="MarkerGUITools Preset">
@@ -129,8 +111,8 @@
       </version>
     </reapack>
     <reapack name="Takes.lua" type="script" desc="MarkerGUITools Preset">
-      <version name="1.0" author="Taras Umanskiy" time="2022-06-26T22:03:01Z">
-        <source>https://github.com/Tarasmetal/ReaScripts/raw/39e20180bc56a98c6a97b5b876dbd0f5a23ab582/GUI%20Tools/MarkerPresets/Takes.lua</source>
+      <version name="1.0" author="Taras Umanskiy" time="2022-06-28T23:58:46Z">
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/ced2bc8f84d1046bf78f66dfc87ac860bcd721d2/GUI%20Tools/MarkerPresets/Takes.lua</source>
       </version>
     </reapack>
   </category>
@@ -142,9 +124,9 @@
         <link rel="screenshot">https://i.imgur.com/uly6oy5.gif</link>
         <link rel="donation">https://www.paypal.com/cgi-bin/webscr?business=T3DEWBQJAV7WL&amp;cmd=_donations&amp;currency_code=CAD</link>
       </metadata>
-      <version name="1.2" author="cfillion (Taras MOD)" time="2022-06-21T06:50:07Z">
+      <version name="1.2" author="cfillion (Taras MOD)" time="2022-06-28T23:58:46Z">
         <changelog><![CDATA[Add a "set to 0" action]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/Markers/trs_cfillion_Set%20timecode%20at%20edit%20cursor%20(set%20to%200).lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/ced2bc8f84d1046bf78f66dfc87ac860bcd721d2/Markers/trs_cfillion_Set%20timecode%20at%20edit%20cursor%20(set%20to%200).lua</source>
       </version>
     </reapack>
     <reapack name="trs_Insert Marker go to REC 666.lua" type="script" desc="Go to start marker 666 MOD">
@@ -158,9 +140,9 @@
 ]]></description>
         <link rel="website">https://forums.cockos.com/showthread.php?p=1923923</link>
       </metadata>
-      <version name="1.1" author="Stephan Römer (Taras MOD)" time="2022-06-21T06:50:07Z">
+      <version name="1.1" author="Stephan Römer (Taras MOD)" time="2022-06-28T23:58:46Z">
         <changelog><![CDATA[+ Code optimizations]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/Markers/trs_Insert%20Marker%20go%20to%20REC%20666.lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/ced2bc8f84d1046bf78f66dfc87ac860bcd721d2/Markers/trs_Insert%20Marker%20go%20to%20REC%20666.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Insert Marker REC 666.lua" type="script" desc="Insert recording marker 666 MOD">
@@ -174,9 +156,9 @@
 ]]></description>
         <link rel="website">https://forums.cockos.com/showthread.php?p=1923923</link>
       </metadata>
-      <version name="1.1" author="Stephan Römer (Taras MOD)" time="2022-06-21T06:50:07Z">
+      <version name="1.1" author="Stephan Römer (Taras MOD)" time="2022-06-28T23:58:46Z">
         <changelog><![CDATA[+ Code optimizations]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/Markers/trs_Insert%20Marker%20REC%20666.lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/ced2bc8f84d1046bf78f66dfc87ac860bcd721d2/Markers/trs_Insert%20Marker%20REC%20666.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Marker =END to cursor position.lua" type="script" desc="trs_ Set Marker =END">
@@ -226,9 +208,9 @@
 ]]></description>
         <link rel="website">https://forum.cockos.com/member.php?u=39350</link>
       </metadata>
-      <version name="1.0" author="BenjyO" time="2022-06-21T06:50:07Z">
+      <version name="1.0" author="BenjyO" time="2022-06-28T23:58:46Z">
         <changelog><![CDATA[Initial release]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/Markers/trs_Reset%20project%20start%20time.lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/ced2bc8f84d1046bf78f66dfc87ac860bcd721d2/Markers/trs_Reset%20project%20start%20time.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Set project time back.lua" type="script" desc="Move edit cursor to time 0 or to project start">
@@ -241,9 +223,9 @@
 }
 ]]></description>
       </metadata>
-      <version name="2.0" author="Taras Umanskiy" time="2022-06-21T06:50:07Z">
+      <version name="2.0" author="Taras Umanskiy" time="2022-06-28T23:58:46Z">
         <changelog><![CDATA[+ More accurate]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9be40262973d9231930742729023160f8d7e6081/Markers/trs_Set%20project%20time%20back.lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/ced2bc8f84d1046bf78f66dfc87ac860bcd721d2/Markers/trs_Set%20project%20time%20back.lua</source>
       </version>
     </reapack>
   </category>
