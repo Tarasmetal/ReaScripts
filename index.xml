@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="f453795501674c7629359c0414cb084c92b36444">
+<index version="1" name="Taras Scripts" commit="392a6ce8a4ecf7b82fa3d9d11d8c4cc30cc204c7">
   <category name="GUI Tools">
     <reapack name="trs_MarkerGUITools.lua" type="script" desc="Marker GUI Tools">
       <metadata>
@@ -16,7 +16,7 @@
       </metadata>
       <version name="1.0" author="Taras Umanskiy" time="2022-06-28T07:33:29Z">
         <changelog><![CDATA[+ Code Fixies]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/9cf93fe0dcffda8bb29b18c6f93043212c1a8ec4/GUI%20Tools/trs_MarkerGUITools.lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/392a6ce8a4ecf7b82fa3d9d11d8c4cc30cc204c7/GUI%20Tools/trs_MarkerGUITools.lua</source>
       </version>
     </reapack>
   </category>
