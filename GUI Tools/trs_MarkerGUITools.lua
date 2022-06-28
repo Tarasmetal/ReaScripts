@@ -174,7 +174,8 @@ if not widgets.cheads then
       }
       end
 
-    rv,widgets.cheads.closable_group = r.ImGui_Checkbox(ctx, 'Scripts', widgets.cheads.closable_group)
+    rv,widgets.cheads.closable_group = r.ImGui_Checkbox(ctx, '<', widgets.cheads.closable_group)
+    -- rv,widgets.cheads.closable_group = r.ImGui_Checkbox(ctx, 'Scripts', widgets.cheads.closable_group)
 
         r.ImGui_SameLine(ctx) HelpMarker('(?)',
             'Show CUSTOM SCRIPTS buttons\n')
@@ -185,9 +186,15 @@ if not widgets.cheads then
         -- r.ImGui_Spacing(ctx)
         -- r.ImGui_Text(ctx, ('IsItemHovered: %s'):format(r.ImGui_IsItemHovered(ctx)))
         r.ImGui_SameLine(ctx)
-        btnCmdCol('Delete M', '_SWSMARKERLIST9', 'Delete all Markers', 6.5,0)
+        btnCmdCol('Del M 1', '40613', 'Markers: Delete marker near cursor', 7,2)
         r.ImGui_SameLine(ctx)
-        btnCmdCol('Delete R', '_SWSMARKERLIST10', 'Delete all Regions', 6.3,0)
+        btnCmdCol('Del M all', '_SWSMARKERLIST9', 'Delete all Markers', 7,0)
+        r.ImGui_SameLine(ctx)
+        r.ImGui_TextDisabled(ctx, '|')
+        r.ImGui_SameLine(ctx)
+        btnCmdCol('Del R1', '40615', 'Region: Delete marker near cursor', 6,0)
+        r.ImGui_SameLine(ctx)
+        btnCmdCol('Del R all', '_SWSMARKERLIST10', 'Delete all Regions', 7,0)
         r.ImGui_SameLine(ctx)
         r.ImGui_TextDisabled(ctx, '|')
         r.ImGui_SameLine(ctx)
