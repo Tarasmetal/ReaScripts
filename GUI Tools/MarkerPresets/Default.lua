@@ -6,6 +6,7 @@ Intro,green
 Verse,yellow
 Chorus,lime
 Fill,
+Pre,
 Bridge,
 BreakDown,
 Main,
@@ -14,7 +15,7 @@ Beat,
 Silent,
 Outro,
 Riff,
-Fx,
 Phase,
 Idea,
 Old,
+Fx,

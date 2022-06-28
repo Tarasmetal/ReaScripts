@@ -1,0 +1,1 @@
+reapack-index -a -W -V --strict --rebuild -o index.xml
