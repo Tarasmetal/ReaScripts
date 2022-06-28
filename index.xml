@@ -16,7 +16,7 @@
       </metadata>
       <version name="1.0" author="Taras Umanskiy" time="2022-06-28T07:33:29Z">
         <changelog><![CDATA[+ Code Fixies]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/392a6ce8a4ecf7b82fa3d9d11d8c4cc30cc204c7/GUI%20Tools/trs_MarkerGUITools.lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/3bfc231915f84d8b69acd1b66dbd1339b3936430/GUI%20Tools/trs_MarkerGUITools.lua</source>
       </version>
     </reapack>
     <reapack name="trs_ReaImgGUI_script_load.lua" type="script" desc="ReaImgGUI_script_load">
