@@ -1,5 +1,6 @@
 [Marker GUI Tools](https://github.com/Tarasmetal/ReaScripts/raw/master/GUI%20Tools) создан для работы в [REAPER DAW](https://www.reaper.fm/download.php) WIN & OSX.
 ======
+[trs_MarkerGUITools.lua](https://github.com/Tarasmetal/ReaScripts/tree/master/GUI%20Tools) создан для работы в [REAPER DAW](https://www.reaper.fm/download.php) WIN & OSX.
 
 [![Marker GUI Tools Demo](https://github.com/Tarasmetal/ReaScripts/blob/master/img/Screenshot1.png)](https://github.com/Tarasmetal/ReaScripts/blob/master/img/Screenshot1.png)
 
@@ -56,7 +57,9 @@
 
 # `<3 Special THX:`
 
-[**MPL**](https://vk.com/michael_pilyavskiy), [**SuperMaximus**](https://vk.com/maxsalkov), [**Aleksey** **Bezborodov**](https://vk.com/epitaph666).
+[**MPL**](), [**SuperMaximus**](), [**Aleksey** **Bezborodv**]().
 
+---
 ###### **Обратная связь:** **[Vk](http://vk.com/tarasmetal)** • [**Instagram**](http://instagram.com/Tarasmetal)
 
+---
