@@ -1,12 +1,20 @@
 -- @description VST Macro Linker
 -- @author Taras Umanskiy
--- @version 3.92
+-- @version 3.97
 -- @provides [main] .
 -- @provides [script] trs_VST Macro Linker.jsfx
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
 -- @about Скрипт для линковки параметров VST в макросы и пады.
 -- @changelog
+--   + Добавлено: Авто-линковка теперь срабатывает при повторном касании того же параметра (даже если значение изменилось незначительно).
+--   + Исправлено: Теперь можно линковать последний затронутый параметр в авто-режиме, просто "пошевелив" его после нажатия 'L'.
+--   + UI: Уменьшен размер ручек (Knobs) на 1/3 для компактности.
+--   + UI: Новая цветовая схема ручек (Min: голубой, Max: оранжевый, Offset: фиолетовый, Curve: зеленый).
+--   + Исправлено: Ошибка 'attempt to call a nil value (field ImGui_GetID)' при использовании Knobs.
+--   + Добавлено: Использование Knobs (ручек) вместо слайдеров в окне Linked Parameters.
+--   + Добавлено: Кривые модуляции (Linear, Logarithmic, Exponential) для линкованных параметров.
+--   + Добавлено: Визуальный предпросмотр кривой и слайдер Tension в окне Linked Parameters.
 --   + Добавлено: Окно 'Linked Parameters' теперь автоматически прикрепляется к правой стороне основного окна.
 --   + Исправлено: Нажатие 'L' больше не линкует мгновенно последний затронутый параметр. Теперь скрипт ждет следующего касания.
 --   + Добавлено: Клик средней кнопкой мыши по кнопке Link или Pad устанавливает его как цель для авто-линковки.
@@ -50,7 +58,7 @@ console = false -- DEBUG ENABLED
 function msg(value) if console then r.ShowConsoleMsg(tostring(value) .. "\n") end end
 
 title = 'VST Macro Linker'
-VERSION = '3.92'
+VERSION = '3.97'
 author = 'Taras Umanskiy'
 about = title .. ' ' .. VERSION .. ' | by ' .. author
 ListDir = {}
@@ -69,6 +77,7 @@ reaper.ImGui_Attach(ctx, font)
 local auto_link_mode = false
 local target_auto_macro_idx = nil -- nil means "next empty"
 local last_touched_fx_hash = ""
+local last_touched_fx_value = -1
 -- Colors for 16 macros (RGBA)
 local macro_colors = {
     -- Set 1 (Original)
@@ -311,10 +320,10 @@ function SaveLinkedParams(filepath)
         local fn = p.fx_name:gsub("|", "")
         local pn = p.param_name:gsub("|", "")
 
-        f:write(string.format("%s|%d|%d|%d|%.4f|%.4f|%s|%s|%s|%s|%.4f\n",
+        f:write(string.format("%s|%d|%d|%d|%.4f|%.4f|%s|%s|%s|%s|%.4f|%.4f\n",
             p.track_guid, p.fx_id, p.param_id, p.macro_idx,
             p.min_val, p.max_val, tostring(p.inverted),
-            tn, fn, pn, p.offset or 0.5))
+            tn, fn, pn, p.offset or 0.5, p.curve_tension or 0.0))
     end
 
         f:write("[MacroNames]\n")
@@ -360,7 +369,8 @@ function LoadLinkedParams(filepath)
                         track_name = parts[8],
                         fx_name = parts[9],
                         param_name = parts[10],
-                        offset = tonumber(parts[11]) or 0.5
+                        offset = tonumber(parts[11]) or 0.5,
+                        curve_tension = tonumber(parts[12]) or 0.0
                     })
                 end
             elseif section == "MacroNames" then
@@ -724,8 +734,9 @@ function AddLastTouchedParam(target_macro_idx)
     -- Update last linked macro index for Global Hotkeys
     last_linked_macro_idx = target_macro_idx
     
-    -- Update hash to prevent double-linking in auto-mode
+    -- Update hash and value to prevent double-linking in auto-mode
     last_touched_fx_hash = string.format("%s_%d_%d", track_guid, fxnumber, paramnumber)
+    last_touched_fx_value = current_val
 
     -- Logic for Pads vs Macros
     local is_pad = (target_macro_idx > MAX_MACROS)
@@ -737,6 +748,7 @@ function AddLastTouchedParam(target_macro_idx)
             p.macro_idx = target_macro_idx
             p.min_val = initial_min -- Update min (0 for pads, current for macros)
             p.offset = 0.5
+            p.curve_tension = 0.0
             BuildLinkIndex()
             return
         end
@@ -753,7 +765,8 @@ function AddLastTouchedParam(target_macro_idx)
         max_val = 1.0,
         inverted = false,
         macro_idx = target_macro_idx,
-        offset = 0.5
+        offset = 0.5,
+        curve_tension = 0.0
     })
     BuildLinkIndex()
 end
@@ -797,11 +810,14 @@ function EnableAutoLinkMode(target_idx)
         if track then
             local track_guid = r.GetTrackGUID(track)
             last_touched_fx_hash = string.format("%s_%d_%d", track_guid, fxnumber, paramnumber)
+            last_touched_fx_value = r.TrackFX_GetParamNormalized(track, fxnumber, paramnumber)
         else
             last_touched_fx_hash = ""
+            last_touched_fx_value = -1
         end
     else
         last_touched_fx_hash = ""
+        last_touched_fx_value = -1
     end
 end
 
@@ -868,6 +884,20 @@ function UpdateLinkedParams(specific_macro_idx)
             local val = macro_values[p.macro_idx]
             if p.inverted then val = 1.0 - val end
 
+            -- Apply Curve
+            if p.curve_tension and p.curve_tension ~= 0 then
+                local tension = p.curve_tension
+                if tension > 0 then
+                    -- Exponential-like (slow start)
+                    local p_val = 1 + (tension * 4)
+                    val = val ^ p_val
+                elseif tension < 0 then
+                    -- Logarithmic-like (fast start)
+                    local p_val = 1 + (math.abs(tension) * 4)
+                    val = 1 - ((1 - val) ^ p_val)
+                end
+            end
+
             -- Scale
             val = p.min_val + (p.max_val - p.min_val) * val
 
@@ -884,6 +914,108 @@ function UpdateLinkedParams(specific_macro_idx)
 end
 
 -- --- GUI Functions ---
+local function DrawKnob(ctx, label, value, min_v, max_v, size)
+    local radius = size * 0.5
+    local draw_list = r.ImGui_GetWindowDrawList(ctx)
+    local x, y = r.ImGui_GetCursorScreenPos(ctx)
+    local center_x, center_y = x + radius, y + radius
+    
+    r.ImGui_InvisibleButton(ctx, label, size, size)
+    local is_active = r.ImGui_IsItemActive(ctx)
+    local is_hovered = r.ImGui_IsItemHovered(ctx)
+    
+    local changed = false
+    local new_val = value
+    
+    if is_active then
+        local mouse_delta_x, mouse_delta_y = r.ImGui_GetMouseDragDelta(ctx, 0, 0)
+        if mouse_delta_y ~= 0 then
+            local step = (max_v - min_v) / 200 -- Sensitivity
+            new_val = value - mouse_delta_y * step
+            if new_val < min_v then new_val = min_v end
+            if new_val > max_v then new_val = max_v end
+            r.ImGui_ResetMouseDragDelta(ctx, 0)
+            changed = true
+        end
+    end
+
+    -- Double click to reset
+    if is_hovered and r.ImGui_IsMouseDoubleClicked(ctx, 0) then
+        new_val = (label:find("Curve") or label:find("Offset")) and 0.0 or 0.0
+        if label:find("Offset") then new_val = 0.5 end
+        if label:find("Max") then new_val = 1.0 end
+        changed = true
+    end
+
+    -- Colors
+    local col_bg = 0x333333FF
+    local col_active = 0x44CC44FF -- Default
+    if label:find("Min") then col_active = 0x44CCFFFF -- Light Blue (голубой)
+    elseif label:find("Max") then col_active = 0xFF8844FF -- Orange (оранжевый)
+    elseif label:find("Offset") then col_active = 0x8844FFFF -- Purple (фиолетовый)
+    elseif label:find("Curve") then col_active = 0x44CC44FF -- Green (зеленый)
+    end
+    
+    -- Draw Background Circle
+    r.ImGui_DrawList_AddCircleFilled(draw_list, center_x, center_y, radius, col_bg, 32)
+    
+    -- Draw Value Arc
+    local angle_min = -1.25 * math.pi -- 7 o'clock
+    local angle_max = 0.25 * math.pi  -- 5 o'clock
+    local t = (new_val - min_v) / (max_v - min_v)
+    local angle_current = angle_min + (angle_max - angle_min) * t
+    
+    r.ImGui_DrawList_PathArcTo(draw_list, center_x, center_y, radius - 2, angle_min, angle_current, 32)
+    r.ImGui_DrawList_PathStroke(draw_list, col_active, 0, 3.0)
+    
+    -- Draw Pointer
+    local pointer_len = radius - 4
+    local px = center_x + math.cos(angle_current) * pointer_len
+    local py = center_y + math.sin(angle_current) * pointer_len
+    r.ImGui_DrawList_AddLine(draw_list, center_x, center_y, px, py, 0xFFFFFFFF, 2.0)
+    
+    -- Tooltip
+    if is_hovered then
+        r.ImGui_SetTooltip(ctx, string.format("%s: %.2f", label:gsub("##.*", ""), new_val))
+    end
+    
+    return changed, new_val
+end
+
+local function DrawCurvePreview(ctx, tension, size)
+    local draw_list = r.ImGui_GetWindowDrawList(ctx)
+    local x, y = r.ImGui_GetCursorScreenPos(ctx)
+    
+    -- Draw background
+    r.ImGui_DrawList_AddRectFilled(draw_list, x, y, x + size, y + size, 0x222222FF)
+    r.ImGui_DrawList_AddRect(draw_list, x, y, x + size, y + size, 0x666666FF)
+    
+    -- Draw curve
+    local last_px, last_py
+    local steps = 20
+    for i = 0, steps do
+        local t = i / steps
+        local val = t
+        
+        if tension > 0 then
+            local p_val = 1 + (tension * 4)
+            val = t ^ p_val
+        elseif tension < 0 then
+            local p_val = 1 + (math.abs(tension) * 4)
+            val = 1 - ((1 - t) ^ p_val)
+        end
+        
+        local px = x + t * size
+        local py = y + size - (val * size)
+        
+        if i > 0 then
+            r.ImGui_DrawList_AddLine(draw_list, last_px, last_py, px, py, 0x00FF00FF, 2)
+        end
+        last_px, last_py = px, py
+    end
+    
+    r.ImGui_Dummy(ctx, size, size)
+end
 
 local function DrawLinkedParamsWindow(main_x, main_y, main_w)
     if show_linked_params then
@@ -986,8 +1118,7 @@ local function DrawLinkedParamsWindow(main_x, main_y, main_w)
                     end
 
                     r.ImGui_SameLine(ctx)
-                    r.ImGui_SetNextItemWidth(ctx, 60)
-                    local min_changed, min_v = r.ImGui_SliderDouble(ctx, "Min", p.min_val, 0.0, 1.0, "%.2f")
+                    local min_changed, min_v = DrawKnob(ctx, "Min", p.min_val, 0.0, 1.0, 20)
                     if min_changed then
                         p.min_val = min_v
                         if p.min_val > p.max_val then p.min_val = p.max_val end
@@ -995,8 +1126,7 @@ local function DrawLinkedParamsWindow(main_x, main_y, main_w)
                     end
 
                     r.ImGui_SameLine(ctx)
-                    r.ImGui_SetNextItemWidth(ctx, 60)
-                    local max_changed, max_v = r.ImGui_SliderDouble(ctx, "Max", p.max_val, 0.0, 1.0, "%.2f")
+                    local max_changed, max_v = DrawKnob(ctx, "Max", p.max_val, 0.0, 1.0, 20)
                     if max_changed then
                         p.max_val = max_v
                         if p.max_val < p.min_val then p.max_val = p.min_val end
@@ -1006,13 +1136,26 @@ local function DrawLinkedParamsWindow(main_x, main_y, main_w)
                     -- Offset Slider (Only for Macros, not Pads)
                     if p.macro_idx <= MAX_MACROS then
                         r.ImGui_SameLine(ctx)
-                        r.ImGui_SetNextItemWidth(ctx, 60)
-                        local off_changed, off_v = r.ImGui_SliderDouble(ctx, "Offset", p.offset or 0.5, 0.0, 1.0, "%.2f")
+                        local off_changed, off_v = DrawKnob(ctx, "Offset", p.offset or 0.5, 0.0, 1.0, 20)
                         if off_changed then
                             p.offset = off_v
                             UpdateLinkedParams(p.macro_idx)
                         end
                     end
+
+                    -- Curve Tension
+                    r.ImGui_SameLine(ctx)
+                    local curv_changed, curv_v = DrawKnob(ctx, "Curve", p.curve_tension or 0.0, -1.0, 1.0, 20)
+                    if curv_changed then
+                        p.curve_tension = curv_v
+                        UpdateLinkedParams(p.macro_idx)
+                    end
+                    if r.ImGui_IsItemHovered(ctx) then
+                        r.ImGui_SetTooltip(ctx, "Curve Tension\n< 0: Logarithmic (Fast start)\n0: Linear\n> 0: Exponential (Slow start)")
+                    end
+
+                    r.ImGui_SameLine(ctx)
+                    DrawCurvePreview(ctx, p.curve_tension or 0.0, 20)
 
                     r.ImGui_Unindent(ctx)
                     r.ImGui_Separator(ctx)
@@ -1608,12 +1751,14 @@ local function loop()
           if track then
               local track_guid = r.GetTrackGUID(track)
               local current_hash = string.format("%s_%d_%d", track_guid, fxnumber, paramnumber)
+              local current_val = r.TrackFX_GetParamNormalized(track, fxnumber, paramnumber)
                
-               if current_hash ~= last_touched_fx_hash then
+              if current_hash ~= last_touched_fx_hash or math.abs(current_val - last_touched_fx_value) > 0.00001 then
                    local target_idx = target_auto_macro_idx or GetNextEmptyMacroIndex()
                    AddLastTouchedParam(target_idx)
                    last_touched_fx_hash = current_hash
-               end
+                   last_touched_fx_value = current_val
+              end
            end
       end
   end
