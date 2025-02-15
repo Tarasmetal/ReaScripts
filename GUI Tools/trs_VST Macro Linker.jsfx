@@ -1,5 +1,5 @@
 desc:VST Macro Linker
-version: 3.97
+version: 3.98
 author: Taras Umanskiy
 about: Bridge plugin for VST Macro Linker Lua script. Hosts automation envelopes for the macro sliders and pads.
 changelog:
