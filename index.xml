@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="1edee20806aee3b4d313bba7abef86657dfc0972">
+<index version="1" name="Taras Scripts" commit="781e35337746d2f3042af84f8ad5fc4c46f5da17">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
       <metadata>
@@ -276,24 +276,6 @@ v1.1
 + Context menu for adding/renaming/deleting buttons
 + Code Fixies]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/trs_TCP%20MCP%20Visible%20Tools.lua</source>
-      </version>
-    </reapack>
-    <reapack name="trs_Toggle track automation mode.lua" type="script" desc="trs_Toggle_track_automation_mode_touch_and_trim">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 \u1057?\u1082?\u1088?\u1080?\u1087?\u1090? \u1089? \u1089?\u1086?\u1074?\u1088?\u1077?\u1084?\u1077?\u1085?\u1085?\u1099?\u1084? \u1075?\u1088?\u1072?\u1092?\u1080?\u1095?\u1077?\u1089?\u1082?\u1080?\u1084? \u1080?\u1085?\u1090?\u1077?\u1088?\u1092?\u1077?\u1081?\u1089?\u1086?\u1084? \u1085?\u1072? \u1073?\u1072?\u1079?\u1077? ReaImGui \u1076?\u1083?\u1103? \u1091?\u1087?\u1088?\u1072?\u1074?\u1083?\u1077?\u1085?\u1080?\u1103? \u1088?\u1077?\u1078?\u1080?\u1084?\u1072?\u1084?\u1080? \u1072?\u1074?\u1090?\u1086?\u1084?\u1072?\u1090?\u1080?\u1079?\u1072?\u1094?\u1080?\u1080? \u1090?\u1088?\u1077?\u1082?\u1086?\u1074?. \u1055?\u1086?\u1076?\u1076?\u1077?\u1088?\u1078?\u1080?\u1074?\u1072?\u1077?\u1090? \u1087?\u1077?\u1088?\u1077?\u1082?\u1083?\u1102?\u1095?\u1077?\u1085?\u1080?\u1077? \u1074?\u1089?\u1077?\u1093? \u1088?\u1077?\u1078?\u1080?\u1084?\u1086?\u1074?: Trim/Read, Read, Touch, Write, Latch, Latch Preview.\par}
-}
-]]></description>
-        <link rel="website">http://vk.com/tarasmetal</link>
-        <link rel="donation">https://vk.com/Tarasmetal</link>
-      </metadata>
-      <version name="1.3" author="Taras Umanskiy" time="2026-02-11T14:46:26Z">
-        <changelog><![CDATA[+ Исправлена ошибка вылета (ImGui_GetWindowContentRegionMax deprecated)
-+ Code optimizations]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/trs_Toggle%20track%20automation%20mode.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Track automation mode toggle.lua" type="script" desc="trs_Track automation mode toggle">
