@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="195902a4d740a8f267f029a9844c29e99c95efb5">
+<index version="1" name="Taras Scripts" commit="25591748d67ecef2cd8f32556338bd81316a5de5">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID name Fixer.lua" type="script" desc="Action List and toolbars Command ID name Fixer">
       <metadata>
@@ -185,6 +185,28 @@ v1.1
 + v2.2: Оптимизирован поиск: добавлено кеширование результатов и дебаунсинг (задержка)
 + v2.3: Исправлено добавление кастомных путей с завершающим слэшем]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/trs_Script%20Launcher.lua</source>
+      </version>
+      <version name="2.7" author="Taras Umanskiy" time="2026-03-08T13:36:04Z">
+        <changelog><![CDATA[+ Первый релиз
++ Полнофункциональный файловый менеджер
++ v1.1: Папки тоже можно добавлять в избранное
++ v1.2: Добавлена возможность добавления кастомных путей в избранное
++ v1.3: Исправлена проверка путей папок (регистронезависимая)
++ v1.4: Папки в избранном теперь отображаются белым цветом
++ v1.5: Настройки теперь сохраняются в .ini файл рядом со скриптом
++ v1.6: Скрипт теперь запоминает и открывает последнюю посещенную папку
++ v1.7: Добавлено контекстное меню для дерева папок (добавление в избранное)
++ v1.8: Скрипты теперь запускаются без добавления в Action List (без следов)
++ v1.9: Добавлена колонка Path в раздел Favorites
++ v2.0: Добавра возможность менять порядок элементов в избранном (Drag & Drop)
++ v2.1: Добавлен чекбокс "Recursive Search" для поиска файлов во всех подпапках
++ v2.2: Оптимизирован поиск: добавлено кеширование результатов и дебаунсинг (задержка)
++ v2.3: Исправлено добавление кастомных путей с завершающим слэшем
++ v2.4: Добавлена колонка Path в раздел History
++ v2.5: Исправлено отображение размера и описания в поиске, добавлена колонка Path в браузер
++ v2.6: Добавлена возможность изменения размера главного окна, адаптивная верстка
++ v2.7: Папки, добавленные в избранное, теперь отображаются белым цветом везде]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/25591748d67ecef2cd8f32556338bd81316a5de5/GUI%20Tools/trs_Script%20Launcher.lua</source>
       </version>
     </reapack>
     <reapack name="trs_TCP MCP Visible Tools.lua" type="script" desc="Track Visible Tools">
