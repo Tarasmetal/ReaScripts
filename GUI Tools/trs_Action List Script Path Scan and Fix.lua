@@ -1,21 +1,21 @@
 -- @description Action List Script Path Scan and Fix
 -- @author Taras Umanskiy
--- @version 1.8.3
+-- @version 1.9.1
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
 -- @about Мощный инструмент для пользователей REAPER, который помогает поддерживать чистоту в Action List, выявляя и устраняя "битые" ссылки на скрипты.
 -- @changelog
---   + Changed: Обновлено название и описание скрипта в метаданных
---   + Changed: Имя файла со списком репозиториев теперь включает имя скрипта.
---   + Changed: Путь сохранения списка репозиториев перенесен в папку скрипта.
---   + Added: Все элементы интерфейса переведены на английский язык.
---   + Changed: Обновлена версия до 1.8.0.
---   + Added: Поддержка файла конфигурации reapack.ini и секции [remotes] (для портативных сборок).
+--   + Changed: Кнопки "Выделить все" и "Снять выделение" теперь действуют только на отфильтрованные скрипты.
+--   + Added: Фильтр для поиска скриптов в списке.
+--   + Added: Чекбоксы для выбора конкретных скриптов для удаления.
+--   + Added: Кнопки "Выделить все" и "Снять выделение".
+--   + Changed: Обновлена логика удаления (удаляются только выбранные элементы).
+--   + Changed: Обновлена версия до 1.9.1.
 
 local ctx = reaper.ImGui_CreateContext('ActionListScriptPathScanAndFix')
 local WINDOW_FLAGS = reaper.ImGui_WindowFlags_MenuBar()
-local VERSION = "1.8.3"
+local VERSION = "1.9.1"
 local SCRIPT_NAME = "Action List Script Path Scan and Fix" .. " " .. VERSION
 
 -- Настройки шрифтов и цветов
@@ -27,6 +27,8 @@ local COLOR_YELLOW = 0xFFFF00FF
 
 -- Переменные для хранения данных
 local broken_scripts = {}
+local filtered_scripts = {}
+local filter_text = ""
 local is_scanning = false
 local scan_complete = false
 local error_msg = ""
@@ -254,11 +256,26 @@ local function SetActionListFilter(text)
     end
 end
 
+-- Функция фильтрации списка
+local function UpdateFilteredScripts()
+    filtered_scripts = {}
+    local lower_filter = filter_text:lower()
+    for _, script in ipairs(broken_scripts) do
+        if filter_text == "" or 
+           script.name:lower():find(lower_filter, 1, true) or 
+           script.path:lower():find(lower_filter, 1, true) or
+           script.id:lower():find(lower_filter, 1, true) then
+            table.insert(filtered_scripts, script)
+        end
+    end
+end
+
 -- Основная функция сканирования
 local function ScanForBrokenScripts()
     is_scanning = true
     scan_complete = false
     broken_scripts = {}
+    filtered_scripts = {}
     error_msg = ""
     fix_msg = ""
 
@@ -349,7 +366,8 @@ local function ScanForBrokenScripts()
                         raw_id = cmd_id, -- Сохраняем "сырой" ID для последующего удаления
                         name = name,
                         path = path,
-                        full_path = full_path
+                        full_path = full_path,
+                        selected = true -- По умолчанию выбрано для удаления
                     })
                 end
             end
@@ -357,13 +375,27 @@ local function ScanForBrokenScripts()
     end
 
     file:close()
+    UpdateFilteredScripts()
     is_scanning = false
     scan_complete = true
 end
 
 -- Функция исправления ошибок (удаление битых ссылок)
 local function FixBrokenScripts()
-    if #broken_scripts == 0 then return end
+    -- Подготовка списка ID для удаления (только выбранные)
+    local ids_to_delete = {}
+    local count_to_delete = 0
+    for _, script in ipairs(broken_scripts) do
+        if script.selected then
+            ids_to_delete[script.raw_id] = true
+            count_to_delete = count_to_delete + 1
+        end
+    end
+
+    if count_to_delete == 0 then 
+        error_msg = "No scripts selected for removal."
+        return 
+    end
 
     local resource_path = reaper.GetResourcePath()
     local kb_ini_path = resource_path .. "/reaper-kb.ini"
@@ -377,13 +409,7 @@ local function FixBrokenScripts()
         return
     end
 
-    -- 2. Подготовка списка ID для удаления
-    local ids_to_delete = {}
-    for _, script in ipairs(broken_scripts) do
-        ids_to_delete[script.raw_id] = true
-    end
-
-    -- 3. Чтение и фильтрация
+    -- 2. Чтение и фильтрация
     local lines = {}
     local file = io.open(kb_ini_path, "r")
     if not file then
@@ -426,7 +452,7 @@ local function FixBrokenScripts()
     end
     file:close()
 
-    -- 4. Запись отфильтрованного содержимого
+    -- 3. Запись отфильтрованного содержимого
     file = io.open(kb_ini_path, "w")
     if not file then
         error_msg = "Error writing to reaper-kb.ini."
@@ -438,10 +464,10 @@ local function FixBrokenScripts()
     end
     file:close()
 
-    -- 5. Завершение
+    -- 4. Завершение
     fix_msg = string.format("Deleted %d records.\nBackup created: %s", deleted_count, backup_path:match("([^/]+)$"))
 
-    -- Перезагрузка списка (должен стать пустым)
+    -- Перезагрузка списка (должен стать пустым или уменьшиться)
     reaper.defer(ScanForBrokenScripts)
 end
 
@@ -476,12 +502,20 @@ local function loop()
 
         -- Кнопка "Fix Errors"
         if scan_complete and #broken_scripts > 0 then
+            -- Подсчет выбранных
+            local selected_count = 0
+            for _, s in ipairs(broken_scripts) do if s.selected then selected_count = selected_count + 1 end end
+
             reaper.ImGui_SameLine(ctx)
             reaper.ImGui_PushStyleColor(ctx, reaper.ImGui_Col_Button(), COLOR_GREEN_DARK)
-            if reaper.ImGui_Button(ctx, "Fix Errors (" .. #broken_scripts .. ")") then
-                local retval = reaper.MB("Are you sure you want to remove these scripts from Action List?\nA backup of reaper-kb.ini will be created.", "Confirmation", 4)
-                if retval == 6 then -- 6 = Yes
-                    FixBrokenScripts()
+            if reaper.ImGui_Button(ctx, "Fix Selected (" .. selected_count .. ")") then
+                if selected_count > 0 then
+                    local retval = reaper.MB("Are you sure you want to remove " .. selected_count .. " scripts from Action List?\nA backup of reaper-kb.ini will be created.", "Confirmation", 4)
+                    if retval == 6 then -- 6 = Yes
+                        FixBrokenScripts()
+                    end
+                else
+                    reaper.MB("Please select scripts to remove.", "No scripts selected", 0)
                 end
             end
             reaper.ImGui_PopStyleColor(ctx)
@@ -490,6 +524,26 @@ local function loop()
             if reaper.ImGui_Button(ctx, "Show Repository") then
                 unique_repos = GetRepositoriesFromBrokenScripts()
                 show_repo_window = true
+            end
+
+            reaper.ImGui_Spacing(ctx)
+            
+            -- Фильтр и кнопки выделения
+            reaper.ImGui_SetNextItemWidth(ctx, 200)
+            local changed, new_filter = reaper.ImGui_InputText(ctx, 'Filter', filter_text)
+            if changed then
+                filter_text = new_filter
+                UpdateFilteredScripts()
+            end
+
+            reaper.ImGui_SameLine(ctx)
+            if reaper.ImGui_Button(ctx, "Select All") then
+                for _, s in ipairs(filtered_scripts) do s.selected = true end
+            end
+            
+            reaper.ImGui_SameLine(ctx)
+            if reaper.ImGui_Button(ctx, "Deselect All") then
+                for _, s in ipairs(filtered_scripts) do s.selected = false end
             end
         end
 
@@ -504,21 +558,29 @@ local function loop()
         reaper.ImGui_Separator(ctx)
 
         if scan_complete then
-            reaper.ImGui_Text(ctx, "Broken scripts found: " .. #broken_scripts)
+            reaper.ImGui_Text(ctx, "Broken scripts found: " .. #broken_scripts .. " (Filtered: " .. #filtered_scripts .. ")")
 
             if #broken_scripts > 0 then
                 -- Таблица результатов
-                if reaper.ImGui_BeginTable(ctx, 'BrokenScriptsTable', 3, reaper.ImGui_TableFlags_Borders() | reaper.ImGui_TableFlags_RowBg() | reaper.ImGui_TableFlags_Resizable()) then
+                if reaper.ImGui_BeginTable(ctx, 'BrokenScriptsTable', 4, reaper.ImGui_TableFlags_Borders() | reaper.ImGui_TableFlags_RowBg() | reaper.ImGui_TableFlags_Resizable()) then
 
-                    reaper.ImGui_TableSetupColumn(ctx, 'Command ID')
+                    reaper.ImGui_TableSetupColumn(ctx, '', reaper.ImGui_TableColumnFlags_WidthFixed(), 30)
+                    reaper.ImGui_TableSetupColumn(ctx, 'Command ID', reaper.ImGui_TableColumnFlags_WidthFixed(), 120)
                     reaper.ImGui_TableSetupColumn(ctx, 'Script Name')
                     reaper.ImGui_TableSetupColumn(ctx, 'File Path')
                     reaper.ImGui_TableHeadersRow(ctx)
 
-                    for i, script in ipairs(broken_scripts) do
+                    for i, script in ipairs(filtered_scripts) do
                         reaper.ImGui_TableNextRow(ctx)
 
+                        -- Чекбокс
                         reaper.ImGui_TableSetColumnIndex(ctx, 0)
+                        local cb_changed, cb_val = reaper.ImGui_Checkbox(ctx, "##cb" .. i, script.selected)
+                        if cb_changed then
+                            script.selected = cb_val
+                        end
+
+                        reaper.ImGui_TableSetColumnIndex(ctx, 1)
                         reaper.ImGui_Text(ctx, script.id)
 
                         if reaper.ImGui_IsItemHovered(ctx) then
@@ -538,10 +600,10 @@ local function loop()
                             reaper.ShowConsoleMsg("ID: " .. script.id .. "\n")
                         end
 
-                        reaper.ImGui_TableSetColumnIndex(ctx, 1)
+                        reaper.ImGui_TableSetColumnIndex(ctx, 2)
                         reaper.ImGui_Text(ctx, script.name)
 
-                        reaper.ImGui_TableSetColumnIndex(ctx, 2)
+                        reaper.ImGui_TableSetColumnIndex(ctx, 3)
                         reaper.ImGui_TextColored(ctx, COLOR_RED, script.path)
                         if reaper.ImGui_IsItemHovered(ctx) then
                             reaper.ImGui_SetTooltip(ctx, "Full path (expected): " .. script.full_path)
