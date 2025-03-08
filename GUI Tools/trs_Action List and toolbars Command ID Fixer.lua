@@ -1,11 +1,12 @@
 -- @description Action List and toolbars Command ID Fixer
 -- @author Taras Umanskiy
--- @version 1.8
+-- @version 1.9
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
--- @about Конвертирует случайные RS ID в KeyMap и меню файлах в читаемые имена на основе описания скрипта.
+-- @about Converts random RS IDs in KeyMap and menu files to readable names based on script description.
 -- @changelog
+--   + v1.9: Интерфейс переведен на английский язык
 --   + v1.8: Обновлено название и описание скрипта в метаданных
 --   + v1.7: Автоматический поиск reaper-kb.ini в папке ресурсов REAPER
 --   + v1.6: Внедрен "Безопасный режим" с предпросмотром изменений (Safe Mode with Preview)
@@ -21,7 +22,7 @@ console = true
 function msg(value) if console then r.ShowConsoleMsg(tostring(value) .. "\n") end end
 
 title = 'Action List and toolbars Command ID name Fixer'
-VERSION = '1.8'
+VERSION = '1.9'
 author = 'Taras Umanskiy'
 about = title .. ' ' .. VERSION .. ' | by ' .. author
 ListDir = {}
@@ -37,7 +38,7 @@ reaper.ImGui_Attach(ctx, font)
 
 -- State variables
 local selected_file = ""
-local status_msg = "Ожидание выбора файла..."
+local status_msg = "Waiting for file selection..."
 local process_log = ""
 local filter_text = ""
 local last_id_map = nil -- Stores ID mappings from the last ProcessFile run
@@ -50,7 +51,7 @@ local f_check = io.open(auto_kb_path, "r")
 if f_check then
     f_check:close()
     selected_file = auto_kb_path
-    status_msg = "Файл автоматически найден: " .. auto_kb_path
+    status_msg = "File automatically found: " .. auto_kb_path
 end
 
 -- Analysis State
@@ -93,7 +94,7 @@ end
 local function AnalyzeFile(filepath)
   local f = io.open(filepath, "r")
   if not f then
-    status_msg = "Ошибка: Не удалось открыть файл."
+    status_msg = "Error: Could not open file."
     return
   end
 
@@ -150,7 +151,7 @@ local function AnalyzeFile(filepath)
   end
 
   is_analyzed = true
-  status_msg = "Анализ завершен. Найдено кандидатов: " .. #analysis_results
+  status_msg = "Analysis complete. Candidates found: " .. #analysis_results
 end
 
 -- STEP 2: Apply Changes
@@ -205,20 +206,20 @@ local function ApplyChanges()
   if out_f then
     out_f:write(table.concat(file_lines, "\n"))
     out_f:close()
-    status_msg = "Готово!\nSCR переименовано: " .. count_scr .. "\nKEY обновлено: " .. count_key .. "\nБекап: " .. backup_path
+    status_msg = "Done!\nSCR renamed: " .. count_scr .. "\nKEY updated: " .. count_key .. "\nBackup: " .. backup_path
 
     -- Reset analysis
     is_analyzed = false
     analysis_results = {}
     file_lines = {}
   else
-    status_msg = "Ошибка при записи файла."
+    status_msg = "Error writing file."
   end
 end
 
 local function ProcessMenuFile()
   if not last_id_map or next(last_id_map) == nil then
-    status_msg = "Ошибка: Нет данных маппинга. Сначала примените изменения к файлу KeyMap."
+    status_msg = "Error: No mapping data. Apply changes to KeyMap file first."
     return
   end
 
@@ -228,14 +229,14 @@ local function ProcessMenuFile()
 
   local f = io.open(menu_path, "r")
   if not f then
-     local retval, filename = r.GetUserFileNameForRead("", "Выберите reaper-menu.ini", "reaper-menu.ini")
+     local retval, filename = r.GetUserFileNameForRead("", "Select reaper-menu.ini", "reaper-menu.ini")
      if retval then
         menu_path = filename
         f = io.open(menu_path, "r")
      end
 
      if not f then
-        status_msg = "Ошибка: reaper-menu.ini не найден."
+        status_msg = "Error: reaper-menu.ini not found."
         return
      end
   end
@@ -276,18 +277,18 @@ local function ProcessMenuFile()
   if out_f then
     out_f:write(table.concat(lines, "\n"))
     out_f:close()
-    status_msg = status_msg .. "\nМеню обновлено: " .. count_menu .. " замен."
+    status_msg = status_msg .. "\nMenu updated: " .. count_menu .. " replacements."
   else
-    status_msg = status_msg .. "\nОшибка записи меню."
+    status_msg = status_msg .. "\nError writing menu."
   end
 end
 
 local function myWindow()
-  if r.ImGui_Button(ctx, 'Выбрать файл (reaper-kb.ini)') then
-    local retval, filename = r.GetUserFileNameForRead("", "Выберите файл", "")
+  if r.ImGui_Button(ctx, 'Select file (reaper-kb.ini)') then
+    local retval, filename = r.GetUserFileNameForRead("", "Select file", "")
     if retval then
       selected_file = filename
-      status_msg = "Файл выбран: " .. filename
+      status_msg = "File selected: " .. filename
       last_id_map = nil
       is_analyzed = false
       analysis_results = {}
@@ -300,23 +301,23 @@ local function myWindow()
 
     r.ImGui_Separator(ctx)
 
-    local changed, new_text = r.ImGui_InputText(ctx, 'Фильтр (по названию)', filter_text)
+    local changed, new_text = r.ImGui_InputText(ctx, 'Filter (by name)', filter_text)
     if changed then
         filter_text = new_text
         -- Reset analysis on filter change
         if is_analyzed then
             is_analyzed = false
             analysis_results = {}
-            status_msg = "Фильтр изменен. Нажмите 'Анализировать'."
+            status_msg = "Filter changed. Click 'Analyze'."
         end
     end
 
-    if r.ImGui_Button(ctx, 'Анализировать') then
+    if r.ImGui_Button(ctx, 'Analyze') then
       AnalyzeFile(selected_file)
     end
 
     r.ImGui_SameLine(ctx)
-    if r.ImGui_Button(ctx, 'Обработать меню') then
+    if r.ImGui_Button(ctx, 'Process Menu') then
       ProcessMenuFile()
     end
   end
@@ -324,23 +325,23 @@ local function myWindow()
   -- Preview Table
   if is_analyzed and #analysis_results > 0 then
       r.ImGui_Separator(ctx)
-      r.ImGui_Text(ctx, "Предпросмотр (" .. #analysis_results .. " изменений):")
+      r.ImGui_Text(ctx, "Preview (" .. #analysis_results .. " changes):")
 
       -- Helper buttons
-      if r.ImGui_Button(ctx, "Выбрать все") then
+      if r.ImGui_Button(ctx, "Select All") then
           for _, item in ipairs(analysis_results) do item.enabled = true end
       end
       r.ImGui_SameLine(ctx)
-      if r.ImGui_Button(ctx, "Снять все") then
+      if r.ImGui_Button(ctx, "Deselect All") then
           for _, item in ipairs(analysis_results) do item.enabled = false end
       end
 
       local table_flags = r.ImGui_TableFlags_Borders() | r.ImGui_TableFlags_RowBg() | r.ImGui_TableFlags_ScrollY() | r.ImGui_TableFlags_Resizable()
       if r.ImGui_BeginTable(ctx, 'preview_table', 4, table_flags, 0, 300) then
           r.ImGui_TableSetupColumn(ctx, "Chk", r.ImGui_TableColumnFlags_WidthFixed(), 30)
-          r.ImGui_TableSetupColumn(ctx, "Описание", r.ImGui_TableColumnFlags_WidthStretch())
-          r.ImGui_TableSetupColumn(ctx, "Старый ID", r.ImGui_TableColumnFlags_WidthFixed(), 150)
-          r.ImGui_TableSetupColumn(ctx, "Новый ID", r.ImGui_TableColumnFlags_WidthFixed(), 150)
+          r.ImGui_TableSetupColumn(ctx, "Description", r.ImGui_TableColumnFlags_WidthStretch())
+          r.ImGui_TableSetupColumn(ctx, "Old ID", r.ImGui_TableColumnFlags_WidthFixed(), 150)
+          r.ImGui_TableSetupColumn(ctx, "New ID", r.ImGui_TableColumnFlags_WidthFixed(), 150)
           r.ImGui_TableHeadersRow(ctx)
 
           for i, item in ipairs(analysis_results) do
@@ -362,12 +363,12 @@ local function myWindow()
           r.ImGui_EndTable(ctx)
       end
 
-      if r.ImGui_Button(ctx, "ПРИМЕНИТЬ ИЗМЕНЕНИЯ") then
+      if r.ImGui_Button(ctx, "APPLY CHANGES") then
           ApplyChanges()
       end
   elseif is_analyzed and #analysis_results == 0 then
       r.ImGui_Separator(ctx)
-      r.ImGui_Text(ctx, "Изменений не найдено (проверьте фильтр).")
+      r.ImGui_Text(ctx, "No changes found (check filter).")
   end
 
   r.ImGui_Separator(ctx)
