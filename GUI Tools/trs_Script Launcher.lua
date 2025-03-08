@@ -1,6 +1,6 @@
 -- @description Script Launcher - File manager for launching REAPER scripts
 -- @author Taras Umanskiy
--- @version 2.3
+-- @version 2.7
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
@@ -17,16 +17,20 @@
 --   + v1.7: Добавлено контекстное меню для дерева папок (добавление в избранное)
 --   + v1.8: Скрипты теперь запускаются без добавления в Action List (без следов)
 --   + v1.9: Добавлена колонка Path в раздел Favorites
---   + v2.0: Добавлена возможность менять порядок элементов в избранном (Drag & Drop)
+--   + v2.0: Добавра возможность менять порядок элементов в избранном (Drag & Drop)
 --   + v2.1: Добавлен чекбокс "Recursive Search" для поиска файлов во всех подпапках
 --   + v2.2: Оптимизирован поиск: добавлено кеширование результатов и дебаунсинг (задержка)
 --   + v2.3: Исправлено добавление кастомных путей с завершающим слэшем
+--   + v2.4: Добавлена колонка Path в раздел History
+--   + v2.5: Исправлено отображение размера и описания в поиске, добавлена колонка Path в браузер
+--   + v2.6: Добавлена возможность изменения размера главного окна, адаптивная верстка
+--   + v2.7: Папки, добавленные в избранное, теперь отображаются белым цветом везде
 
 package.path = reaper.ImGui_GetBuiltinPath() .. '/?.lua'
 local ImGui = require 'imgui' '0.9.2'
 
 local ctx = ImGui.CreateContext('Script Launcher')
-local VERSION = "2.3"
+local VERSION = "2.7"
 local SCRIPT_NAME = "Script Launcher "
 
 local SCRIPT_EXTENSIONS = {
@@ -171,14 +175,14 @@ local state = {
     run_history = {},
     history_index = 0,
     script_info = {},
-    window_flags = ImGui.WindowFlags_MenuBar + ImGui.WindowFlags_AlwaysAutoResize + ImGui.WindowFlags_NoScrollbar,
+    window_flags = ImGui.WindowFlags_MenuBar + ImGui.WindowFlags_NoScrollbar,
+    window_w = 900,
+    window_h = 600,
     sort_by = "name",
     sort_ascending = true,
     ide_path = "",
     show_settings = false,
     tree_width = 200,
-    list_height = 400,
-    list_width = 600,
     show_add_custom_path_modal = false,
     custom_path_input = "",
     recursive_search = false,
@@ -200,6 +204,9 @@ local function SaveConfig()
         file:write("ide_path=" .. state.ide_path .. "\n")
         file:write("last_path=" .. state.current_path .. "\n")
         file:write("recursive_search=" .. (state.recursive_search and "1" or "0") .. "\n")
+        file:write("window_w=" .. tostring(state.window_w) .. "\n")
+        file:write("window_h=" .. tostring(state.window_h) .. "\n")
+        file:write("tree_width=" .. tostring(state.tree_width) .. "\n")
         file:write("favorites=")
         for i, fav in ipairs(state.favorites) do
             if i > 1 then file:write("|") end
@@ -230,6 +237,12 @@ local function LoadConfig()
                     end
                 elseif key == "recursive_search" then
                     state.recursive_search = (value == "1")
+                elseif key == "window_w" then
+                    state.window_w = tonumber(value) or 900
+                elseif key == "window_h" then
+                    state.window_h = tonumber(value) or 600
+                elseif key == "tree_width" then
+                    state.tree_width = tonumber(value) or 200
                 elseif key == "favorites" and value ~= "" then
                     state.favorites = {}
                     for fav in value:gmatch("[^|]+") do
@@ -402,8 +415,8 @@ local function GetRecursiveScripts(path, search_text, results)
                 table.insert(results, {
                     path = filepath,
                     name = file,
-                    is_dir = false
-                    -- Metadata (info) will be loaded lazily
+                    is_dir = false,
+                    info = GetFileInfo(filepath)
                 })
             end
         end
@@ -585,13 +598,20 @@ local function DrawSearchBar()
     end
 end
 
-local function DrawFolderTree()
-    if ImGui.BeginChild(ctx, "FolderTree", state.tree_width, state.list_height, ImGui.ChildFlags_Border + ImGui.ChildFlags_ResizeX) then
-        ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.folder)
-        if ImGui.TreeNodeEx(ctx, "Scripts", "Scripts", ImGui.TreeNodeFlags_DefaultOpen) then
+local function DrawFolderTree(list_height)
+    if ImGui.BeginChild(ctx, "FolderTree", state.tree_width, list_height, ImGui.ChildFlags_Border + ImGui.ChildFlags_ResizeX) then
+        state.tree_width, _ = ImGui.GetWindowSize(ctx)
+        
+        local root_path = GetScriptsPath()
+        local root_is_fav = IsFavorite(root_path)
+        
+        ImGui.PushStyleColor(ctx, ImGui.Col_Text, root_is_fav and 0xFFFFFFFF or colors.folder)
+        local root_open = ImGui.TreeNodeEx(ctx, "Scripts", "Scripts", ImGui.TreeNodeFlags_DefaultOpen)
+        ImGui.PopStyleColor(ctx)
+        
+        if root_open then
             if ImGui.BeginPopupContextItem(ctx) then
-                local root_path = GetScriptsPath()
-                if ImGui.MenuItem(ctx, IsFavorite(root_path) and "Remove from Favorites" or "Add to Favorites") then
+                if ImGui.MenuItem(ctx, root_is_fav and "Remove from Favorites" or "Add to Favorites") then
                     ToggleFavorite(root_path)
                 end
                 ImGui.EndPopup(ctx)
@@ -608,10 +628,14 @@ local function DrawFolderTree()
                         if folder_path == state.current_path then
                             flags = flags + ImGui.TreeNodeFlags_Selected
                         end
+                        
+                        local is_fav = IsFavorite(folder_path)
+                        ImGui.PushStyleColor(ctx, ImGui.Col_Text, is_fav and 0xFFFFFFFF or colors.folder)
                         local is_open = ImGui.TreeNodeEx(ctx, folder_path, folder, flags)
+                        ImGui.PopStyleColor(ctx)
                         
                         if ImGui.BeginPopupContextItem(ctx) then
-                            if ImGui.MenuItem(ctx, IsFavorite(folder_path) and "Remove from Favorites" or "Add to Favorites") then
+                            if ImGui.MenuItem(ctx, is_fav and "Remove from Favorites" or "Add to Favorites") then
                                 ToggleFavorite(folder_path)
                             end
                             ImGui.EndPopup(ctx)
@@ -631,14 +655,13 @@ local function DrawFolderTree()
             DrawTreeNode(GetScriptsPath(), 0)
             ImGui.TreePop(ctx)
         end
-        ImGui.PopStyleColor(ctx)
         ImGui.EndChild(ctx)
     end
 end
 
-local function DrawFileList()
+local function DrawFileList(list_height)
     ImGui.SameLine(ctx)
-    if ImGui.BeginChild(ctx, "FileList", state.list_width, state.list_height, ImGui.ChildFlags_Border) then
+    if ImGui.BeginChild(ctx, "FileList", 0, list_height, ImGui.ChildFlags_Border) then
         
         -- Подготовка списка видимых элементов
         local visible_items = {}
@@ -851,44 +874,64 @@ local function DrawFileList()
         elseif mode == "history" then
             ImGui.TextColored(ctx, colors.favorite, ICONS.history .. " Run History")
             ImGui.Separator(ctx)
-            for i, item in ipairs(visible_items) do
-                local icon = GetIconForFile(item.name)
-                local color = GetColorForFile(item.name)
-                
-                ImGui.PushStyleColor(ctx, ImGui.Col_Text, color)
-                local is_selected = (i == state.selected_index)
-                if ImGui.Selectable(ctx, icon .. " " .. item.name .. "##hist" .. i, is_selected, ImGui.SelectableFlags_AllowDoubleClick) then
-                    state.selected_index = i
-                    state.selected_file = item.path
-                    state.script_info = GetFileInfo(item.path)
+            
+            if ImGui.BeginTable(ctx, "HistoryTable", 2, ImGui.TableFlags_Resizable + ImGui.TableFlags_RowBg + ImGui.TableFlags_ScrollY) then
+                ImGui.TableSetupColumn(ctx, "Name", ImGui.TableColumnFlags_WidthStretch)
+                ImGui.TableSetupColumn(ctx, "Path", ImGui.TableColumnFlags_WidthStretch)
+                ImGui.TableHeadersRow(ctx)
+
+                for i, item in ipairs(visible_items) do
+                    ImGui.TableNextRow(ctx)
+                    ImGui.TableNextColumn(ctx)
+
+                    local icon = GetIconForFile(item.name)
+                    local color = GetColorForFile(item.name)
                     
-                    if ImGui.IsMouseDoubleClicked(ctx, 0) then
-                        RunScript(item.path)
+                    ImGui.PushStyleColor(ctx, ImGui.Col_Text, color)
+                    local is_selected = (i == state.selected_index)
+                    
+                    local flags = ImGui.SelectableFlags_AllowDoubleClick + ImGui.SelectableFlags_SpanAllColumns
+                    
+                    if ImGui.Selectable(ctx, icon .. " " .. item.name .. "##hist" .. i, is_selected, flags) then
+                        state.selected_index = i
+                        state.selected_file = item.path
+                        state.script_info = GetFileInfo(item.path)
+                        
+                        if ImGui.IsMouseDoubleClicked(ctx, 0) then
+                            RunScript(item.path)
+                        end
                     end
-                end
-                ImGui.PopStyleColor(ctx)
+                    ImGui.PopStyleColor(ctx)
 
-                if is_selected and (ImGui.IsKeyPressed(ctx, ImGui.Key_UpArrow) or ImGui.IsKeyPressed(ctx, ImGui.Key_DownArrow)) then
-                    ImGui.SetScrollHereY(ctx)
-                end
-
-                if ImGui.BeginPopupContextItem(ctx) then
-                    if ImGui.MenuItem(ctx, ICONS.run .. " Run") then RunScript(item.path) end
-                    if ImGui.MenuItem(ctx, ICONS.edit .. " Edit") then EditScript(item.path) end
-                    ImGui.Separator(ctx)
-                    local is_fav = IsFavorite(item.path)
-                    if ImGui.MenuItem(ctx, is_fav and "Remove from Favorites" or "Add to Favorites") then
-                        ToggleFavorite(item.path)
+                    if is_selected and (ImGui.IsKeyPressed(ctx, ImGui.Key_UpArrow) or ImGui.IsKeyPressed(ctx, ImGui.Key_DownArrow)) then
+                        ImGui.SetScrollHereY(ctx)
                     end
-                    ImGui.EndPopup(ctx)
+
+                    if ImGui.BeginPopupContextItem(ctx) then
+                        if ImGui.MenuItem(ctx, ICONS.run .. " Run") then RunScript(item.path) end
+                        if ImGui.MenuItem(ctx, ICONS.edit .. " Edit") then EditScript(item.path) end
+                        ImGui.Separator(ctx)
+                        local is_fav = IsFavorite(item.path)
+                        if ImGui.MenuItem(ctx, is_fav and "Remove from Favorites" or "Add to Favorites") then
+                            ToggleFavorite(item.path)
+                        end
+                        ImGui.EndPopup(ctx)
+                    end
+
+                    ImGui.TableNextColumn(ctx)
+                    ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.size)
+                    ImGui.Text(ctx, item.path)
+                    ImGui.PopStyleColor(ctx)
                 end
+                ImGui.EndTable(ctx)
             end
             
         else -- browser
-            if ImGui.BeginTable(ctx, "FilesTable", 4, ImGui.TableFlags_Resizable + ImGui.TableFlags_RowBg + ImGui.TableFlags_ScrollY) then
+            if ImGui.BeginTable(ctx, "FilesTable", 5, ImGui.TableFlags_Resizable + ImGui.TableFlags_RowBg + ImGui.TableFlags_ScrollY) then
                 ImGui.TableSetupColumn(ctx, "Name", ImGui.TableColumnFlags_WidthStretch)
                 ImGui.TableSetupColumn(ctx, "Size", ImGui.TableColumnFlags_WidthFixed, 80)
                 ImGui.TableSetupColumn(ctx, "Description", ImGui.TableColumnFlags_WidthStretch)
+                ImGui.TableSetupColumn(ctx, "Path", ImGui.TableColumnFlags_WidthStretch)
                 ImGui.TableSetupColumn(ctx, "", ImGui.TableColumnFlags_WidthFixed, 30)
                 ImGui.TableHeadersRow(ctx)
                 
@@ -896,17 +939,17 @@ local function DrawFileList()
                     ImGui.TableNextRow(ctx)
                     ImGui.TableNextColumn(ctx)
                     
+                    local is_selected = (i == state.selected_index)
+                    local is_fav = IsFavorite(item.path)
+                    
                     local icon, color
                     if item.is_dir then
                         icon = ICONS.folder
-                        color = colors.folder
+                        color = is_fav and 0xFFFFFFFF or colors.folder
                     else
                         icon = GetIconForFile(item.name)
                         color = GetColorForFile(item.name)
                     end
-                    
-                    local is_selected = (i == state.selected_index)
-                    local is_fav = IsFavorite(item.path)
                     
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, color)
                     local flags = ImGui.SelectableFlags_AllowDoubleClick + ImGui.SelectableFlags_SpanAllColumns
@@ -959,6 +1002,11 @@ local function DrawFileList()
                     if item.info and item.info.description ~= "" then
                         ImGui.Text(ctx, item.info.description)
                     end
+                    ImGui.PopStyleColor(ctx)
+
+                    ImGui.TableNextColumn(ctx)
+                    ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.size)
+                    ImGui.Text(ctx, item.path)
                     ImGui.PopStyleColor(ctx)
                     
                     ImGui.TableNextColumn(ctx)
@@ -1088,9 +1136,11 @@ local function DrawAddCustomPathModal()
 end
 
 local function MainLoop()
-    ImGui.SetNextWindowSize(ctx, 900, 600, ImGui.Cond_FirstUseEver)
+    ImGui.SetNextWindowSize(ctx, state.window_w, state.window_h, ImGui.Cond_FirstUseEver)
     local visible, open = ImGui.Begin(ctx, SCRIPT_NAME .. " v" .. VERSION, true, state.window_flags)
     if visible then
+        state.window_w, state.window_h = ImGui.GetWindowSize(ctx)
+        
         if ImGui.IsWindowFocused(ctx, ImGui.FocusedFlags_RootAndChildWindows) and ImGui.IsKeyPressed(ctx, ImGui.Key_Escape) and not ImGui.IsAnyItemActive(ctx) then
             open = false
         end
@@ -1101,8 +1151,16 @@ local function MainLoop()
         ImGui.Spacing(ctx)
         DrawSearchBar()
         ImGui.Spacing(ctx)
-        DrawFolderTree()
-        DrawFileList()
+        
+        -- Calculate remaining height for tree and list
+        local _, cur_y = ImGui.GetCursorPos(ctx)
+        local win_h = ImGui.GetWindowHeight(ctx)
+        local info_panel_h = (state.selected_file and state.script_info) and 150 or 0
+        local list_h = win_h - cur_y - info_panel_h - 20
+        if list_h < 100 then list_h = 100 end
+
+        DrawFolderTree(list_h)
+        DrawFileList(list_h)
         DrawInfoPanel()
         ImGui.End(ctx)
     end
