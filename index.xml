@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="781e35337746d2f3042af84f8ad5fc4c46f5da17">
+<index version="1" name="Taras Scripts" commit="7da0ce64ce52fb12c8baea31be44a9a243393688">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
       <metadata>
@@ -68,6 +68,16 @@
 + Changed: Обновлена логика удаления (удаляются только выбранные элементы).
 + Changed: Обновлена версия до 1.9.1.]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/1edee20806aee3b4d313bba7abef86657dfc0972/GUI%20Tools/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.lua</source>
+      </version>
+      <version name="1.9.2" author="Taras Umanskiy" time="2026-03-08T20:20:21Z">
+        <changelog><![CDATA[+ Changed: Чекбоксы выбора скриптов теперь выключены по умолчанию после сканирования.
++ Changed: Кнопки "Выделить все" и "Снять выделение" теперь действуют только на отфильтрованные скрипты.
++ Added: Фильтр для поиска скриптов в списке.
++ Added: Чекбоксы для выбора конкретных скриптов для удаления.
++ Added: Кнопки "Выделить все" и "Снять выделение".
++ Changed: Обновлена логика удаления (удаляются только выбранные элементы).
++ Changed: Обновлена версия до 1.9.1.]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/7da0ce64ce52fb12c8baea31be44a9a243393688/GUI%20Tools/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Label GUI Tools.lua" type="script" desc="Label GUI Tools">
