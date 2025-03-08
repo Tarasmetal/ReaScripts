@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="f957839beac5917cac286d0a30748a7692b4bfcd">
+<index version="1" name="Taras Scripts" commit="1edee20806aee3b4d313bba7abef86657dfc0972">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
       <metadata>
@@ -59,6 +59,15 @@
 + Changed: Обновлена версия до 1.8.0.
 + Added: Поддержка файла конфигурации reapack.ini и секции [remotes] (для портативных сборок).]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.lua</source>
+      </version>
+      <version name="1.9.1" author="Taras Umanskiy" time="2026-03-08T19:53:11Z">
+        <changelog><![CDATA[+ Changed: Кнопки "Выделить все" и "Снять выделение" теперь действуют только на отфильтрованные скрипты.
++ Added: Фильтр для поиска скриптов в списке.
++ Added: Чекбоксы для выбора конкретных скриптов для удаления.
++ Added: Кнопки "Выделить все" и "Снять выделение".
++ Changed: Обновлена логика удаления (удаляются только выбранные элементы).
++ Changed: Обновлена версия до 1.9.1.]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/1edee20806aee3b4d313bba7abef86657dfc0972/GUI%20Tools/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Label GUI Tools.lua" type="script" desc="Label GUI Tools">
