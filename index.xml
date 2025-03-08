@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="ec1250fd18a5a513f2d757b451c7ae5d1e07748a">
+<index version="1" name="Taras Scripts" commit="b407a48bc0958b69facb5bde84e494a41d08edfa">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
       <metadata>
@@ -363,6 +363,27 @@ v1.1
         <source type="script" file="TrackPresets/user color.txt">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/TrackPresets/user%20color.txt</source>
         <source type="script" file="TrackPresets/user.txt">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/TrackPresets/user.txt</source>
         <source type="script" file="TrackPresets/trs_TrackGUITools_default.lua">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/TrackPresets/trs_TrackGUITools_default.lua</source>
+      </version>
+      <version name="4.1" author="Taras Umanskiy" time="2026-03-08T18:22:09Z">
+        <changelog><![CDATA[+ Добавлена возможность добавления строки (Insert на основной кнопке) и суффикса (Insert на кнопке суффикса) при наведении мыши.
++ Кнопка "Add Row" теперь большая, находится по центру и мигает красно-желтым цветом (для пустых пресетов).
++ Кнопка "Add Row" теперь отображается в главном интерфейсе, только если пресет пустой.
++ Добавлены кнопки New, Clear и Delete во всплывающее меню PRESETS для управления файлами пресетов.
++ Кнопка PRESETS теперь открывает список пресетов в виде всплывающего меню.
++ Добавлена возможность удаления ячейки или строки пресета клавишей Delete при наведении мыши.
++ Добавлена возможность клонирования имен треков с разделением на префиксы и суффиксы (ПКМ на кнопке Clone).
++ Добавлена кнопка "Clone" для добавления имен выделенных треков в список пресетов.
++ Добавлена кнопка "LR" для автоматического именования дубликатов треков (L/R).
++ Добавлена кнопка "Index" для нумерации дубликатов треков.
++ Added multi-track support for renaming, coloring, and panning.
++ Added support for HEX color codes in presets.
++ Code optimizations.]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/b407a48bc0958b69facb5bde84e494a41d08edfa/GUI%20Tools/trs_Track%20GUI%20Tools.lua</source>
+        <source type="script" file="TrackPresets/default color.txt">https://github.com/Tarasmetal/ReaScripts/raw/b407a48bc0958b69facb5bde84e494a41d08edfa/GUI%20Tools/TrackPresets/default%20color.txt</source>
+        <source type="script" file="TrackPresets/default.txt">https://github.com/Tarasmetal/ReaScripts/raw/b407a48bc0958b69facb5bde84e494a41d08edfa/GUI%20Tools/TrackPresets/default.txt</source>
+        <source type="script" file="TrackPresets/user color.txt">https://github.com/Tarasmetal/ReaScripts/raw/b407a48bc0958b69facb5bde84e494a41d08edfa/GUI%20Tools/TrackPresets/user%20color.txt</source>
+        <source type="script" file="TrackPresets/user.txt">https://github.com/Tarasmetal/ReaScripts/raw/b407a48bc0958b69facb5bde84e494a41d08edfa/GUI%20Tools/TrackPresets/user.txt</source>
+        <source type="script" file="TrackPresets/trs_TrackGUITools_default.lua">https://github.com/Tarasmetal/ReaScripts/raw/b407a48bc0958b69facb5bde84e494a41d08edfa/GUI%20Tools/TrackPresets/trs_TrackGUITools_default.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Track vol pan fx auto Save Restore.lua" type="script" desc="Track Volume Pan &amp; Automation Save/Restore (ReaImGui)">
