@@ -1,6 +1,6 @@
 -- @description TRACK RENAME GUI TOOLS
 -- @author Taras Umanskiy
--- @version 3.8
+-- @version 4.1
 -- @provides [main] .
 --  [script] TrackPresets/*.txt
 --  [script] TrackPresets/trs_TrackGUITools_default.lua
@@ -8,6 +8,9 @@
 -- @donation https://vk.com/Tarasmetal
 -- @about Скрипт предоставляет мощный графический интерфейс для управления именами треков, панорамированием и цветами в REAPER. Поддерживает систему пресетов, HEX-коды цветов и удобную навигацию.
 -- @changelog
+--   + Добавлена возможность добавления строки (Insert на основной кнопке) и суффикса (Insert на кнопке суффикса) при наведении мыши.
+--   + Кнопка "Add Row" теперь большая, находится по центру и мигает красно-желтым цветом (для пустых пресетов).
+--   + Кнопка "Add Row" теперь отображается в главном интерфейсе, только если пресет пустой.
 --   + Добавлены кнопки New, Clear и Delete во всплывающее меню PRESETS для управления файлами пресетов.
 --   + Кнопка PRESETS теперь открывает список пресетов в виде всплывающего меню.
 --   + Добавлена возможность удаления ячейки или строки пресета клавишей Delete при наведении мыши.
@@ -25,7 +28,7 @@ console = false
 function msg(value) if console then r.ShowConsoleMsg(tostring(value) .. "\n") end end
 
 title = 'TRACK RENAME GUI TOOLS'
-ver = '3.8'
+ver = '4.1'
 author = 'Taras Umanskiy'
 about = title .. ' ' .. ver .. ' | by ' .. author
 ListDir = {}
@@ -601,6 +604,32 @@ local function myWindow()
         cloneSelectedTracksToSet(true)
       end
       r.ImGui_PopStyleColor(ctx, 1)
+
+      -- Add Row button only if preset is empty or cleared
+      if #track_set == 0 then
+        local window_w = r.ImGui_GetWindowSize(ctx)
+        local btn_w, btn_h = 70, 45
+        
+        -- Center horizontally
+        r.ImGui_SetCursorPosX(ctx, (window_w - btn_w) / 2)
+        -- Add some vertical space
+        r.ImGui_SetCursorPosY(ctx, r.ImGui_GetCursorPosY(ctx) + 20)
+        
+        -- Flashing color: Red (1,0,0) to Yellow (1,1,0)
+        local time = r.time_precise()
+        local phase = (math.sin(time * 8) + 1) / 2 -- Pulsing frequency 8
+        local flash_color = r.ImGui_ColorConvertDouble4ToU32(1.0, phase, 0.0, 0.3)
+        
+        r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), flash_color)
+        r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonHovered(), flash_color)
+        r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonActive(), flash_color)
+        
+        if r.ImGui_Button(ctx, "START", btn_w, btn_h) then
+          table.insert(track_set, {text = "New", pan = false})
+          SavePreset(allPresetFiles[currentPresetIndex], track_set)
+        end
+        r.ImGui_PopStyleColor(ctx, 3)
+      end
     end
   end
 
@@ -631,6 +660,12 @@ local function myWindow()
     -- Удаление ячейки при наведении и нажатии Delete
     if r.ImGui_IsItemHovered(ctx) and r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Delete()) then
       item_to_delete = _
+    end
+
+    -- Добавление новой строки при наведении и нажатии Insert
+    if r.ImGui_IsItemHovered(ctx) and r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Insert()) then
+      table.insert(track_set, _ + 1, {text = "New", pan = false})
+      SavePreset(allPresetFiles[currentPresetIndex], track_set)
     end
 
     -- Drag and Drop
@@ -783,6 +818,17 @@ local function myWindow()
         if r.ImGui_IsItemHovered(ctx) and r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Delete()) then
           set["text_add_" .. i] = ""
           SavePreset(allPresetFiles[currentPresetIndex], track_set)
+        end
+
+        -- Добавление нового суффикса при наведении и нажатии Insert
+        if r.ImGui_IsItemHovered(ctx) and r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Insert()) then
+          for k = 1, 5 do
+            if not set["text_add_" .. k] or set["text_add_" .. k] == "" then
+              set["text_add_" .. k] = "New"
+              SavePreset(allPresetFiles[currentPresetIndex], track_set)
+              break
+            end
+          end
         end
 
         -- Drag and Drop Source
