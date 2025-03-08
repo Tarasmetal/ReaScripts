@@ -1,6 +1,6 @@
 -- @description Marker GUI Tools
 -- @author Taras Umanskiy
--- @version 3.2
+-- @version 3.3
 -- @provides
 --   [main] .
 --   [script] MarkerPresets/*.txt
@@ -13,6 +13,8 @@
 --   Основная идея и задача скрипта — максимально сократить время на разметку проекта, оставляя его красивым и понятным для всех, а главное для самого себя.
 --   Не отвлекайтесь от творческого процесса, перемещайтесь в любую точку проекта за пару секунд, чтобы записать, прослушать или внести кориктеровки в трекинг.
 -- @changelog
+--   + Добавлена возможность удаления пресета маркера клавишей Delete при наведении мыши
+--   + Добавлена возможность вставки нового пресета маркера клавишей Insert при наведении мыши (вставляет справа)
 --   + Исправлена нумерация ID первого маркера (теперь начинается с 1 вместо 0 при выключенном ID)
 --   + Автоматическое создание Default.txt с набором маркеров при первом запуске
 --   + Исправлена критическая ошибка при загрузке несуществующих пресетов (nil error)
@@ -73,7 +75,7 @@ function msg(value)
 end
 
 scrAuthor = 'Taras Umanskiy'
-version = '3.2'
+version = '3.3'
 scrName = 'MARKER TOOLS'
 scrAbout = scrName .. ' ' .. version .. ' by ' .. scrAuthor
 
@@ -154,8 +156,8 @@ if not f_check then
     local f_def = io.open(default_path, "w")
     if f_def then
         local default_markers = {
-            "Intro", "Main", "Verse", "Chorus", "Fill", "Pre", "Bridge", 
-            "BDown", "Drop", "Beat", "Silent", "Riff", "Solo", "Tap", 
+            "Intro", "Main", "Verse", "Chorus", "Fill", "Pre", "Bridge",
+            "BDown", "Drop", "Beat", "Silent", "Riff", "Solo", "Tap",
             "Outro", "Phase", "Idea", "Old", "Fx", "!1016"
         }
         for _, m_name in ipairs(default_markers) do
@@ -421,44 +423,46 @@ if not widgets.cheads then
            end
 
 
-if not widgets then
-       widgets = {
-        closable = true,
-      }
-    end
         if widgets.closable then
+            if r.ImGui_Button(ctx, buttonText .. "###marker_btn") then
+                insertMarker(buttonText, markersToShow[i].color)
+            end
+        else
+            if r.ImGui_Button(ctx, buttonText .. "###marker_btn") then
+                insertMarkerNoID(buttonText, color)
+            end
+        end
 
-          if r.ImGui_Button(ctx, buttonText .. "###marker_btn") then
-              insertMarker(buttonText, markersToShow[i].color)
-          end
-             if r.ImGui_IsItemHovered(ctx) then
-                r.ImGui_BeginTooltip(ctx)
-                r.ImGui_PushTextWrapPos(ctx, r.ImGui_GetFontSize(ctx) * 35.0)
-                r.ImGui_TextColored(ctx, hex2rgb('#C7C7C7'), 'Insert')
-                r.ImGui_SameLine(ctx)
-                r.ImGui_TextColored(ctx, hex2rgb('#FFFF00'), buttonText)
+        if r.ImGui_IsItemHovered(ctx) then
+            -- Tooltip
+            r.ImGui_BeginTooltip(ctx)
+            r.ImGui_PushTextWrapPos(ctx, r.ImGui_GetFontSize(ctx) * 35.0)
+            r.ImGui_TextColored(ctx, hex2rgb('#C7C7C7'), 'Insert')
+            r.ImGui_SameLine(ctx)
+            r.ImGui_TextColored(ctx, hex2rgb('#FFFF00'), buttonText)
+            if widgets.closable then
                 r.ImGui_SameLine(ctx)
                 r.ImGui_TextColored(ctx, hex2rgb('#88FF00'), generateId(buttonText))
-                r.ImGui_SameLine(ctx)
-                r.ImGui_TextColored(ctx, hex2rgb('#C7C7C7'), 'marker at cursor')
-                r.ImGui_PopTextWrapPos(ctx)
-                r.ImGui_EndTooltip(ctx)
-              end
-             else
-          if r.ImGui_Button(ctx, buttonText .. "###marker_btn") then
-               insertMarkerNoID(buttonText, color)
-          end
-          if r.ImGui_IsItemHovered(ctx) then
-                r.ImGui_BeginTooltip(ctx)
-                r.ImGui_PushTextWrapPos(ctx, r.ImGui_GetFontSize(ctx) * 35.0)
-                r.ImGui_TextColored(ctx, hex2rgb('#C7C7C7'), 'Insert')
-                r.ImGui_SameLine(ctx)
-                r.ImGui_TextColored(ctx, hex2rgb('#FFFF00'), buttonText)
-                r.ImGui_SameLine(ctx)
-                r.ImGui_TextColored(ctx, hex2rgb('#C7C7C7'), 'marker at cursor')
-                r.ImGui_PopTextWrapPos(ctx)
-                r.ImGui_EndTooltip(ctx)
-              end
+            end
+            r.ImGui_SameLine(ctx)
+            r.ImGui_TextColored(ctx, hex2rgb('#C7C7C7'), 'marker at cursor')
+            r.ImGui_PopTextWrapPos(ctx)
+            r.ImGui_EndTooltip(ctx)
+
+            -- Keyboard shortcuts (Insert / Delete)
+             if r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Insert()) then
+                 table.insert(markersToShow, i + 1, {name='New', color=''})
+                 save_simple_preset(presetDir, defaultPresetName, markersToShow)
+                 r.ImGui_PopStyleColor(ctx, 3)
+                 r.ImGui_PopID(ctx)
+                 break
+             elseif r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Delete()) then
+                 table.remove(markersToShow, i)
+                 save_simple_preset(presetDir, defaultPresetName, markersToShow)
+                 r.ImGui_PopStyleColor(ctx, 3)
+                 r.ImGui_PopID(ctx)
+                 break
+             end
         end
 
         -- Drag and Drop
