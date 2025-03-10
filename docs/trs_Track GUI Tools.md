@@ -5,7 +5,8 @@
 **RENAME TRACKS GUI TOOLS** — это мощный и интуитивно понятный инструмент, предназначенный для быстрой организации проекта. Скрипт предоставляет графический интерфейс для мгновенного переименования треков, управления панорамированием и цветами, а также автоматизации рутинных задач, таких как нумерация и создание L/R пар.
 
 ---
-<video controls src="../VIDEO/trs_Track GUI Tools.mp4" title="RENAME TRACKS GUI TOOLS VIDEO"></video>
+![Demo](../img/trs_TrackGUITools.gif)
+<!-- <video controls src="../VIDEO/trs_Track GUI Tools.mp4" title="RENAME TRACKS GUI TOOLS VIDEO"></video> -->
 ---
 
 ## 🚀 Основные возможности
