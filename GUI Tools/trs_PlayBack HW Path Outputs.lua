@@ -1,13 +1,15 @@
 -- @description Playback HW Path Outputs
 -- @author Taras Umanskiy
--- @version 1.1
+-- @version 1.3
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
 -- @about Automated track routing for REAPER. Disables master send and assigns hardware outputs based on track names.
 -- @changelog
---  + Интерфейс переведен на английский язык
---  + Оптимизация кода
+--  v.1.3 + Добавлена кнопка Reset Routing для очистки роутинга у треков
+--  v.1.2 + Добавлен чекбокс чувствительности к регистру
+--  v.1.2 + Интерфейс переведен на английский язык
+--  v.1.2 + Оптимизация кода
 
 local r = reaper
 console = false
@@ -15,7 +17,7 @@ console = false
 function msg(value) if console then r.ShowConsoleMsg(tostring(value) .. "\n") end end
 
 local title = 'Playback HW Path Outputs'
-local ver = '1.1'
+local ver = '1.3'
 local author = 'Taras Umanskiy'
 local about = title .. ' ' .. ver .. ' by ' .. author
 local ListDir = {}
@@ -33,6 +35,7 @@ reaper.ImGui_Attach(ctx, font)
 
 local MST = 0  -- Флаг управления мастер-выходами: 1 = включить, 0 = отключить
 local master_track_enabled = false -- Состояние чекбокса для мастер-трека
+local case_sensitive_enabled = false -- Состояние чекбокса для чувствительности к регистру
 -- Создаем массив с именами треков и выходами для обработки
 tr_settings = {
     {name = "PB", output = 1, type = "s"},
@@ -110,12 +113,39 @@ if last_preset ~= "" then
     end
 end
 
+function resetRouting()
+    reaper.Undo_BeginBlock()
+    local track_count = reaper.CountTracks(0)
+    for i = 0, track_count - 1 do
+        local track = reaper.GetTrack(0, i)
+        
+        -- Включаем отправку на мастер
+        reaper.SetMediaTrackInfo_Value(track, "B_MAINSEND", 1)
+        
+        -- Удаляем все hardware output
+        local hw_send_count = reaper.GetTrackNumSends(track, 1)
+        for j = hw_send_count - 1, 0, -1 do
+            reaper.RemoveTrackSend(track, 1, j)
+        end
+    end
+    
+    -- Сбрасываем мьют с мастер-выходов
+    local master = reaper.GetMasterTrack(0)
+    local master_hw_send_count = reaper.GetTrackNumSends(master, 1)
+    for j = 0, master_hw_send_count - 1 do
+        reaper.BR_GetSetTrackSendInfo(master, 1, j, "B_MUTE", 1, 0)
+    end
+    
+    reaper.Undo_EndBlock('• ' .. title .. ' (Reset) •', -1)
+end
+
 function processTracks()
     reaper.Undo_BeginBlock()
     -- Создаем карту настроек для быстрого поиска по имени
     local settings_map = {}
     for _, item in ipairs(tr_settings) do
-        settings_map[item.name] = {item.output, item.type}
+        local key = case_sensitive_enabled and item.name or string.lower(item.name)
+        settings_map[key] = {item.output, item.type}
     end
 
     -- Получаем количество треков в проекте
@@ -125,9 +155,11 @@ function processTracks()
     for i = 0, track_count - 1 do
         local track = reaper.GetTrack(0, i)
         local _, track_name = reaper.GetTrackName(track)
+        
+        local search_name = case_sensitive_enabled and track_name or string.lower(track_name)
 
         -- Если имя трека есть в массиве настроек
-        if settings_map[track_name] then
+        if settings_map[search_name] then
             -- Отключаем отправку на мастер
             reaper.SetMediaTrackInfo_Value(track, "B_MAINSEND", 0)
 
@@ -146,8 +178,8 @@ function processTracks()
             end
 
             -- Добавляем hardware output
-            local send_output = settings_map[track_name][1]
-            local send_type = settings_map[track_name][2]
+            local send_output = settings_map[search_name][1]
+            local send_type = settings_map[search_name][2]
 
             reaper.CreateTrackSend(track, nil)
             local new_send_idx = reaper.GetTrackNumSends(track, -1)
@@ -205,6 +237,13 @@ local function myWindow()
   local changed_master, current_master = reaper.ImGui_Checkbox(ctx, 'Master Track', master_track_enabled)
   if changed_master then
     master_track_enabled = current_master
+  end
+
+  reaper.ImGui_SameLine(ctx)
+
+  local changed_case, current_case = reaper.ImGui_Checkbox(ctx, 'Case Sensitive', case_sensitive_enabled)
+  if changed_case then
+    case_sensitive_enabled = current_case
   end
 
   reaper.ImGui_Separator(ctx)
@@ -270,6 +309,10 @@ local function myWindow()
   reaper.ImGui_Separator(ctx)
   if reaper.ImGui_Button(ctx, 'Apply Routing') then
     processTracks()
+  end
+  reaper.ImGui_SameLine(ctx)
+  if reaper.ImGui_Button(ctx, 'Reset Routing') then
+    resetRouting()
   end
 
 end
