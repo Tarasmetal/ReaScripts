@@ -164,7 +164,9 @@
 
 **[📖 Документация](docs/trs_Track%20color%20auto%20loader.md)**
 
-![Demo](docs/trs_Track%20Color%20Auto%20Loader.gif)
+![Demo](docs/trs_Track%20color%20auto%20loader.gif)
+
+
 <!-- Окошко для видео -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Track%20Color%20Auto%20Loader.mp4" width="100%" controls></video> -->
 
