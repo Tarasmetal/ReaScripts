@@ -26,17 +26,24 @@
 ## 🖥️ Interface Overview
 
 ### 1. Control Panel (Top Section) 🛠️
-- **PRESETS**: Opens a dialog box to select a preset file (.txt).
+- **PRESETS**: Opens a popup menu with a list of available preset files (.txt).
+  - **New**: Create a new empty preset.
+  - **Clear**: Remove all buttons from the current preset.
+  - **Delete**: Remove the current preset file.
 - **SAVE AS**: Allows saving the current set of buttons to a new file.
 - **`<` and `>` Buttons**: Quickly switch between available preset files in the `TrackPresets` folder.
 - **Preset Name**: Displays the name of the active set (highlighted in yellow).
 - **Index**: Scans all selected tracks and, if it finds identical names, adds a sequence number to them.
-- **LR**: Searches for pairs of tracks with the same name and adds "L" to the first and "R" to the second.
+- **LR**: Searches for pairs of tracks with the same name and adds "L" to the first and "R" to the second (supports space, underscore, or hyphen separators).
+- **Clone**: 
+  - **Left Click**: Adds selected track names to the preset list.
+  - **Right Click**: Clones track names and attempts to split them into prefix and suffixes.
 
 ### 2. Button Grid 🎹
 Each button in the grid corresponds to a specific track name. The button color (shaded) reflects the color that will be assigned to the track when pressed.
 - **Left Click**: Renames all selected tracks, applies color and pan (if configured).
 - **Click and Drag**: Allows moving a button to another position in the list.
+- **START Button**: A large, flashing button that appears in the center for empty presets, allowing you to quickly add the first row.
 
 ---
 
@@ -49,6 +56,9 @@ Right-clicking any button opens the edit context menu:
 - **Pan Value**: Set the pan value (from -100 to 100).
 - **Enable Color**: Toggle track color change.
 - **Color Picker**: Choose a color via the standard palette or enter a HEX code.
+- **Add Suffix**: Add a new suffix cell to the current row.
+- **Add Row**: Insert a new row after the current one.
+- **Delete Row**: Remove the entire row.
 
 ---
 
@@ -59,6 +69,12 @@ For maximum efficiency, the following commands are implemented in the script:
 ### Keyboard ⌨️
 - **`W`**: Select the previous track (up).
 - **`S`**: Select the next track (down).
+- **`Insert`**:
+  - Hover over main button — Add a new row.
+  - Hover over suffix button — Add a new suffix to the row.
+- **`Delete`**:
+  - Hover over main button — Delete the entire row.
+  - Hover over suffix button — Clear the suffix text.
 - **`Enter` / `Num Enter`**: Confirm input in text fields and close edit windows.
 - **`Escape`**: Quickly close the script window.
 
