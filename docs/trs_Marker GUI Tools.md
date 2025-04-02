@@ -1,9 +1,9 @@
-[⬅️ На главную (Main)](../README.md)
+[⬅️ Main](../README.md) | [🇬🇧 English](trs_Marker%20GUI%20Tools.md) | [🇷🇺 Русский](trs_Marker%20GUI%20Tools_ru.md)
 
 # 🤖 REAPER — Marker GUI Tools
 
-> **Профессиональный инструмент для работы с маркерами и навигации в проектах REAPER.**  
-> Скрипт позволяет максимально сократить время на разметку проекта, оставляя его красивым и понятным. Не отвлекайтесь от творческого процесса — перемещайтесь в любую точку проекта и ставте маркеры с уже подготовленными именами  за пару секунд.
+> **A professional tool for working with markers and project navigation in REAPER.**  
+> The script allows you to maximize time efficiency for project markup, keeping it neat and clear. Don't be distracted from the creative process — navigate to any point in the project and set markers with pre-prepared names in a couple of seconds.
 
 ![Demo](../img/trs_Marker_GUI_Tools.gif)
 
@@ -11,83 +11,83 @@
 
 ---
 
-<!-- ## 📺 Видео демонстрация -->
+<!-- ## 📺 Video Demonstration -->
 
 <!-- <video src="../img/trs_Marker GUI Tools.mp4" width="100%" controls></video> -->
 
 ---
 
-## 🚀 Основные возможности
+## 🚀 Key Features
 
-### 1. Управление маркерами
-* **Быстрый доступ**: Создавайте маркеры одним кликом из настраиваемого списка.
-* **Drag & Drop**: Легко меняйте порядок кнопок маркеров в интерфейсе простым перетаскиванием.
-* **START / END**: Специальные кнопки для быстрой установки маркеров начала (`=START`) и конца (`=END`) проекта.
-* **Редактирование**:
-    * **ПКМ (Правая кнопка мыши)** на кнопке маркера открывает меню редактирования.
-    * Изменяйте имя, цвет, удаляйте или вставляйте новые маркеры.
-* **Только маркеры (Mode 'H')**: Нажмите клавишу `H`, чтобы скрыть все лишние инструменты и оставить только кнопки маркеров для минималистичного вида.
+### 1. Marker Management
+* **Quick Access**: Create markers with one click from a customizable list.
+* **Drag & Drop**: Easily change the order of marker buttons in the interface simply by dragging.
+* **START / END**: Special buttons to quickly set the start (`=START`) and end (`=END`) project markers.
+* **Editing**:
+    * **RMB (Right Mouse Button)** on a marker button opens the edit menu.
+    * Change the name, color, delete, or insert new markers.
+* **Markers Only (Mode 'H')**: Press the `H` key to hide all extra tools and leave only the marker buttons for a minimalistic view.
 
-### 2. Пресеты и настройки
-* **Система пресетов**: Скрипт поддерживает загрузку и сохранение наборов маркеров.
-    * Маркеры хранятся в папке `MarkerPresets`.
-    * Текущий пресет запоминается при перезапуске.
-* **Настройка цветов**: Вы можете настроить цвета кнопок START/END через контекстное меню.
-* **ID Маркеров**: Опция `ID` позволяет скрывать или показывать идентификаторы маркеров в REAPER (через ExtState).
+### 2. Presets and Settings
+* **Preset System**: The script supports loading and saving marker sets.
+    * Markers are stored in the `MarkerPresets` folder.
+    * The current preset is remembered upon restart.
+* **Color Setup**: You can customize the START/END button colors via the context menu.
+* **Marker IDs**: The `ID` option allows hiding or showing marker identifiers in REAPER (via ExtState).
 
-### 3. Дополнительные инструменты (Custom Buttons)
-Скрипт включает в себя мощную панель инструментов (скрывается за кнопкой `<`), которая предоставляет доступ к функциям SWS и кастомным экшенам:
+### 3. Additional Tools (Custom Buttons)
+The script includes a powerful toolbar (hidden behind the `<` button), which provides access to SWS functions and custom actions:
 
-| Группа | Функции |
+| Group | Functions |
 | :--- | :--- |
-| **Set** | Установка START/END по выделению времени. |
-| **Delete** | Удаление маркеров темпа, маркеров или регионов (по курсору или всех). |
-| **Convert** | Конвертация: Маркеры ↔ Регионы. |
-| **Renumber** | Перенумерация ID маркеров и регионов. |
-| **Index** | Добавление/удаление индексов в именах маркеров. |
-| **Time** | Установка 0:00:00, сброс времени проекта. |
-| **PlayBack** | Инструменты для работы с PlayBack (опция `PB`). |
+| **Set** | Set START/END to time selection. |
+| **Delete** | Delete tempo markers, markers, or regions (by cursor or all). |
+| **Convert** | Convert: Markers ↔ Regions. |
+| **Renumber** | Renumber marker and region IDs. |
+| **Index** | Add/remove indexes in marker names. |
+| **Time** | Set 0:00:00, reset project time. |
+| **PlayBack** | Tools for working with PlayBack (`PB` option). |
 
 ---
 
-## 🎮 Управление и Горячие клавиши
+## 🎮 Controls and Hotkeys
 
-### Клавиатура
-* **`H`** — Переключение режима "Только маркеры" (Minimalist View).
-* **`Esc`** — Закрыть скрипт (если фокус на окне).
+### Keyboard
+* **`H`** — Toggle "Markers Only" mode (Minimalist View).
+* **`Esc`** — Close the script (if the window is in focus).
 
-### Мышь
-* **ЛКМ (Левый клик)** — Вставить маркер / Выполнить действие.
-* **ПКМ (Правый клик)** — Контекстное меню (Редактирование кнопки, цвета, удаление).
-* **Drag & Drop** — Перетаскивание кнопок маркеров для изменения их порядка.
-
----
-
-## ⚙️ Установка и Требования
-
-Для корректной работы скрипта убедитесь, что у вас установлены:
-1.  **ReaImGui**: Библиотека для отрисовки интерфейса (устанавливается через ReaPack).
-2.  **SWS Extension**: Необходим для работы многих функций управления маркерами и регионами.
-
-**Файловая структура:**
-* `trs_Marker GUI Tools.lua` — Основной скрипт.
-* `Functions/` — Папка с библиотеками функций (`PresetFileLoadFunctions.lua`, `MarkerFunctions.lua`).
-* `MarkerPresets/` — Папка для хранения пресетов маркеров.
+### Mouse
+* **LMB (Left Click)** — Insert marker / Execute action.
+* **RMB (Right Click)** — Context menu (Edit button, color, delete).
+* **Drag & Drop** — Drag marker buttons to change their order.
 
 ---
 
-## 📜 История изменений (Changelog)
+## ⚙️ Installation and Requirements
+
+For the script to work correctly, ensure you have installed:
+1.  **ReaImGui**: Library for rendering the interface (installed via ReaPack).
+2.  **SWS Extension**: Required for many marker and region management functions to work.
+
+**File Structure:**
+* `trs_Marker GUI Tools.lua` — Main script.
+* `Functions/` — Folder with function libraries (`PresetFileLoadFunctions.lua`, `MarkerFunctions.lua`).
+* `MarkerPresets/` — Folder for storing marker presets.
+
+---
+
+## 📜 Changelog
 
 ### v2.4
-* `+` Добавлена видео-демонстрация в документацию.
+* `+` Added video demonstration to the documentation.
 
 ### v2.1.1
-* `+` Исправлены ссылки и названия файлов.
+* `+` Fixed links and file names.
 
 ### v2.1
-* `+` Добавлена горячая клавиша **"H"** для переключения в минималистичный режим (отображаются только маркеры).
-* `+` Маркеры **START/END** теперь используют цвета, заданные в GUI (настраиваются через ПКМ).
-* `+` Оптимизация кода.
+* `+` Added hotkey **"H"** to toggle minimalist mode (only markers are displayed).
+* `+` **START/END** markers now use colors set in the GUI (customizable via RMB).
+* `+` Code optimization.
 
 ---
 

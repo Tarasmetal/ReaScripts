@@ -2,177 +2,179 @@
 
 ![Author](https://img.shields.io/badge/Author-Taras%20Umanskiy-blue) ![Platform](https://img.shields.io/badge/Platform-Windows%20(x64)-orange) ![Platform](https://img.shields.io/badge/Platform-Mac%20OS-yellow) ![API](https://img.shields.io/badge/API-Reaper%20%2F%20ReaImGui-green)
 
-Представляю вашему вниманию **GUI Tools Pack** — набор продвинутых скриптов для [REAPER DAW](https://www.reaper.fm/), написанных на Lua с использованием библиотеки **ReaImGui**. Этот пак создан для того, чтобы ускорить рутинные задачи, улучшить навигацию и добавить новые творческие возможности в ваш процесс сведения и аранжировки.
-Документация постепенно будет дополняться и исправляться, поэтому не стесняйтесь обращаться за помощью или предложениями.
+[🇬🇧 English](README.md) | [🇷🇺 Русский](README_ru.md)
+
+I present to you **GUI Tools Pack** — a set of advanced scripts for [REAPER DAW](https://www.reaper.fm/), written in Lua using the **ReaImGui** library. This pack is designed to speed up routine tasks, improve navigation, and add new creative possibilities to your mixing and arranging workflow.
+The documentation will be gradually updated and corrected, so don't hesitate to reach out for help or with suggestions.
 
 ---
 
 ## **Marker GUI Tools**
-**Описание:** Скрипт позволяет максимально сократить время на разметку проекта, оставляя его красивым и понятным. Не отвлекайтесь от творческого процесса — перемещайтесь в любую точку проекта и ставте маркеры с уже подготовленными именами за пару секунд.
+**Description:** This script minimizes the time spent marking up your project while keeping it visually clear and organized. Stay focused on your creative process — jump to any point in the project and insert markers with predefined names in seconds.
 
-**[📖 Документация](docs/trs_Marker%20GUI%20Tools.md)**
+**[📖 Documentation](docs/trs_Marker%20GUI%20Tools.md)**
 
 ![Demo](docs/trs_Marker%20GUI%20Tools.gif)
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Marker%20GUI%20Tools.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **Track GUI Tools**
-**Описание:** Скрипт предоставляет удобный интерфейс для мгновенного переименования треков, управления их цветом и панорамой. Этот инструмент идеально подходит для звукорежиссеров и композиторов, которым необходимо быстро привести структуру проекта в порядок, используя гибкую систему пресетов и автоматизированные функции именования.
+**Description:** A convenient interface for instantly renaming tracks, managing their colors, and panning. This tool is perfect for sound engineers and composers who need to quickly organize their project structure using a flexible preset system and automated naming functions.
 
-**[📖 Документация](docs/trs_Track%20GUI%20Tools.md)**
+**[📖 Documentation](docs/trs_Track%20GUI%20Tools.md)**
 
 ![Demo](docs/trs_Track%20GUI%20Tools.gif)
 
-**Создание нового пресета:**
+**Creating a new preset:**
 
 ![Demo](docs/trs_Track%20GUI%20Tools%202.gif)
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Track%20GUI%20Tools.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **Label GUI Tools**
-**Описание:** Инструменты для работы с текстовыми заметками и лейблами айтемов.
+**Description:** Tools for working with text notes and item labels.
 
-**[📖 Документация](docs/trs_Label%20GUI%20Tools.md)**
+**[📖 Documentation](docs/trs_Label%20GUI%20Tools.md)**
 
 ![Demo](docs/trs_Label%20GUI%20Tools.gif)
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Label%20GUI%20Tools.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **VST Macro Linker**
-**Описание:** Скрипт для быстрой привязки параметров VST плагинов к макросам, включая возможность линковки с разных дорожек, включая мастер трек.
+**Description:** A script for quickly linking VST plugin parameters to macros, including the ability to link from different tracks, including the master track.
 
-**[📖 Документация](docs/trs_VST%20Macro%20Linker.md)**
+**[📖 Documentation](docs/trs_VST%20Macro%20Linker.md)**
 
 ![Demo](docs/trs_VST%20Macro%20Linker.gif)
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_VST%20Macro%20Linker.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **TCP/MCP Visible Tools**
-**Описание:** Система управления видимостью треков в окне аранжировки и микшере. Быстрое скрытие/показ треков по их именам для удобной работы с большими проектами.
+**Description:** A track visibility management system for the arrange view and mixer. Quickly hide/show tracks by their names for comfortable work with large projects.
 
-**[📖 Документация](docs/trs_TCP%20MCP%20Visible%20Tools.md)**
+**[📖 Documentation](docs/trs_TCP%20MCP%20Visible%20Tools.md)**
 
 ![Demo](docs/trs_TCP%20MCP%20Visible%20Tools.gif)
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_TCP%20MCP%20Visible%20Tools.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **Routing Tools (SendBox MODDED)**
-**Описание:** Инструменты для быстрой и удобной маршрутизации (Sends/Receives).
+**Description:** Tools for fast and convenient routing (Sends/Receives).
 
-**[📖 Документация](docs/Routing%20Tools.md)**
+**[📖 Documentation](docs/Routing%20Tools.md)**
 
 ![Demo](docs/Routing%20Tools.gif)
 
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Routing%20Tools.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **PlayBack Routing**
-**Описание:** Скрипт предназначен для автоматической маршрутизации (роутинга) треков в проекте на основе их имен. Это идеальный инструмент для быстрой настройки плейбэка (Playback) или подготовки мультитрека к выводу на физические выходы аудиоинтерфейса.
+**Description:** This script is designed for automatic track routing in the project based on their names. It's an ideal tool for quickly setting up playback or preparing a multitrack for routing to hardware audio interface outputs.
 
-**[📖 Документация](docs/trs_Playback%20HW%20Path%20Outputs.md)**
+**[📖 Documentation](docs/trs_Playback%20HW%20Path%20Outputs.md)**
 
 ![Demo](docs/trs_Playback%20HW%20Path%20Outputs.gif)
 
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_PlayBack%20Routing.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **Track Mix Save/Restore**
-**Описание:** Cкрипт позволяет **сохранять текущее состояние микса** (громкость, панорама, статус FX, автоматизация) в файл, а затем **сбрасывать эти настройки** например, чтобы отрендерить исходный сигнал и затем  **восстанавливать** их в любой момент.
+**Description:** This script allows you to **save the current mix state** (volume, pan, FX status, automation) to a file, then **reset these settings**, for example, to render the dry signal, and then **restore** them at any time.
 
-**[📖 Документация](docs/trs_Track%20vol%20pan%20fx%20auto%20Save%20Restore.md)**
+**[📖 Documentation](docs/trs_Track%20vol%20pan%20fx%20auto%20Save%20Restore.md)**
 
 ![Demo](docs/trs_Track%20vol%20pan%20fx%20auto%20Save%20Restore.gif)
 
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Track%20Mix%20Save%20Restore.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **Script Launcher**
-**Описание:** Файловый менеджер для запуска скриптов с превью, избранным и историей.
+**Description:** A file manager for launching scripts with previews, favorites, and history.
 
-**[📖 Документация](docs/trs_Script%20Launcher.md)**
+**[📖 Documentation](docs/trs_Script%20Launcher.md)**
 
 ![Demo](docs/trs_Script%20Launcher.gif)
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Script%20Launcher.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **Action List and toolbars Command ID Fixer**
-**Описание:** Конвертирует технические ID скриптов в читаемые имена на основе их описания в `reaper-kb.ini` и меню.
+**Description:** Converts technical script IDs into readable names based on their description in `reaper-kb.ini` and menus.
 
-**[📖 Документация](docs/trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.md)**
+**[📖 Documentation](docs/trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.md)**
 
 ![Demo](docs/trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.gif)
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Command%20ID%20name%20Fixer.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **Action List Script Path Scan and Fix**
-**Описание:** Скрипт, который помогает поддерживать чистоту в Action List, выявляя и устраняя "битые" ссылки на скрипты.
+**Description:** A script that helps keep the Action List clean by identifying and fixing "broken" script links.
 
-**[📖 Документация](docs/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.md)**
+**[📖 Documentation](docs/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.md)**
 
 ![Demo](docs/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.gif)
 
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **Move Files to Region Folder**
-**Описание:** Перемещает исходные файлы выбранных айтемов в подпапки, названные в честь регионов проекта.
+**Description:** Moves source files of selected items into subfolders named after the project regions.
 
-**[📖 Документация](docs/trs_Move%20selected%20items%20files%20to%20region%20folder.md)**
+**[📖 Documentation](docs/trs_Move%20selected%20items%20files%20to%20region%20folder.md)**
 
 ![Demo](docs/trs_Move%20selected%20items%20files%20to%20region%20folder.gif)
 
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Move%20Files%20to%20Region%20Folder.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **Automation Mode Toggler**
-**Описание:** Удобный GUI для переключения режимов автоматизации треков с функцией быстрого Toggle.
+**Description:** A convenient GUI for toggling track automation modes with a quick toggle function.
 
-**[📖 Документация](docs/trs_Track%20automation%20mode%20toggle.md)**
+**[📖 Documentation](docs/trs_Track%20automation%20mode%20toggle.md)**
 
 ![Demo](docs/trs_Track%20automation%20mode%20toggle.gif)
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Automation%20Mode%20Toggler.mp4" width="100%" controls></video> -->
 
 ---
 
 ## **Track Color Auto Loader**
-**Описание:** Автоматическая окраска треков по именам и создание продвинутых градиентов для папок.
+**Description:** Automatic track coloring by names and creation of advanced gradients for folders.
 
-**[📖 Документация](docs/trs_Track%20color%20auto%20loader.md)**
+**[📖 Documentation](docs/trs_Track%20color%20auto%20loader.md)**
 
 ![Demo](docs/trs_Track%20color%20auto%20loader.gif)
 
 
-<!-- Окошко для видео -->
+<!-- Video Window -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Track%20Color%20Auto%20Loader.mp4" width="100%" controls></video> -->
 
 ---
 
-# 📥 Установка Репозитория (Installation)
+# 📥 Installation
 
 ![Demo](docs/trs_install.gif)
 
@@ -180,17 +182,16 @@
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/install.mp4" width="100%" controls></video> -->
 ---
 
+For most scripts to work correctly, you need to install the [SWS Extension](https://sws-extension.org/) and [ReaPack](https://reapack.com/).
 
-Для корректной работы большинства скриптов необходимы установленные расширения [SWS Extension](https://sws-extension.org/) и [ReaPack](https://reapack.com/).
+## Adding the repository to ReaPack
 
-## Добавление репозитория в ReaPack
-
-1. Запустите REAPER.
-2. В главном меню перейдите: `Extensions` > `ReaPack` > `Import repositories...`
+1. Launch REAPER.
+2. In the main menu, go to: `Extensions` > `ReaPack` > `Import repositories...`
 
    [![ReaPack Menu](docs/repo_menu.png)](docs/repo_menu.png)
 
-3. В появившемся окне вставьте ссылку на репозиторий:
+3. In the window that appears, paste the repository link:
 
    ```text
    https://github.com/Tarasmetal/ReaScripts/raw/master/index.xml
@@ -198,17 +199,17 @@
 
    [![Import Repository](docs/repo_import.png)](docs/repo_import.png)
 
-4. Нажмите **OK**.
-5. Теперь вы можете найти и установить инструменты через `Extensions` > `ReaPack` > `Browse packages...`.
+4. Click **OK**.
+5. Now you can find and install the tools via `Extensions` > `ReaPack` > `Browse packages...`.
 
 [![Check Repositories](docs/repo.png)](docs/repo.png)
 
 ---
 
-## 📞 Обратная связь (Contact)
+## 📞 Contact
 
 * **VK:** [vk.com/tarasmetal](http://vk.com/tarasmetal)
 * **Instagram:** [@Tarasmetal](http://instagram.com/Tarasmetal)
 
 ---
-Разработано с ❤️ для сообщества REAPER
+Developed with ❤️ for the REAPER community

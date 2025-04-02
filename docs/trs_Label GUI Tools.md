@@ -1,75 +1,77 @@
-[⬅️ На главную (Main)](../README.md)
+[⬅️ Main](../README.md)
+
+[🇬🇧 English](trs_Label%20GUI%20Tools.md) | [🇷🇺 Русский](trs_Label%20GUI%20Tools_ru.md)
 
 # GUI Tools: trs_Label GUI Tools
 
-## Описание
+## Description
 
-**trs_Label GUI Tools** — это скрипт для REAPER, предоставляющий удобный графический интерфейс (на базе библиотеки ReaImGui) для управления и редактирования меток (имен айтемов/тейков) в проекте.
+**trs_Label GUI Tools** is a script for REAPER that provides a convenient graphical interface (based on the ReaImGui library) for managing and editing labels (item/take names) in your project.
 
-Инструмент позволяет быстро переименовывать группы выделенных айтемов, используя информацию о треке, регионе и темпе проекта (BPM), а также выполнять другие полезные операции с именами файлов.
+The tool allows you to quickly rename groups of selected items using information about the track, region, and project tempo (BPM), as well as perform other useful operations with file names.
 
-## Основные возможности
+## Main Features
 
-### Информационная панель
-* Отображение количества **выделенных айтемов** (цветовая индикация в зависимости от количества).
-* Отображение текущего **BPM** (Master Tempo) проекта.
+### Information Panel
+* Displays the number of **selected items** (color indication depends on the count).
+* Displays the current project **BPM** (Master Tempo).
 
-### Инструменты переименования (Пресеты)
-Скрипт содержит набор кнопок для быстрого переименования выделенных айтемов по заданным шаблонам:
+### Renaming Tools (Presets)
+The script contains a set of buttons for quickly renaming selected items according to specified templates:
 
-* **EMPTY**: Очистка имени.
-* **RENAME Region Track**: Шаблон `/r /T` (Имя региона + Имя трека).
-* **RENAME Region Track BPM**: Шаблон `/r /T [BPM]` (Имя региона + Имя трека + Темп).
-* **RENAME Name Only**: Шаблон `/T` (Только имя трека).
-* **RENAME Name Index**: Шаблон `/T_/E` (Имя трека + Индекс).
-* **RENAME Name Tuned**: Добавляет пометку "Tunned".
-* **RENAME Name Click**: Добавляет пометку "Click".
-* **RENAME Name_ [BPM]**: Имя трека + Темп.
-* **RENAME Name Index [BPM]**: Имя трека + Индекс + Темп.
+* **EMPTY**: Clear the name.
+* **RENAME Region Track**: Template `/r /T` (Region Name + Track Name).
+* **RENAME Region Track BPM**: Template `/r /T [BPM]` (Region Name + Track Name + Tempo).
+* **RENAME Name Only**: Template `/T` (Track Name only).
+* **RENAME Name Index**: Template `/T_/E` (Track Name + Index).
+* **RENAME Name Tuned**: Adds the "Tunned" mark.
+* **RENAME Name Click**: Adds the "Click" mark.
+* **RENAME Name_ [BPM]**: Track Name + Tempo.
+* **RENAME Name Index [BPM]**: Track Name + Index + Tempo.
 
-### Ручное управление
-* Текстовое поле для ввода произвольных шаблонов переименования (например, `/T /E`).
-* Кнопка **GO!** для применения введенного шаблона.
+### Manual Control
+* A text field for entering custom renaming templates (e.g., `/T /E`).
+* **GO!** button to apply the entered template.
 
-### Дополнительно
-* Интеграция с командой SWS: **Rename takes and source files** (позволяет переименовывать исходные файлы).
+### Additional Features
+* Integration with the SWS command: **Rename takes and source files** (allows renaming source files).
 
-## Использование
+## Usage
 
-1. Выделите один или несколько медиа-айтемов (Media Items) в окне аранжировки REAPER.
-2. Запустите скрипт `trs_Label GUI Tools.lua`.
-3. В появившемся окне выберите нужный пресет нажатием на соответствующую кнопку.
-4. Имена айтемов будут мгновенно обновлены согласно выбранному шаблону.
-5. Для произвольного переименования введите шаблон в текстовое поле внизу и нажмите **GO!**.
+1. Select one or more media items in the REAPER arrange view.
+2. Run the `trs_Label GUI Tools.lua` script.
+3. In the window that appears, select the desired preset by clicking the corresponding button.
+4. Item names will be instantly updated according to the selected template.
+5. For custom renaming, enter the template in the text field at the bottom and click **GO!**.
 
-## Условные обозначения шаблонов (Pattern Symbols)
+## Pattern Symbols
 
-Скрипт поддерживает следующие символы подстановки для формирования имен:
+The script supports the following substitution symbols for forming names:
 
-### Основные
-* `/T` — Имя трека (Track Name).
-* `/t` — Номер трека (Track Number).
-* `/r` — Имя региона, в котором находится айтем (Region Name).
-* `$notes` — Текущий текст заметок айтема (Item Notes).
-* `\n` — Символ переноса строки.
+### Basic
+* `/T` — Track Name.
+* `/t` — Track Number.
+* `/r` — Name of the region where the item is located (Region Name).
+* `$notes` — Current item notes text (Item Notes).
+* `\n` — Line break symbol.
 
-### Нумерация (Counters)
-* `/E` — Глобальная нумерация по всем выделенным айтемам (1, 2, 3...).
-* `/e` — Локальная нумерация айтемов в пределах каждого трека.
-* `/I` — Обратная глобальная нумерация (от последнего к первому).
-* `/i` — Обратная локальная нумерация (в пределах трека).
+### Counters
+* `/E` — Global numbering across all selected items (1, 2, 3...).
+* `/e` — Local item numbering within each track.
+* `/I` — Reverse global numbering (from last to first).
+* `/i` — Reverse local numbering (within the track).
 
-### Расширенная настройка нумерации
-Для счетчиков (`/E`, `/e`, `/I`, `/i`) поддерживается расширенный формат для указания количества цифр (нулей) и смещения (offset):
+### Advanced Counter Settings
+For counters (`/E`, `/e`, `/I`, `/i`), an extended format is supported to specify the number of digits (leading zeros) and an offset:
 
-**Синтаксис:** `/SymbolDigits_Offset_`
+**Syntax:** `/SymbolDigits_Offset_`
 
-* `Digits` — количество цифр (ведущие нули).
-* `Offset` — число, которое прибавляется к счетчику.
+* `Digits` — number of digits (leading zeros).
+* `Offset` — the number added to the counter.
 
-**Примеры:**
-* `/E` — обычная нумерация: 1, 2, 3...
-* `/E02_0_` — два знака: 01, 02, 03...
-* `/E03_10_` — три знака, начало с 11 (1 + 10): 011, 012, 013...
+**Examples:**
+* `/E` — normal numbering: 1, 2, 3...
+* `/E02_0_` — two digits: 01, 02, 03...
+* `/E03_10_` — three digits, starting from 11 (1 + 10): 011, 012, 013...
 
 ---

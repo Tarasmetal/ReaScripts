@@ -1,70 +1,70 @@
-[⬅️ На главную (Main)](../README.md)
+[⬅️ Main](../README.md) | [Русский](trs_Playback%20HW%20Path%20Outputs_ru.md)
 
 # trs_PlayBack Routing
 
-## Описание
-**trs_PlayBack Routing** — это Lua скрипт для REAPER с графическим интерфейсом на базе **ReaImGui**. Скрипт предназначен для автоматической маршрутизации (роутинга) треков в проекте на основе их имен. Это идеальный инструмент для быстрой настройки плейбэка (Playback) или подготовки мультитрека к выводу на физические выходы аудиоинтерфейса.
+## Description
+**trs_PlayBack Routing** is a Lua script for REAPER featuring a graphical user interface based on **ReaImGui**. The script is designed to automatically route tracks in a project based on their names. It is an ideal tool for quickly setting up playback or preparing a multitrack for output to the physical outputs of an audio interface.
 
-Скрипт позволяет создать конфигурацию, где определенным именам треков соответствуют конкретные аппаратные выходы (Hardware Outputs). При применении настроек скрипт автоматически отключает\вкл посыл на мастер-канал и назначает прямые выходы.
+The script allows you to create a configuration where specific track names correspond to specific hardware outputs. When applying the settings, the script automatically disables the master send and assigns direct hardware outputs.
 
-## Основные возможности
+## Main Features
 
-*   **Автоматическая маршрутизация:** Поиск треков в проекте по имени и назначение им соответствующих аппаратных выходов.
-*   **Управление типами выходов:** Поддержка как **Стерео**, так и **Моно** выходов.
-*   **Изоляция от Мастера:** Автоматически отключает "Master Send" (отправку на мастер-канал) для маршрутизируемых треков.
-*   **Управление Мастер-треком:** Опция для глобального включения или отключения (Mute/Unmute) всех аппаратных выходов мастер-трека.
-*   **Система пресетов:**
-    *   Сохранение и загрузка конфигураций в текстовые файлы.
-    *   Автоматическое восстановление последнего использованного пресета при запуске скрипта.
-*   **Удобное редактирование:** Добавление и удаление треков из списка конфигурации прямо в интерфейсе.
+*   **Automatic Routing:** Searches for tracks in the project by name and assigns them to the corresponding hardware outputs.
+*   **Output Type Management:** Supports both **Stereo** and **Mono** outputs.
+*   **Master Isolation:** Automatically disables the "Master Send" for routed tracks.
+*   **Master Track Control:** Option to globally mute/unmute all hardware outputs of the master track.
+*   **Preset System:**
+    *   Save and load configurations to text files.
+    *   Automatically restores the last used preset when the script is launched.
+*   **Easy Editing:** Add and remove tracks from the configuration list directly in the interface.
 
-## Требования
+## Requirements
 
-*   **REAPER** (рекомендуется последняя версия)
-*   **ReaImGui** (библиотека интерфейса, устанавливается через ReaPack)
-*   **SWS Extension** (рекомендуется для корректной работы функций управления треками)
+*   **REAPER** (latest version recommended)
+*   **ReaImGui** (GUI library, installed via ReaPack)
+*   **SWS Extension** (recommended for proper track management functions)
 
-## Инструкция по использованию
+## Usage Instructions
 
-### Интерфейс
-Окно скрипта разделено на панель управления пресетами и список маршрутизации.
+### Interface
+The script window is divided into a preset management panel and a routing list.
 
-#### 1. Настройка списка треков
-В таблице настроек вы можете задать параметры для каждого типа трека:
-*   **Имя трека:** Введите точное имя трека, как оно названо в проекте REAPER (например, `PB`, `CLICK`, `BASS`).
-*   **Выход:** Укажите номер первого канала аппаратного выхода (Hardware Output).
-    *   *Справа от имени отображается итоговый диапазон каналов (например, `1-2` или `3`).*
-*   **Тип:** Выберите режим:
-    *   **стерео:** Используется пара выходов (например, 1-2).
-    *   **моно:** Используется один моно-канал.
+#### 1. Track List Setup
+In the settings table, you can define parameters for each track type:
+*   **Track Name:** Enter the exact track name as it appears in the REAPER project (e.g., `PB`, `CLICK`, `BASS`).
+*   **Output:** Specify the first channel number of the hardware output.
+    *   *To the right of the name, the resulting channel range is displayed (e.g., `1-2` or `3`).*
+*   **Type:** Select the mode:
+    *   **stereo:** A pair of outputs is used (e.g., 1-2).
+    *   **mono:** A single mono channel is used.
 
-**Управление строками:**
-*   **Добавить строку:** Нажмите клавишу **`Insert`** на клавиатуре.
-*   **Удалить строку:** Кликните на поле ввода имени трека, чтобы оно было в фокусе, и нажмите клавишу **`Delete`**.
+**Row Management:**
+*   **Add Row:** Press the **`Insert`** key on your keyboard.
+*   **Delete Row:** Click on the track name input field to focus it, then press the **`Delete`** key.
 
-#### 2. Опция "Мастер-трек"
-Чекбокс **Мастер-трек** управляет состоянием аппаратных выходов самого мастер-трека проекта REAPER:
-*   **[ x ] Включен:** Все аппаратные выходы мастер-трека будут **размьютированы** (Unmuted).
-*   **[   ] Выключен:** Все аппаратные выходы мастер-трека будут **замьютированы** (Muted).
+#### 2. "Master Track" Option
+The **Master Track** checkbox controls the state of the hardware outputs of the REAPER project's master track itself:
+*   **[ x ] Enabled:** All hardware outputs of the master track will be **unmuted**.
+*   **[   ] Disabled:** All hardware outputs of the master track will be **muted**.
 
-#### 3. Применение настроек
-Нажмите кнопку **"Применить маршрутизацию"**. Скрипт выполнит следующие действия:
-1.  Просканирует все треки в проекте.
-2.  Если имя трека совпадает с одной из настроек:
-    *   Отключит галочку "Master Send".
-    *   Удалит все текущие Hardware Sends на этом треке.
-    *   Создаст новый Hardware Send согласно настройкам (номер канала и моно/стерео режим).
-3.  Применит настройки Mute/Unmute к выходам Мастер-трека.
+#### 3. Applying Settings
+Click the **"Apply Routing"** button. The script will perform the following actions:
+1.  Scan all tracks in the project.
+2.  If a track's name matches one of the settings:
+    *   Disable the "Master Send" checkbox.
+    *   Remove all current Hardware Sends on that track.
+    *   Create a new Hardware Send according to the settings (channel number and mono/stereo mode).
+3.  Apply the Mute/Unmute settings to the Master track's outputs.
 
-### Работа с пресетами
-*   **Загрузить пресет:** Открывает стандартное диалоговое окно для выбора сохраненного файла настроек.
-*   **Сохранить пресет:** Позволяет сохранить текущую конфигурацию под новым именем. Файлы сохраняются в папку `RoutingPresets` рядом со скриптом.
+### Working with Presets
+*   **Load Preset:** Opens a standard dialog to select a saved settings file.
+*   **Save Preset:** Allows you to save the current configuration under a new name. Files are saved in the `RoutingPresets` folder next to the script.
 
-## Автор
+## Author
 **Taras Umanskiy**
 *   **VK:** [http://vk.com/tarasmetal](http://vk.com/tarasmetal)
 *   **Donation:** [https://vk.com/Tarasmetal](https://vk.com/Tarasmetal)
 *   **GitHub:** [https://github.com/Tarasmetal/ReaScripts](https://github.com/Tarasmetal/ReaScripts)
 
 ---
-Разработано с ❤️ для сообщества REAPER.
+Developed with ❤️ for the REAPER community.

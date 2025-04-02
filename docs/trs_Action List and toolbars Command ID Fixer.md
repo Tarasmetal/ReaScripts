@@ -1,4 +1,7 @@
-[⬅️ На главную (Main)](../README.md)
+[🇬🇧 English](trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.md) | [🇷🇺 Русский](trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer_ru.md)
+
+[⬅️ Main](../README.md)
+
 # 🤖 Action List and toolbars Command ID name Fixer v1.6
 
 ![Author](https://img.shields.io/badge/Author-Taras%20Umanskiy-blue)
@@ -8,83 +11,83 @@
 
 ![Command ID name Fixer](../img/trs_Action%20List%20and%20toolbars%20Command%20ID%20name%20Fixer.png)
 
-## **Обзор**
-**Action List and toolbars Command ID name Fixer** — это мощный инструмент для пользователей REAPER, который помогает привести в порядок файлы конфигурации действий (`reaper-kb.ini`) и меню (`reaper-menu.ini`). Скрипт заменяет автоматически сгенерированные идентификаторы (например, `RS7d3c_...`) на осмысленные имена, основанные на описании скрипта.
+## **Overview**
+**Action List and toolbars Command ID name Fixer** is a powerful tool for REAPER users that helps to tidy up action configuration files (`reaper-kb.ini`) and menus (`reaper-menu.ini`). The script replaces automatically generated IDs (e.g., `RS7d3c_...`) with meaningful names based on the script description.
 
-Это делает ваши файлы конфигурации читаемыми и облегчает перенос настроек между различными установками REAPER.
-
----
-
-## **Основные возможности**
-- **Безопасный режим (Safe Mode):** Предварительный анализ и таблица предпросмотра позволяют выбрать, какие именно ID нужно заменить.
-- **Интеллектуальная очистка имен:** Автоматически удаляет префиксы `Script:`, `Custom:`, расширения файлов и недопустимые символы.
-- **Поддержка горячих клавиш:** Обновляет не только регистрации скриптов (`SCR`), но и привязки клавиш (`KEY`).
-- **Обработка меню:** Синхронизирует изменения с файлом `reaper-menu.ini`.
-- **Резервное копирование:** Автоматически создает `.bck` файлы перед внесением любых изменений.
-- **Фильтрация:** Возможность поиска конкретных скриптов для точечной обработки.
+This makes your configuration files readable and makes it easier to migrate settings between different REAPER installations.
 
 ---
 
-## **Требования**
-- **REAPER** (рекомендуется последняя версия).
-- **ReaImGui** (доступен через ReaPack).
-- ОС **Windows** (x64 для оптимальной работы шрифтов).
+## **Key Features**
+- **Safe Mode:** Pre-analysis and a preview table allow you to choose exactly which IDs to replace.
+- **Smart Name Cleanup:** Automatically removes `Script:`, `Custom:` prefixes, file extensions, and invalid characters.
+- **Hotkeys Support:** Updates not only script registrations (`SCR`), but also key bindings (`KEY`).
+- **Menu Processing:** Synchronizes changes with the `reaper-menu.ini` file.
+- **Backup:** Automatically creates `.bck` files before making any changes.
+- **Filtering:** Ability to search for specific scripts for targeted processing.
 
 ---
 
-## **Инструкция по использованию**
-
-### **Шаг 1: Выбор файла**
-Запустите скрипт и нажмите кнопку **"Выбрать файл (reaper-kb.ini)"**. Обычно этот файл находится в папке ресурсов REAPER (Options -> Show REAPER resource path...).
-
-### **Шаг 2: Анализ**
-1. (Опционально) Введите текст в поле **"Фильтр"**, чтобы найти конкретные скрипты.
-2. Нажмите **"Анализировать"**. Скрипт просканирует файл и покажет таблицу с возможными заменами.
-
-### **Шаг 3: Проверка и применение**
-1. В таблице предпросмотра вы увидите:
-   - **Описание:** Оригинальное название скрипта.
-   - **Старый ID:** Текущий технический ID.
-   - **Новый ID:** Сгенерированный читаемый ID.
-2. Отметьте нужные пункты галочками (или используйте "Выбрать все").
-3. Нажмите **"ПРИМЕНИТЬ ИЗМЕНЕНИЯ"**. Скрипт обновит `reaper-kb.ini` и создаст бекап.
-
-### **Шаг 4: Обновление меню**
-После успешного обновления `reaper-kb.ini`, нажмите **"Обработать меню"**. Скрипт найдет `reaper-menu.ini` в той же папке и обновит ссылки на ID в ваших кастомных меню.
+## **Requirements**
+- **REAPER** (latest version recommended).
+- **ReaImGui** (available via ReaPack).
+- **Windows** OS (x64 for optimal font rendering).
 
 ---
 
-## **Технические подробности**
+## **Usage Instructions**
 
-### **Логика именования**
-Скрипт преобразует названия по следующим правилам:
-1. Перевод в нижний регистр.
-2. Замена пробелов на нижнее подчеркивание (`_`).
-3. Удаление спецсимволов: `. , ( ) [ ] + ' : "`.
-4. Удаление расширений: `.lua`, `.eel`, `.py`.
-5. Добавление суффиксов для специфических секций:
+### **Step 1: File Selection**
+Run the script and click the **"Select file (reaper-kb.ini)"** button. Usually, this file is located in the REAPER resource folder (Options -> Show REAPER resource path...).
+
+### **Step 2: Analysis**
+1. (Optional) Enter text in the **"Filter"** field to find specific scripts.
+2. Click **"Analyze"**. The script will scan the file and show a table with possible replacements.
+
+### **Step 3: Review and Apply**
+1. In the preview table, you will see:
+   - **Description:** Original name of the script.
+   - **Old ID:** Current technical ID.
+   - **New ID:** Generated readable ID.
+2. Check the boxes for the items you want (or use "Select All").
+3. Click **"APPLY CHANGES"**. The script will update `reaper-kb.ini` and create a backup.
+
+### **Step 4: Update Menu**
+After successfully updating `reaper-kb.ini`, click **"Process Menu"**. The script will find `reaper-menu.ini` in the same folder and update the ID links in your custom menus.
+
+---
+
+## **Technical Details**
+
+### **Naming Logic**
+The script converts names according to the following rules:
+1. Conversion to lowercase.
+2. Replacing spaces with underscores (`_`).
+3. Removing special characters: `. , ( ) [ ] + ' : "'`.
+4. Removing extensions: `.lua`, `.eel`, `.py`.
+5. Adding suffixes for specific sections:
    - MIDI Editor: `_me`
    - MIDI Event List: `_mie`
 
-### **Безопасность**
-Скрипт работает в памяти и записывает изменения только после вашего подтверждения. Создание резервных копий гарантирует, что вы сможете откатиться к предыдущему состоянию в случае ошибки.
+### **Safety**
+The script works in memory and writes changes only after your confirmation. Creating backups ensures that you can roll back to the previous state in case of an error.
 
 ---
 
-## **История изменений**
+## **Changelog**
 ### **v1.6**
-- ✅ Внедрен "Безопасный режим" с предпросмотром изменений.
-- ✅ Разделение логики анализа и применения.
-- ✅ Таблица предпросмотра с чекбоксами.
-- ✅ Кнопка "Обработать меню" для синхронизации.
-- ✅ Создание резервной копии (`*.ini.bck`).
-- ✅ Добавлен фильтр поиска.
+- ✅ Implemented "Safe Mode" with preview of changes.
+- ✅ Separation of analysis and application logic.
+- ✅ Preview table with checkboxes.
+- ✅ "Process Menu" button for synchronization.
+- ✅ Backup creation (`*.ini.bck`).
+- ✅ Search filter added.
 
 ---
 
-## **Контакты и поддержка**
-- **Автор:** Taras Umanskiy
+## **Contacts & Support**
+- **Author:** Taras Umanskiy
 - **VK:** [vk.com/tarasmetal](http://vk.com/tarasmetal)
-- **Поддержать проект:** [vk.com/Tarasmetal](https://vk.com/Tarasmetal)
+- **Support the project:** [vk.com/Tarasmetal](https://vk.com/Tarasmetal)
 
-<p align="center">Разработано с ❤️ для сообщества REAPER</p>
+<p align="center">Developed with ❤️ for the REAPER community</p>

@@ -1,66 +1,69 @@
-[⬅️ На главную (Main)](../README.md)
+[⬅️ Main](../README.md)
+
+[🇬🇧 English](trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.md) | [🇷🇺 Русский](trs_Action%20List%20Script%20Path%20Scan%20and%20Fix_ru.md)
+
 # 🤖 Action List Script Path Scan and Fix
 
-**Action List Script Path Scan and Fix** — это мощный инструмент для пользователей REAPER, который помогает поддерживать чистоту в Action List, выявляя и устраняя "битые" ссылки на скрипты.
+**Action List Script Path Scan and Fix** is a powerful tool for REAPER users that helps maintain a clean Action List by identifying and fixing broken script links.
 
 ---
 
-## 📋 Описание
-Скрипт сканирует файл конфигурации `reaper-kb.ini` и проверяет наличие файлов скриптов по указанным путям. Если файл не найден (например, после удаления репозитория или ручного перемещения файлов), скрипт помечает его как "битый" и предлагает варианты решения.
+## 📋 Description
+The script scans the `reaper-kb.ini` configuration file and checks for the existence of script files at the specified paths. If a file is not found (e.g., after deleting a repository or manually moving files), the script marks it as "broken" and offers solutions.
 
-## ✨ Основные возможности
-- **Глубокое сканирование**: Проверка всех зарегистрированных ReaScript в Action List.
-- **Интеллектуальный поиск**: Распознавание как абсолютных, так и относительных путей (включая папку `Scripts`).
-- **Безопасное исправление**: Автоматическое удаление нерабочих записей из `reaper-kb.ini`.
-- **Резервное копирование**: Создание бэкапа `reaper-kb.ini` перед внесением любых изменений.
-- **Анализ репозиториев**: Попытка определить, из какого репозитория ReaPack пришел отсутствующий скрипт.
-- **Интеграция с Action List**: Быстрый поиск и копирование ID скрипта через контекстное меню.
-- **Экспорт данных**: Возможность сохранить список URL отсутствующих репозиториев в текстовый файл.
+## ✨ Key Features
+- **Deep Scanning**: Checks all registered ReaScripts in the Action List.
+- **Smart Search**: Recognizes both absolute and relative paths (including the `Scripts` folder).
+- **Safe Fixing**: Automatically removes broken entries from `reaper-kb.ini`.
+- **Backup**: Creates a backup of `reaper-kb.ini` before making any changes.
+- **Repository Analysis**: Attempts to determine which ReaPack repository the missing script came from.
+- **Action List Integration**: Quick search and copying of script IDs via the context menu.
+- **Data Export**: Ability to save a list of missing repository URLs to a text file.
 
-## 🛠 Установка и требования
+## 🛠 Installation and Requirements
 
-Для корректной работы скрипта необходимы следующие компоненты:
-1. **REAPER** (версия 6.0 или выше).
-2. **ReaImGui**: Доступно через ReaPack (расширение для создания графического интерфейса).
-3. **JS_ReaScriptAPI** (опционально): Требуется для автоматической вставки текста в фильтр Action List.
+The following components are required for the script to work correctly:
+1. **REAPER** (version 6.0 or higher).
+2. **ReaImGui**: Available via ReaPack (extension for creating graphical user interfaces).
+3. **JS_ReaScriptAPI** (optional): Required for automatically inserting text into the Action List filter.
 
-### Как установить:
-1. Скопируйте файл `trs_Broken Script Path Scan and Fix.lua` в папку со скриптами REAPER.
-2. Добавьте его в Action List (`Actions` -> `Show action list...` -> `New action` -> `Load ReaScript...`).
+### How to install:
+1. Copy the `trs_Broken Script Path Scan and Fix.lua` file to your REAPER scripts folder.
+2. Add it to the Action List (`Actions` -> `Show action list...` -> `New action` -> `Load ReaScript...`).
 
-## 🚀 Инструкция по использованию
+## 🚀 Usage Instructions
 
-### 1. Сканирование
-- Запустите скрипт.
-- Нажмите кнопку **"Сканировать Action List"**.
-- Скрипт отобразит таблицу со всеми найденными нерабочими скриптами.
+### 1. Scanning
+- Run the script.
+- Click the **"Scan Action List"** button.
+- The script will display a table with all broken scripts found.
 
-### 2. Анализ результатов
-В таблице отображаются:
-- **Command ID**: Уникальный идентификатор команды.
-- **Имя скрипта**: Название, под которым он значится в Action List.
-- **Путь к файлу**: Путь, по которому REAPER пытается найти файл.
+### 2. Analyzing Results
+The table displays:
+- **Command ID**: The unique identifier of the command.
+- **Script Name**: The name under which it appears in the Action List.
+- **File Path**: The path where REAPER is trying to find the file.
 
-### 3. Исправление ошибок
-- Нажмите кнопку **"Исправить ошибки"**.
-- Подтвердите действие. Скрипт удалит записи из `reaper-kb.ini` и создаст резервную копию в той же папке.
-- **Важно**: После удаления записей рекомендуется перезапустить REAPER или обновить Action List.
+### 3. Fixing Errors
+- Click the **"Fix Errors"** button.
+- Confirm the action. The script will remove the entries from `reaper-kb.ini` and create a backup in the same folder.
+- **Important**: After removing entries, it is recommended to restart REAPER or refresh the Action List.
 
-### 4. Работа с репозиториями
-- Если вы хотите узнать, какие репозитории нужно переустановить, нажмите **"Показать репозиторий"**.
-- Вы сможете скопировать URL репозитория или сохранить весь список в файл `Broken_Repos_List.txt`.
+### 4. Working with Repositories
+- If you want to know which repositories need to be reinstalled, click **"Show Repository"**.
+- You can copy the repository URL or save the entire list to a `Broken_Repos_List.txt` file.
 
-## 🛡 Безопасность
-Скрипт разработан с приоритетом на сохранность ваших данных:
-- **Никакие файлы не удаляются с диска**. Скрипт работает только с записями в конфигурационном файле.
-- Перед каждым исправлением создается файл вида `reaper-kb.ini.backup_YYYYMMDD_HHMMSS`.
+## 🛡 Security
+The script is designed with a priority on keeping your data safe:
+- **No files are deleted from your drive**. The script only works with entries in the configuration file.
+- Before every fix, a backup file like `reaper-kb.ini.backup_YYYYMMDD_HHMMSS` is created.
 
 ---
 
-## 🔗 Ссылки
-- **Автор**: Taras Umanskiy
-- **Версия**: 1.7.3
-- **Поддержка/Связь**: [VK.com/tarasmetal](http://vk.com/tarasmetal)
-- **Донаты**: [Поддержать автора](https://vk.com/Tarasmetal)
+## 🔗 Links
+- **Author**: Taras Umanskiy
+- **Version**: 1.7.3
+- **Support/Contact**: [VK.com/tarasmetal](http://vk.com/tarasmetal)
+- **Donation**: [Support the author](https://vk.com/Tarasmetal)
 
 ---
