@@ -1,163 +1,167 @@
-# 🚀 trs_Script Launcher — Ваш персональный центр управления скриптами
+[⬅️ Main](../README.md)
 
-> *Забудьте о бесконечном поиске в Action List. Встречайте элегантное решение для запуска и управления скриптами REAPER.*
+[![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Script%20Launcher.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Script%20Launcher_ru.md)
+
+# 🚀 trs_Script Launcher — Your Personal Script Control Center
+
+> *Forget about endless searching in the Action List. Meet an elegant solution for launching and managing REAPER scripts.*
 
 ![Demo](../img/trs_Script_Launcher.gif)
 
 ---
 
-## 📖 О скрипте
+## 📖 About the Script
 
-**trs_Script Launcher** — это мощный файловый менеджер и лаунчер скриптов для REAPER, который превращает хаос из сотен скриптов в организованную систему с интуитивным интерфейсом. Больше не нужно регистрировать каждый скрипт в Action List — просто запускайте их напрямую!
+**trs_Script Launcher** is a powerful file manager and script launcher for REAPER that transforms the chaos of hundreds of scripts into an organized system with an intuitive interface. No more need to register every script in the Action List — just launch them directly!
 
-### ✨ Ключевые возможности
+### ✨ Key Features
 
-- 🗂️ **Файловый браузер** — навигация по папкам со скриптами с древовидной структурой
-- ⭐ **Система избранного** — быстрый доступ к часто используемым скриптам
-- 📜 **История запусков** — отслеживание последних выполненных скриптов
-- 🔍 **Умный поиск** — мгновенный поиск по именам файлов
-- 🎯 **Drag & Drop** — перетаскивание для изменения порядка в избранном
-- ⚡ **Быстрый запуск** — двойной клик или Enter для выполнения
-- 💾 **Автосохранение** — все настройки сохраняются автоматически
-- 🎨 **Современный интерфейс** — построен на ReaImGui с поддержкой тем
-- 🔄 **Контекстные меню** — правый клик для дополнительных действий
-- 📂 **Мультиформатность** — поддержка `.lua`, `.eel`, `.py` скриптов
-
----
-
-## 🖥️ Обзор интерфейса
-
-Интерфейс Script Launcher разделен на несколько функциональных зон:
-
-### Верхняя панель инструментов
-- **Кнопка "Up"** — переход на уровень выше в структуре папок
-- **Поле пути** — отображение текущей директории
-- **Кнопка "Home"** — быстрый возврат в корневую папку скриптов
-- **Поле поиска** — фильтрация файлов по имени
-
-### Левая панель — Дерево папок
-Древовидная структура всех доступных директорий со скриптами. Клик по папке мгновенно отображает её содержимое в центральной панели.
-
-### Центральная панель — Список файлов
-Основная рабочая область с таблицей файлов:
-- **Колонка "Name"** — имя файла с иконкой типа
-- **Колонка "Size"** — размер файла
-- **Колонка "Modified"** — дата последнего изменения
-
-### Правая панель — Вкладки
-- **📂 Files** — просмотр файлов текущей папки
-- **⭐ Favorites** — список избранных скриптов с возможностью перетаскивания
-- **📜 History** — последние запущенные скрипты
-
-### Нижняя строка состояния
-Отображает количество файлов в текущей папке и общую статистику.
+- 🗂️ **File Browser** — Navigate script folders with a tree structure
+- ⭐ **Favorites System** — Quick access to frequently used scripts
+- 📜 **Run History** — Track recently executed scripts
+- 🔍 **Smart Search** — Instant search by filenames
+- 🎯 **Drag & Drop** — Drag to reorder items in Favorites
+- ⚡ **Quick Launch** — Double-click or Enter to execute
+- 💾 **Auto-Save** — All settings are saved automatically
+- 🎨 **Modern Interface** — Built on ReaImGui with theme support
+- 🔄 **Context Menus** — Right-click for additional actions
+- 📂 **Multi-format** — Supports `.lua`, `.eel`, `.py` scripts
 
 ---
 
-## 💡 Практические примеры использования
+## 🖥️ Interface Overview
 
-### Пример 1: Организация рабочего процесса
+The Script Launcher interface is divided into several functional zones:
 
-**Задача:** У вас есть 10 скриптов, которые вы используете ежедневно для сведения.
+### Top Toolbar
+- **"Up" Button** — Go up one level in the folder structure
+- **Path Field** — Displays the current directory
+- **"Home" Button** — Quick return to the root script folder
+- **Search Field** — Filter files by name
 
-**Решение:**
-1. Откройте Script Launcher
-2. Найдите нужный скрипт через поиск или браузер
-3. Кликните правой кнопкой → "Add to Favorites"
-4. Повторите для всех 10 скриптов
-5. Перейдите на вкладку "⭐ Favorites"
-6. Перетащите скрипты в нужном порядке (самые важные — наверх)
+### Left Panel — Folder Tree
+Tree structure of all available script directories. Clicking a folder instantly displays its contents in the central panel.
 
-**Результат:** Теперь все ваши рабочие инструменты в одном месте, в нужном порядке, всегда под рукой!
+### Central Panel — File List
+The main working area with a table of files:
+- **"Name" Column** — Filename with type icon
+- **"Size" Column** — File size
+- **"Modified" Column** — Last modification date
 
----
+### Right Panel — Tabs
+- **📂 Files** — View files in the current folder
+- **⭐ Favorites** — List of favorite scripts with drag & drop capability
+- **📜 History** — Last launched scripts
 
-### Пример 2: Тестирование новых скриптов
-
-**Задача:** Вы скачали пакет из 50 новых скриптов и хотите протестировать их, не засоряя Action List.
-
-**Решение:**
-1. Распакуйте скрипты в любую папку
-2. В Script Launcher нажмите "Home" и перейдите в эту папку
-3. Двойной клик по скрипту для запуска
-4. Скрипт выполнится БЕЗ добавления в Action List
-5. Проверьте вкладку "📜 History" — все запуски записаны
-
-**Результат:** Чистый Action List + полная история тестирования!
+### Bottom Status Bar
+Displays the number of files in the current folder and overall statistics.
 
 ---
 
-### Пример 3: Быстрый доступ к скриптам проекта
+## 💡 Practical Use Cases
 
-**Задача:** Для конкретного проекта вы создали набор специализированных скриптов.
+### Example 1: Workflow Organization
 
-**Решение:**
-1. Создайте папку "MyProject Scripts" в директории REAPER
-2. Поместите туда все скрипты проекта
-3. В Script Launcher перейдите в эту папку
-4. Добавьте папку в закладки (если функция доступна)
-5. Используйте поиск для мгновенного нахождения нужного скрипта
+**Task:** You have 10 scripts that you use daily for mixing.
 
-**Результат:** Все инструменты проекта изолированы и доступны в два клика!
+**Solution:**
+1. Open Script Launcher
+2. Find the desired script via search or browser
+3. Right-click → "Add to Favorites"
+4. Repeat for all 10 scripts
+5. Go to the "⭐ Favorites" tab
+6. Drag scripts into the desired order (most important at the top)
 
----
-
-### Пример 4: Работа с историей
-
-**Задача:** Вы запустили какой-то скрипт вчера, но забыли его название.
-
-**Решение:**
-1. Откройте Script Launcher
-2. Перейдите на вкладку "📜 History"
-3. Просмотрите список последних запусков
-4. Найдите нужный скрипт по дате/времени
-5. Двойной клик для повторного запуска
-6. Или добавьте в избранное для будущего использования
-
-**Результат:** История запусков — ваша страховка от забывчивости!
+**Result:** Now all your working tools are in one place, in the correct order, always at hand!
 
 ---
 
-## 🔥 Продвинутые возможности
+### Example 2: Testing New Scripts
 
-### Горячие клавиши
-- **Enter** — запустить выбранный скрипт
-- **Delete** — удалить из избранного (на вкладке Favorites)
-- **Ctrl+F** — фокус на поле поиска
-- **Escape** — очистить поиск
+**Task:** You downloaded a package of 50 new scripts and want to test them without cluttering the Action List.
 
-### Контекстное меню (правый клик)
-- **Run Script** — запустить скрипт
-- **Add to Favorites** — добавить в избранное
-- **Remove from Favorites** — удалить из избранного
-- **Show in Explorer** — открыть расположение файла
-- **Copy Path** — скопировать полный путь к файлу
+**Solution:**
+1. Unpack scripts into any folder
+2. In Script Launcher, press "Home" and navigate to this folder
+3. Double-click a script to launch
+4. The script will execute WITHOUT being added to the Action List
+5. Check the "📜 History" tab — all launches are recorded
 
-### Drag & Drop в избранном
-Перетаскивайте скрипты в списке Favorites для изменения порядка. Новый порядок сохраняется автоматически!
-
-### Умная фильтрация
-Поиск работает в реальном времени и ищет совпадения в любой части имени файла. Регистр не учитывается.
-
-### Автоматическое сохранение
-Все изменения (избранное, история, размер окна, позиция) сохраняются в файл `trs_Script Launcher.ini` автоматически при закрытии.
+**Result:** Clean Action List + full testing history!
 
 ---
 
-## ⚙️ Технические детали
+### Example 3: Quick Access to Project Scripts
 
-### Системные требования
-- **REAPER** версии 6.0 или выше
-- **ReaImGui** расширение (устанавливается через ReaPack)
-- **Операционная система:** Windows, macOS, Linux
+**Task:** For a specific project, you created a set of specialized scripts.
 
-### Поддерживаемые форматы скриптов
-- `.lua` — Lua скрипты
-- `.eel` — EEL2 скрипты  
-- `.py` — Python скрипты
+**Solution:**
+1. Create a "MyProject Scripts" folder in the REAPER directory
+2. Place all project scripts there
+3. In Script Launcher, navigate to this folder
+4. Add the folder to bookmarks (if the feature is available)
+5. Use search to instantly find the needed script
 
-### Файл конфигурации
-Настройки хранятся в `GUI Tools/trs_Script Launcher.ini`:
+**Result:** All project tools are isolated and accessible in two clicks!
+
+---
+
+### Example 4: Working with History
+
+**Task:** You ran a script yesterday but forgot its name.
+
+**Solution:**
+1. Open Script Launcher
+2. Go to the "📜 History" tab
+3. Browse the list of recent launches
+4. Find the desired script by date/time
+5. Double-click to run again
+6. Or add to favorites for future use
+
+**Result:** Launch history — your insurance against forgetfulness!
+
+---
+
+## 🔥 Advanced Features
+
+### Hotkeys
+- **Enter** — Launch selected script
+- **Delete** — Remove from favorites (on Favorites tab)
+- **Ctrl+F** — Focus on search field
+- **Escape** — Clear search
+
+### Context Menu (Right-Click)
+- **Run Script** — Launch script
+- **Add to Favorites** — Add to favorites
+- **Remove from Favorites** — Remove from favorites
+- **Show in Explorer** — Open file location
+- **Copy Path** — Copy full file path
+
+### Drag & Drop in Favorites
+Drag scripts in the Favorites list to change their order. The new order is saved automatically!
+
+### Smart Filtering
+Search works in real-time and matches any part of the filename. Case-insensitive.
+
+### Automatic Saving
+All changes (favorites, history, window size, position) are saved to `trs_Script Launcher.ini` automatically upon closing.
+
+---
+
+## ⚙️ Technical Details
+
+### System Requirements
+- **REAPER** version 6.0 or higher
+- **ReaImGui** extension (installed via ReaPack)
+- **Operating System:** Windows, macOS, Linux
+
+### Supported Script Formats
+- `.lua` — Lua scripts
+- `.eel` — EEL2 scripts
+- `.py` — Python scripts
+
+### Configuration File
+Settings are stored in `GUI Tools/trs_Script Launcher.ini`:
 ```ini
 [Window]
 width=1200
@@ -172,46 +176,46 @@ last1=path/to/recent/script.lua
 last2=path/to/previous/script.py
 ```
 
-### Особенности выполнения
-Скрипты запускаются через `reaper.Main_OnCommand(reaper.NamedCommandLookup("_RS..."), 0)` БЕЗ регистрации в Action List. Это означает:
-- ✅ Чистый Action List
-- ✅ Нет конфликтов ID
-- ✅ Можно запускать временные/тестовые скрипты
-- ✅ Не требуется перезагрузка REAPER
+### Execution Details
+Scripts are launched via `reaper.Main_OnCommand(reaper.NamedCommandLookup("_RS..."), 0)` WITHOUT registration in the Action List. This means:
+- ✅ Clean Action List
+- ✅ No ID conflicts
+- ✅ Can run temporary/test scripts
+- ✅ No REAPER restart required
 
-### Производительность
-- Сканирование директорий происходит асинхронно
-- Кэширование структуры папок для быстрой навигации
-- Оптимизированная отрисовка больших списков файлов
-
----
-
-## 🎯 Начните использовать прямо сейчас!
-
-1. **Установите** скрипт через ReaPack или вручную
-2. **Запустите** из Action List: `Script: trs_Script Launcher`
-3. **Настройте** избранное под свой workflow
-4. **Наслаждайтесь** организованной работой со скриптами!
-
-### Полезные советы для старта:
-- Добавьте сам Script Launcher в избранное REAPER для быстрого доступа
-- Создайте отдельные папки для разных типов задач (Mixing, Editing, MIDI и т.д.)
-- Используйте понятные имена файлов — это упростит поиск
-- Регулярно проверяйте историю — возможно, какой-то скрипт стоит добавить в избранное
+### Performance
+- Directory scanning occurs asynchronously
+- Folder structure caching for fast navigation
+- Optimized rendering of large file lists
 
 ---
 
-## 📞 Поддержка и обратная связь
+## 🎯 Get Started Now!
 
-- **Автор:** Taras Umanskiy
-- **Версия:** 2.0
-- **Ссылка:** [VK](http://vk.com/tarasmetal)
-- **Поддержать проект:** [Donation](https://vk.com/Tarasmetal)
+1. **Install** the script via ReaPack or manually
+2. **Launch** from the Action List: `Script: trs_Script Launcher`
+3. **Configure** favorites for your workflow
+4. **Enjoy** organized script work!
+
+### Tips for Starting:
+- Add Script Launcher itself to REAPER favorites for quick access
+- Create separate folders for different task types (Mixing, Editing, MIDI, etc.)
+- Use clear filenames — it simplifies searching
+- Regularly check history — maybe a script should be added to favorites
+
+---
+
+## 📞 Support and Feedback
+
+- **Author:** Taras Umanskiy
+- **Version:** 2.0
+- **Link:** [VK](http://vk.com/tarasmetal)
+- **Support the Project:** [Donation](https://vk.com/Tarasmetal)
 
 ---
 
 <div align="center">
 
-**Разработано с ❤️ для сообщества REAPER**
+**Developed with ❤️ for the REAPER community**
 
 </div>

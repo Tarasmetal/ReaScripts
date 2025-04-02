@@ -1,107 +1,108 @@
-[⬅️ На главную (Main)](../README.md)
+[⬅️ Main](../README.md)
+
+[![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Track%20GUI%20Tools.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Track%20GUI%20Tools_ru.md)
 
 # 🛠️ RENAME TRACKS GUI TOOLS
 
-**RENAME TRACKS GUI TOOLS** — это мощный и интуитивно понятный инструмент, предназначенный для быстрой организации проекта. Скрипт предоставляет графический интерфейс для мгновенного переименования треков, управления панорамированием и цветами, а также автоматизации рутинных задач, таких как нумерация и создание L/R пар.
+**RENAME TRACKS GUI TOOLS** is a powerful and intuitive tool designed for quick project organization. The script provides a graphical interface for instant track renaming, pan and color management, and automation of routine tasks such as numbering and creating L/R pairs.
 
 ---
 ![Demo](../img/trs_TrackGUITools.gif)
-<!-- <video controls src="../VIDEO/trs_Track GUI Tools.mp4" title="RENAME TRACKS GUI TOOLS VIDEO"></video> -->
 ---
 
-## 🚀 Основные возможности
+## 🚀 Key Features
 
-- 📝 **Мгновенное переименование**: Одним кликом меняйте имена выбранных треков.
-- 🎨 **Управление цветом**: Автоматическая раскраска треков в соответствии с выбранным пресетом.
-- 🎚️ **Панорамирование**: Возможность задавать значения панорамы для конкретных типов треков.
-- 📂 **Система пресетов**: Создавайте, сохраняйте и переключайтесь между различными наборами инструментов.
-- 🔢 **Авто-индексация**: Быстрая нумерация дублирующихся имен треков (например, Vox 1, Vox 2).
-- ↔️ **L/R Роутинг**: Автоматическое добавление суффиксов L и R для стерео-пар.
-- 🖱️ **Drag & Drop**: Перетаскивайте кнопки в интерфейсе для изменения их порядка.
-- ⚙️ **Контекстное меню**: Редактируйте параметры кнопок прямо в интерфейсе через правый клик.
-
----
-
-## 🖥️ Описание интерфейса
-
-### 1. Панель управления (Верхняя часть) 🛠️
-- **PRESETS**: Открывает диалоговое окно для выбора файла пресета (.txt).
-- **SAVE AS**: Позволяет сохранить текущий набор кнопок в новый файл.
-- **Кнопки `<` и `>`**: Быстрое переключение между доступными файлами пресетов в папке `TrackPresets`.
-- **Название пресета**: Отображает имя активного набора (выделено желтым цветом).
-- **Index**: Проходит по всем выбранным трекам и, если находит одинаковые имена, добавляет к ним порядковый номер.
-- **LR**: Ищет пары треков с одинаковыми именами и добавляет к первому "L", а ко второму "R".
-
-### 2. Сетка кнопок 🎹
-Каждая кнопка в сетке соответствует определенному имени трека. Цвет кнопки (затемненный) отражает цвет, который будет присвоен треку при нажатии.
-- **Левый клик**: Переименовывает все выбранные треки, применяет цвет и панораму (если настроены).
-- **Зажать и тащить (Drag)**: Позволяет переместить кнопку на другое место в списке.
+- 📝 **Instant Renaming**: Change the names of selected tracks with one click.
+- 🎨 **Color Management**: Automatic track coloring according to the selected preset.
+- 🎚️ **Panning**: Ability to set pan values for specific track types.
+- 📂 **Preset System**: Create, save, and switch between different toolsets.
+- 🔢 **Auto-Indexing**: Quick numbering of duplicate track names (e.g., Vox 1, Vox 2).
+- ↔️ **L/R Routing**: Automatic addition of L and R suffixes for stereo pairs.
+- 🖱️ **Drag & Drop**: Drag buttons in the interface to change their order.
+- ⚙️ **Context Menu**: Edit button parameters directly in the interface via right-click.
 
 ---
 
-## 🖱️ Расширенные настройки (Правый клик) ⚙️
+## 🖥️ Interface Overview
 
-При нажатии правой кнопкой мыши на любую кнопку открывается контекстное меню редактирования:
+### 1. Control Panel (Top Section) 🛠️
+- **PRESETS**: Opens a dialog box to select a preset file (.txt).
+- **SAVE AS**: Allows saving the current set of buttons to a new file.
+- **`<` and `>` Buttons**: Quickly switch between available preset files in the `TrackPresets` folder.
+- **Preset Name**: Displays the name of the active set (highlighted in yellow).
+- **Index**: Scans all selected tracks and, if it finds identical names, adds a sequence number to them.
+- **LR**: Searches for pairs of tracks with the same name and adds "L" to the first and "R" to the second.
 
-- **Edit Name**: Изменение текста на кнопке и имени трека.
-- **Enable Pan**: Включение/выключение управления панорамой для этой кнопки.
-- **Pan Value**: Установка значения панорамы (от -100 до 100).
-- **Enable Color**: Включение/выключение изменения цвета трека.
-- **Color Picker**: Выбор цвета через стандартную палитру или ввод HEX-кода.
+### 2. Button Grid 🎹
+Each button in the grid corresponds to a specific track name. The button color (shaded) reflects the color that will be assigned to the track when pressed.
+- **Left Click**: Renames all selected tracks, applies color and pan (if configured).
+- **Click and Drag**: Allows moving a button to another position in the list.
 
 ---
 
-## ⌨️ Горячие клавиши и управление мышью
+## 🖱️ Advanced Settings (Right-Click) ⚙️
 
-Для максимально быстрой работы в скрипте реализованы следующие команды:
+Right-clicking any button opens the edit context menu:
 
-### Клавиатура ⌨️
-- **`W`**: Выбрать предыдущий трек (вверх).
-- **`S`**: Выбрать следующий трек (вниз).
-- **`Enter` / `Num Enter`**: Подтверждение ввода в текстовых полях и закрытие окон редактирования.
-- **`Escape`**: Быстрое закрытие окна скрипта.
+- **Edit Name**: Change the text on the button and the track name.
+- **Enable Pan**: Toggle pan management for this button.
+- **Pan Value**: Set the pan value (from -100 to 100).
+- **Enable Color**: Toggle track color change.
+- **Color Picker**: Choose a color via the standard palette or enter a HEX code.
 
-### Мышь 🖱️
-- **Левый клик (ЛКМ)**: 
-  - На основную кнопку — полное переименование + цвет + панорама.
-  - На кнопку суффикса — добавление текста к текущему имени трека.
-- **Средний клик (СКМ)**:
-  - На кнопку суффикса — **заменяет** имя трека на текст суффикса (вместо добавления).
-- **Правый клик (ПКМ)**:
-  - На любую кнопку — открывает меню настроек (редактирование имени, цвета, панорамы).
-  - В меню цвета — клик ПКМ по иконке цвета копирует цвет с текущего выбранного трека в REAPER.
+---
+
+## ⌨️ Hotkeys and Mouse Controls
+
+For maximum efficiency, the following commands are implemented in the script:
+
+### Keyboard ⌨️
+- **`W`**: Select the previous track (up).
+- **`S`**: Select the next track (down).
+- **`Enter` / `Num Enter`**: Confirm input in text fields and close edit windows.
+- **`Escape`**: Quickly close the script window.
+
+### Mouse 🖱️
+- **Left Click (LMB)**:
+  - On the main button — Full rename + color + pan.
+  - On the suffix button — Adds text to the current track name.
+- **Middle Click (MMB)**:
+  - On the suffix button — **Replaces** the track name with the suffix text (instead of adding).
+- **Right Click (RMB)**:
+  - On any button — Opens the settings menu (editing name, color, pan).
+  - In the color menu — RMB click on the color icon copies the color from the currently selected track in REAPER.
 - **Drag & Drop**:
-  - Перетаскивание основных кнопок для изменения их порядка.
-  - Перетаскивание кнопок суффиксов для их перемещения или обмена местами.
+  - Drag main buttons to change their order.
+  - Drag suffix buttons to move or swap them.
 
 ---
 
-## 📁 Система пресетов и файлы 🗄️
+## 📁 Preset System and Files 🗄️
 
-Скрипт хранит настройки в папке `TrackPresets`, находящейся в директории скрипта.
+The script stores settings in the `TrackPresets` folder, located in the script directory.
 
-- **Формат файла**: `.txt`
-- **Структура данных**: Имя, Доп. поля, Панорама, Цвет (HEX).
-- **Автоматизация**: При первом запуске создаются файлы `default.txt` и `user.txt`.
-
----
-
-## 🔧 Требования и установка 📦
-
-1. **REAPER**: Актуальная версия.
-2. **ReaImGui**: Должен быть установлен через Reapack.
-3. **SWS Extension**: Рекомендуется для стабильной работы некоторых функций API.
+- **File Format**: `.txt`
+- **Data Structure**: Name, Extra fields, Pan, Color (HEX).
+- **Automation**: Upon the first launch, `default.txt` and `user.txt` files are created.
 
 ---
 
-## 💡 Советы по использованию 💡
+## 🔧 Requirements and Installation 📦
 
-- Чтобы быстро переименовать группу треков, выделите их в микшере или окне аранжировки и нажмите соответствующую кнопку в скрипте.
-- Используйте кнопку **Index** после дублирования трека (например, гитары), чтобы быстро получить "Guitar 1" и "Guitar 2".
-- Кнопка **LR** идеально подходит для дабл-треков: выделите два трека с именем "Lead Gtr" и нажмите LR — вы получите "Lead Gtr L" и "Lead Gtr R".
+1. **REAPER**: Current version.
+2. **ReaImGui**: Must be installed via ReaPack.
+3. **SWS Extension**: Recommended for stable operation of some API functions.
+
+---
+
+## 💡 Usage Tips 💡
+
+- To quickly rename a group of tracks, select them in the mixer or arrangement window and press the corresponding button in the script.
+- Use the **Index** button after duplicating a track (e.g., guitars) to quickly get "Guitar 1" and "Guitar 2".
+- The **LR** button is perfect for double-tracks: select two tracks named "Lead Gtr" and press LR — you will get "Lead Gtr L" and "Lead Gtr R".
 
 ---
 
 <p align="center">
-Разработано с ❤️ для сообщества REAPER
+Developed with ❤️ for the REAPER community
 </p>
