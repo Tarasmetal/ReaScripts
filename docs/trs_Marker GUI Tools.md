@@ -1,4 +1,4 @@
-[⬅️ Main](../README.md) | [![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Marker%20GUI%20Tools.md) | [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Marker%20GUI%20Tools_ru.md)
+[⬅️ Main](../README.md) [![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Marker%20GUI%20Tools.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Marker%20GUI%20Tools_ru.md)
 
 # 🤖 REAPER — Marker GUI Tools
 
