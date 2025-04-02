@@ -1,8 +1,10 @@
-[⬅️ Main](../README.md) [![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Marker%20GUI%20Tools.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Marker%20GUI%20Tools_ru.md)
+[⬅️ Main](../README.md)
+
+[![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Marker%20GUI%20Tools.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Marker%20GUI%20Tools_ru.md)
 
 # 🤖 REAPER — Marker GUI Tools
 
-> **A professional tool for working with markers and project navigation in REAPER.**  
+> **A professional tool for working with markers and project navigation in REAPER.**
 > The script allows you to maximize time efficiency for project markup, keeping it neat and clear. Don't be distracted from the creative process — navigate to any point in the project and set markers with pre-prepared names in a couple of seconds.
 
 ![Demo](../img/trs_Marker_GUI_Tools.gif)
