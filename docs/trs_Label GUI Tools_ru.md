@@ -1,6 +1,6 @@
 [⬅️ На главную (Main)](../README_ru.md)
 
-[🇬🇧 English](trs_Label%20GUI%20Tools.md) | [🇷🇺 Русский](trs_Label%20GUI%20Tools_ru.md)
+[en English](trs_Label%20GUI%20Tools.md) | [🇷🇺 Русский](trs_Label%20GUI%20Tools_ru.md)
 
 # GUI Tools: trs_Label GUI Tools
 

@@ -1,6 +1,6 @@
 [⬅️ Main](../README.md)
 
-[🇬🇧 English](trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.md) | [🇷🇺 Русский](trs_Action%20List%20Script%20Path%20Scan%20and%20Fix_ru.md)
+[en English](trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.md) | [🇷🇺 Русский](trs_Action%20List%20Script%20Path%20Scan%20and%20Fix_ru.md)
 
 # 🤖 Action List Script Path Scan and Fix
 

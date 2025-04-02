@@ -2,7 +2,7 @@
 
 ![Author](https://img.shields.io/badge/Author-Taras%20Umanskiy-blue) ![Platform](https://img.shields.io/badge/Platform-Windows%20(x64)-orange) ![Platform](https://img.shields.io/badge/Platform-Mac%20OS-yellow) ![API](https://img.shields.io/badge/API-Reaper%20%2F%20ReaImGui-green)
 
-[🇬🇧 English](README.md) | [🇷🇺 Русский](README_ru.md)
+[en English](README.md) | [🇷🇺 Русский](README_ru.md)
 
 I present to you **GUI Tools Pack** — a set of advanced scripts for [REAPER DAW](https://www.reaper.fm/), written in Lua using the **ReaImGui** library. This pack is designed to speed up routine tasks, improve navigation, and add new creative possibilities to your mixing and arranging workflow.
 The documentation will be gradually updated and corrected, so don't hesitate to reach out for help or with suggestions.
