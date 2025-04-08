@@ -1,6 +1,6 @@
 -- @description Script Launcher - File manager for launching REAPER scripts
 -- @author Taras Umanskiy
--- @version 2.7
+-- @version 2.8
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
@@ -25,12 +25,13 @@
 --   + v2.5: Исправлено отображение размера и описания в поиске, добавлена колонка Path в браузер
 --   + v2.6: Добавлена возможность изменения размера главного окна, адаптивная верстка
 --   + v2.7: Папки, добавленные в избранное, теперь отображаются белым цветом везде
+--   + v2.8: Выбор любого диска
 
 package.path = reaper.ImGui_GetBuiltinPath() .. '/?.lua'
 local ImGui = require 'imgui' '0.9.2'
 
 local ctx = ImGui.CreateContext('Script Launcher')
-local VERSION = "2.7"
+local VERSION = "2.8"
 local SCRIPT_NAME = "Script Launcher "
 
 local SCRIPT_EXTENSIONS = {
@@ -50,6 +51,7 @@ local ICONS = {
     back = "◀",
     up = "🔼",
     home = "🏠",
+    drive = "💻",
     search = "🔍",
     history = "🕐",
     refresh = "🔄"
@@ -129,22 +131,35 @@ local function NormalizePath(path)
     return path:gsub("\\", "/")
 end
 
+local function GetAvailableDrives()
+    local drives = {}
+    for i = 65, 90 do
+        local drive = string.char(i) .. ":"
+        local test_dir = reaper.EnumerateSubdirectories(drive .. "\\", 0)
+        local test_file = reaper.EnumerateFiles(drive .. "\\", 0)
+        if test_dir or test_file then
+            table.insert(drives, drive)
+        end
+    end
+    return drives
+end
+
 local function IsDirectory(path)
     -- Normalize path for comparison
     path = NormalizePath(path)
     -- Remove trailing slash if present
     if path:sub(-1) == "/" then path = path:sub(1, -2) end
-    
+
     local parent = GetParentPath(path)
-    if not parent then 
+    if not parent then
         -- Check if it is a drive letter (e.g. C:)
         if path:match("^%a:$") then return true end
-        return false 
+        return false
     end
-    
+
     -- Ensure parent path ends with slash if it is just a drive letter
     if parent:match("^%a:$") then parent = parent .. "/" end
-    
+
     local dirname = GetFileName(path)
     if not dirname then return false end
 
@@ -556,6 +571,23 @@ local function DrawToolbar()
     if ImGui.Button(ctx, ICONS.home .. "##home") then GoHome() end
     if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Home (Scripts folder)") end
     ImGui.SameLine(ctx)
+
+    if ImGui.Button(ctx, ICONS.drive .. "##drives") then
+        ImGui.OpenPopup(ctx, "DrivesPopup")
+    end
+    if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Drives") end
+
+    if ImGui.BeginPopup(ctx, "DrivesPopup") then
+        local drives = GetAvailableDrives()
+        for _, drive in ipairs(drives) do
+            if ImGui.MenuItem(ctx, drive) then
+                NavigateTo(drive .. "/")
+            end
+        end
+        ImGui.EndPopup(ctx)
+    end
+
+    ImGui.SameLine(ctx)
     if ImGui.Button(ctx, ICONS.refresh .. "##refresh") then ScanDirectory(state.current_path) end
     if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Refresh") end
     ImGui.SameLine(ctx)
@@ -583,15 +615,15 @@ end
 local function DrawSearchBar()
     ImGui.SetNextItemWidth(ctx, -200)
     local changed, new_text = ImGui.InputTextWithHint(ctx, "##search", ICONS.search .. " Search scripts...", state.search_text)
-    if changed then 
-        state.search_text = new_text 
+    if changed then
+        state.search_text = new_text
         state.needs_search_update = true
         state.search_timer = reaper.time_precise() + 0.3 -- 300ms debounce
     end
     ImGui.SameLine(ctx)
     local changed_rec, new_rec = ImGui.Checkbox(ctx, "Recursive Search", state.recursive_search)
-    if changed_rec then 
-        state.recursive_search = new_rec 
+    if changed_rec then
+        state.recursive_search = new_rec
         state.needs_search_update = true
         state.search_timer = 0 -- Update immediately on checkbox change
         SaveConfig()
@@ -601,14 +633,14 @@ end
 local function DrawFolderTree(list_height)
     if ImGui.BeginChild(ctx, "FolderTree", state.tree_width, list_height, ImGui.ChildFlags_Border + ImGui.ChildFlags_ResizeX) then
         state.tree_width, _ = ImGui.GetWindowSize(ctx)
-        
+
         local root_path = GetScriptsPath()
         local root_is_fav = IsFavorite(root_path)
-        
+
         ImGui.PushStyleColor(ctx, ImGui.Col_Text, root_is_fav and 0xFFFFFFFF or colors.folder)
         local root_open = ImGui.TreeNodeEx(ctx, "Scripts", "Scripts", ImGui.TreeNodeFlags_DefaultOpen)
         ImGui.PopStyleColor(ctx)
-        
+
         if root_open then
             if ImGui.BeginPopupContextItem(ctx) then
                 if ImGui.MenuItem(ctx, root_is_fav and "Remove from Favorites" or "Add to Favorites") then
@@ -628,12 +660,12 @@ local function DrawFolderTree(list_height)
                         if folder_path == state.current_path then
                             flags = flags + ImGui.TreeNodeFlags_Selected
                         end
-                        
+
                         local is_fav = IsFavorite(folder_path)
                         ImGui.PushStyleColor(ctx, ImGui.Col_Text, is_fav and 0xFFFFFFFF or colors.folder)
                         local is_open = ImGui.TreeNodeEx(ctx, folder_path, folder, flags)
                         ImGui.PopStyleColor(ctx)
-                        
+
                         if ImGui.BeginPopupContextItem(ctx) then
                             if ImGui.MenuItem(ctx, is_fav and "Remove from Favorites" or "Add to Favorites") then
                                 ToggleFavorite(folder_path)
@@ -662,7 +694,7 @@ end
 local function DrawFileList(list_height)
     ImGui.SameLine(ctx)
     if ImGui.BeginChild(ctx, "FileList", 0, list_height, ImGui.ChildFlags_Border) then
-        
+
         -- Подготовка списка видимых элементов
         local visible_items = {}
         local mode = "browser"
@@ -695,7 +727,7 @@ local function DrawFileList(list_height)
         else -- browser
             -- Обновление кешированного поиска
             local current_time = reaper.time_precise()
-            local search_changed = state.search_text ~= state.last_search_text or 
+            local search_changed = state.search_text ~= state.last_search_text or
                                  state.recursive_search ~= state.last_recursive_search or
                                  state.current_path ~= state.last_search_path
 
@@ -796,12 +828,12 @@ local function DrawFileList(list_height)
                         icon = GetIconForFile(item.name)
                         color = GetColorForFile(item.name)
                     end
-                    
+
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, color)
                     local is_selected = (i == state.selected_index)
-                    
+
                     local flags = ImGui.SelectableFlags_AllowDoubleClick + ImGui.SelectableFlags_SpanAllColumns
-                    
+
                     if ImGui.Selectable(ctx, icon .. " " .. item.name .. "##fav" .. i, is_selected, flags) then
                         state.selected_index = i
                         state.selected_file = item.path
@@ -810,7 +842,7 @@ local function DrawFileList(list_height)
                         else
                              state.script_info = nil
                         end
-                        
+
                         if ImGui.IsMouseDoubleClicked(ctx, 0) then
                             if item.is_dir then
                                 NavigateTo(item.path)
@@ -843,7 +875,7 @@ local function DrawFileList(list_height)
                     end
 
                     ImGui.PopStyleColor(ctx)
-                    
+
                     if is_selected and (ImGui.IsKeyPressed(ctx, ImGui.Key_UpArrow) or ImGui.IsKeyPressed(ctx, ImGui.Key_DownArrow)) then
                         ImGui.SetScrollHereY(ctx)
                     end
@@ -870,11 +902,11 @@ local function DrawFileList(list_height)
                 end
                 ImGui.EndTable(ctx)
             end
-            
+
         elseif mode == "history" then
             ImGui.TextColored(ctx, colors.favorite, ICONS.history .. " Run History")
             ImGui.Separator(ctx)
-            
+
             if ImGui.BeginTable(ctx, "HistoryTable", 2, ImGui.TableFlags_Resizable + ImGui.TableFlags_RowBg + ImGui.TableFlags_ScrollY) then
                 ImGui.TableSetupColumn(ctx, "Name", ImGui.TableColumnFlags_WidthStretch)
                 ImGui.TableSetupColumn(ctx, "Path", ImGui.TableColumnFlags_WidthStretch)
@@ -886,17 +918,17 @@ local function DrawFileList(list_height)
 
                     local icon = GetIconForFile(item.name)
                     local color = GetColorForFile(item.name)
-                    
+
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, color)
                     local is_selected = (i == state.selected_index)
-                    
+
                     local flags = ImGui.SelectableFlags_AllowDoubleClick + ImGui.SelectableFlags_SpanAllColumns
-                    
+
                     if ImGui.Selectable(ctx, icon .. " " .. item.name .. "##hist" .. i, is_selected, flags) then
                         state.selected_index = i
                         state.selected_file = item.path
                         state.script_info = GetFileInfo(item.path)
-                        
+
                         if ImGui.IsMouseDoubleClicked(ctx, 0) then
                             RunScript(item.path)
                         end
@@ -925,7 +957,7 @@ local function DrawFileList(list_height)
                 end
                 ImGui.EndTable(ctx)
             end
-            
+
         else -- browser
             if ImGui.BeginTable(ctx, "FilesTable", 5, ImGui.TableFlags_Resizable + ImGui.TableFlags_RowBg + ImGui.TableFlags_ScrollY) then
                 ImGui.TableSetupColumn(ctx, "Name", ImGui.TableColumnFlags_WidthStretch)
@@ -934,14 +966,14 @@ local function DrawFileList(list_height)
                 ImGui.TableSetupColumn(ctx, "Path", ImGui.TableColumnFlags_WidthStretch)
                 ImGui.TableSetupColumn(ctx, "", ImGui.TableColumnFlags_WidthFixed, 30)
                 ImGui.TableHeadersRow(ctx)
-                
+
                 for i, item in ipairs(visible_items) do
                     ImGui.TableNextRow(ctx)
                     ImGui.TableNextColumn(ctx)
-                    
+
                     local is_selected = (i == state.selected_index)
                     local is_fav = IsFavorite(item.path)
-                    
+
                     local icon, color
                     if item.is_dir then
                         icon = ICONS.folder
@@ -950,18 +982,18 @@ local function DrawFileList(list_height)
                         icon = GetIconForFile(item.name)
                         color = GetColorForFile(item.name)
                     end
-                    
+
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, color)
                     local flags = ImGui.SelectableFlags_AllowDoubleClick + ImGui.SelectableFlags_SpanAllColumns
-                    
+
                     local display_name = icon .. " " .. item.name
                     if is_fav then display_name = display_name .. " " .. ICONS.favorite end
-                    
+
                     if ImGui.Selectable(ctx, display_name .. "##item" .. i, is_selected, flags) then
                         state.selected_index = i
                         state.selected_file = item.path
                         state.script_info = item.info -- info nil if folder
-                        
+
                         if ImGui.IsMouseDoubleClicked(ctx, 0) then
                             if item.is_dir then
                                 NavigateTo(item.path)
@@ -971,7 +1003,7 @@ local function DrawFileList(list_height)
                         end
                     end
                     ImGui.PopStyleColor(ctx)
-                    
+
                     if is_selected and (ImGui.IsKeyPressed(ctx, ImGui.Key_UpArrow) or ImGui.IsKeyPressed(ctx, ImGui.Key_DownArrow)) then
                         ImGui.SetScrollHereY(ctx)
                     end
@@ -989,14 +1021,14 @@ local function DrawFileList(list_height)
                         end
                         ImGui.EndPopup(ctx)
                     end
-                    
+
                     ImGui.TableNextColumn(ctx)
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.size)
                     if item.info then
                         ImGui.Text(ctx, FormatFileSize(item.info.size))
                     end
                     ImGui.PopStyleColor(ctx)
-                    
+
                     ImGui.TableNextColumn(ctx)
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.date)
                     if item.info and item.info.description ~= "" then
@@ -1008,7 +1040,7 @@ local function DrawFileList(list_height)
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.size)
                     ImGui.Text(ctx, item.path)
                     ImGui.PopStyleColor(ctx)
-                    
+
                     ImGui.TableNextColumn(ctx)
                     -- Empty column
                 end
@@ -1096,26 +1128,26 @@ local function DrawAddCustomPathModal()
         ImGui.SetNextItemWidth(ctx, 400)
         local changed, new_text = ImGui.InputText(ctx, "##custompath", state.custom_path_input)
         if changed then state.custom_path_input = new_text end
-        
+
         ImGui.Spacing(ctx)
-        
+
         if ImGui.Button(ctx, "Add") then
             local path = state.custom_path_input
             -- Remove quotes if user copied as "path"
             path = path:gsub('^"', ''):gsub('"$', '')
             -- Normalize slashes and remove trailing ones
             path = NormalizePath(path)
-            if path:sub(-1) == "/" and not path:match("^%a:/$") then 
-                path = path:sub(1, -2) 
+            if path:sub(-1) == "/" and not path:match("^%a:/$") then
+                path = path:sub(1, -2)
             end
-            
+
             local is_valid = false
             if reaper.file_exists(path) then
                 is_valid = true
             elseif IsDirectory(path) then
                 is_valid = true
             end
-            
+
             if is_valid then
                 ToggleFavorite(path)
                 state.custom_path_input = ""
@@ -1124,13 +1156,13 @@ local function DrawAddCustomPathModal()
                 reaper.ShowMessageBox("Path does not exist or is invalid.", "Error", 0)
             end
         end
-        
+
         ImGui.SameLine(ctx)
-        
+
         if ImGui.Button(ctx, "Cancel") then
             ImGui.CloseCurrentPopup(ctx)
         end
-        
+
         ImGui.EndPopup(ctx)
     end
 end
@@ -1140,7 +1172,7 @@ local function MainLoop()
     local visible, open = ImGui.Begin(ctx, SCRIPT_NAME .. " v" .. VERSION, true, state.window_flags)
     if visible then
         state.window_w, state.window_h = ImGui.GetWindowSize(ctx)
-        
+
         if ImGui.IsWindowFocused(ctx, ImGui.FocusedFlags_RootAndChildWindows) and ImGui.IsKeyPressed(ctx, ImGui.Key_Escape) and not ImGui.IsAnyItemActive(ctx) then
             open = false
         end
@@ -1151,7 +1183,7 @@ local function MainLoop()
         ImGui.Spacing(ctx)
         DrawSearchBar()
         ImGui.Spacing(ctx)
-        
+
         -- Calculate remaining height for tree and list
         local _, cur_y = ImGui.GetCursorPos(ctx)
         local win_h = ImGui.GetWindowHeight(ctx)
