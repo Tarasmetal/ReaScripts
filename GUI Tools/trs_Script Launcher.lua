@@ -1,6 +1,6 @@
 -- @description Script Launcher - File manager for launching REAPER scripts
 -- @author Taras Umanskiy
--- @version 2.9.2
+-- @version 2.9.8
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
@@ -29,13 +29,19 @@
 --   + v2.9: Добавлена система тегов для скриптов и папок
 --   + v2.9.1: Управление тегами перенесено в контекстное меню (чекбоксы)
 --   + v2.9.2: Панель тегов интегрирована в тулбар
+--   + v2.9.3: Добавлена кнопка "?" (About) в менюбар с ссылками на автора и донаты
+--   + v2.9.4: Исправлен лишний пробел в названии, оптимизирована кнопка помощи
+--   + v2.9.5: Добавлена ссылка на GitHub репозиторий в окно About
+--   + v2.9.6: Кнопки Home и Drive перемещены в начало тулбара
+--   + v2.9.7: Исправлено отображение путей и тегов в разделах Favorites и History
+--   + v2.9.8: Добавлена настройка скрытия иконок файлов (View > Show File Icons)
 
 package.path = reaper.ImGui_GetBuiltinPath() .. '/?.lua'
 local ImGui = require 'imgui' '0.9.2'
 
 local ctx = ImGui.CreateContext('Script Launcher')
-local VERSION = "2.9.2"
-local SCRIPT_NAME = "Script Launcher "
+local VERSION = "2.9.8"
+local SCRIPT_NAME = "Script Launcher"
 
 local SCRIPT_EXTENSIONS = {
     lua = true, eel = true, py = true
@@ -58,7 +64,8 @@ local ICONS = {
     search = "🔍",
     history = "🕐",
     refresh = "🔄",
-    tag = "🏷️"
+    tag = "🏷️",
+    help = "❓"
 }
 
 local colors = {
@@ -199,8 +206,10 @@ local state = {
     window_h = 600,
     sort_by = "name",
     sort_ascending = true,
+    show_file_icons = true,
     ide_path = "",
     show_settings = false,
+    show_about = false,
     tree_width = 200,
     show_add_custom_path_modal = false,
     custom_path_input = "",
@@ -234,6 +243,7 @@ local function SaveConfig()
         file:write("window_w=" .. tostring(state.window_w) .. "\n")
         file:write("window_h=" .. tostring(state.window_h) .. "\n")
         file:write("tree_width=" .. tostring(state.tree_width) .. "\n")
+        file:write("show_file_icons=" .. (state.show_file_icons and "1" or "0") .. "\n")
         
         file:write("tags=")
         for i, tag in ipairs(state.tags) do
@@ -291,6 +301,8 @@ local function LoadConfig()
                     state.window_h = tonumber(value) or 600
                 elseif key == "tree_width" then
                     state.tree_width = tonumber(value) or 200
+                elseif key == "show_file_icons" then
+                    state.show_file_icons = (value == "1")
                 elseif key == "tags" and value ~= "" then
                     state.tags = {}
                     for tag in value:gmatch("[^|]+") do
@@ -627,29 +639,66 @@ local function DrawMenuBar()
                 state.sort_ascending = false
                 ScanDirectory(state.current_path)
             end
-            ImGui.EndMenu(ctx)
-        end
-        if ImGui.BeginMenu(ctx, "Help") then
-            if ImGui.MenuItem(ctx, "About...") then
-                reaper.ShowMessageBox(
-                    SCRIPT_NAME .. " v" .. VERSION .. "\n\n" ..
-                    "Author: Taras Umanskiy\n" ..
-                    "File manager for launching REAPER scripts",
-                    "About", 0)
+            ImGui.Separator(ctx)
+            if ImGui.MenuItem(ctx, "Show File Icons", nil, state.show_file_icons) then
+                state.show_file_icons = not state.show_file_icons
+                SaveConfig()
             end
             ImGui.EndMenu(ctx)
         end
+
+        -- Правая часть менюбара
+        local menu_w = ImGui.GetWindowWidth(ctx)
+        local help_btn_w = 25
+        ImGui.SetCursorPosX(ctx, menu_w - help_btn_w - 5)
+        
+        if ImGui.Selectable(ctx, ICONS.help .. "##help", state.show_about, 0, help_btn_w) then
+            state.show_about = not state.show_about
+        end
+        if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "About / Help") end
+
         ImGui.EndMenuBar(ctx)
     end
 end
 
+local function DrawAboutWindow()
+    if state.show_about then
+        local center = {ImGui.Viewport_GetCenter(ImGui.GetMainViewport(ctx))}
+        ImGui.SetNextWindowPos(ctx, center[1], center[2], ImGui.Cond_Appearing, 0.5, 0.5)
+        
+        local visible, open = ImGui.Begin(ctx, "About " .. SCRIPT_NAME, true, ImGui.WindowFlags_AlwaysAutoResize)
+        if visible then
+            ImGui.TextColored(ctx, colors.selected, SCRIPT_NAME .. " v" .. VERSION)
+            ImGui.Separator(ctx)
+            ImGui.Text(ctx, "Author: Taras Umanskiy")
+            ImGui.Spacing(ctx)
+            ImGui.TextWrapped(ctx, "File manager for launching REAPER scripts with tags, favorites, and history.")
+            ImGui.Spacing(ctx)
+            
+            if ImGui.Button(ctx, "GitHub Repository") then
+                reaper.CF_ShellExecute("https://github.com/Tarasmetal/ReaScripts")
+            end
+            
+            ImGui.SameLine(ctx)
+            
+            if ImGui.Button(ctx, "VK Contact") then
+                reaper.CF_ShellExecute("http://vk.com/tarasmetal")
+            end
+            
+            ImGui.SameLine(ctx)
+            
+            if ImGui.Button(ctx, "Donation") then
+                reaper.CF_ShellExecute("https://vk.com/Tarasmetal")
+            end
+            
+            ImGui.Separator(ctx)
+            ImGui.End(ctx)
+        end
+        if not open then state.show_about = false end
+    end
+end
+
 local function DrawToolbar()
-    if ImGui.Button(ctx, ICONS.back .. "##back") then GoBack() end
-    if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Back") end
-    ImGui.SameLine(ctx)
-    if ImGui.Button(ctx, ICONS.up .. "##up") then GoUp() end
-    if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Up") end
-    ImGui.SameLine(ctx)
     if ImGui.Button(ctx, ICONS.home .. "##home") then GoHome() end
     if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Home (Scripts folder)") end
     ImGui.SameLine(ctx)
@@ -668,7 +717,15 @@ local function DrawToolbar()
         end
         ImGui.EndPopup(ctx)
     end
+    ImGui.SameLine(ctx)
+    ImGui.Text(ctx, "|")
+    ImGui.SameLine(ctx)
 
+    if ImGui.Button(ctx, ICONS.back .. "##back") then GoBack() end
+    if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Back") end
+    ImGui.SameLine(ctx)
+    if ImGui.Button(ctx, ICONS.up .. "##up") then GoUp() end
+    if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Up") end
     ImGui.SameLine(ctx)
     if ImGui.Button(ctx, ICONS.refresh .. "##refresh") then ScanDirectory(state.current_path) end
     if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Refresh") end
@@ -868,14 +925,14 @@ local function DrawFileList(list_height)
                         icon = ICONS.folder
                         color = is_fav and 0xFFFFFFFF or colors.folder
                     else
-                        icon = GetIconForFile(item.name)
+                        icon = state.show_file_icons and GetIconForFile(item.name) or ""
                         color = GetColorForFile(item.name)
                     end
 
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, color)
                     local flags = ImGui.SelectableFlags_AllowDoubleClick + ImGui.SelectableFlags_SpanAllColumns
 
-                    local display_name = icon .. " " .. item.name
+                    local display_name = (icon ~= "" and icon .. " " or "") .. item.name
                     if is_fav then display_name = display_name .. " " .. ICONS.favorite end
 
                     if ImGui.Selectable(ctx, display_name .. "##tag_item" .. i, is_selected, flags) then
@@ -1041,8 +1098,9 @@ local function DrawFileList(list_height)
             ImGui.TextColored(ctx, colors.favorite, ICONS.favorite .. " Favorites")
             ImGui.Separator(ctx)
 
-            if ImGui.BeginTable(ctx, "FavoritesTable", 2, ImGui.TableFlags_Resizable + ImGui.TableFlags_RowBg + ImGui.TableFlags_ScrollY) then
+            if ImGui.BeginTable(ctx, "FavoritesTable", 3, ImGui.TableFlags_Resizable + ImGui.TableFlags_RowBg + ImGui.TableFlags_ScrollY) then
                 ImGui.TableSetupColumn(ctx, "Name", ImGui.TableColumnFlags_WidthStretch)
+                ImGui.TableSetupColumn(ctx, "Tags", ImGui.TableColumnFlags_WidthStretch)
                 ImGui.TableSetupColumn(ctx, "Path", ImGui.TableColumnFlags_WidthStretch)
                 ImGui.TableHeadersRow(ctx)
 
@@ -1055,7 +1113,7 @@ local function DrawFileList(list_height)
                         icon = ICONS.folder
                         color = 0xFFFFFFFF -- White for favorite folders
                     else
-                        icon = GetIconForFile(item.name)
+                        icon = state.show_file_icons and GetIconForFile(item.name) or ""
                         color = GetColorForFile(item.name)
                     end
 
@@ -1064,7 +1122,8 @@ local function DrawFileList(list_height)
 
                     local flags = ImGui.SelectableFlags_AllowDoubleClick + ImGui.SelectableFlags_SpanAllColumns
 
-                    if ImGui.Selectable(ctx, icon .. " " .. item.name .. "##fav" .. i, is_selected, flags) then
+                    local display_name = (icon ~= "" and icon .. " " or "") .. item.name
+                    if ImGui.Selectable(ctx, display_name .. "##fav" .. i, is_selected, flags) then
                         state.selected_index = i
                         state.selected_file = item.path
                         if not item.is_dir then
@@ -1151,8 +1210,9 @@ local function DrawFileList(list_height)
             ImGui.TextColored(ctx, colors.favorite, ICONS.history .. " Run History")
             ImGui.Separator(ctx)
 
-            if ImGui.BeginTable(ctx, "HistoryTable", 2, ImGui.TableFlags_Resizable + ImGui.TableFlags_RowBg + ImGui.TableFlags_ScrollY) then
+            if ImGui.BeginTable(ctx, "HistoryTable", 3, ImGui.TableFlags_Resizable + ImGui.TableFlags_RowBg + ImGui.TableFlags_ScrollY) then
                 ImGui.TableSetupColumn(ctx, "Name", ImGui.TableColumnFlags_WidthStretch)
+                ImGui.TableSetupColumn(ctx, "Tags", ImGui.TableColumnFlags_WidthStretch)
                 ImGui.TableSetupColumn(ctx, "Path", ImGui.TableColumnFlags_WidthStretch)
                 ImGui.TableHeadersRow(ctx)
 
@@ -1160,7 +1220,7 @@ local function DrawFileList(list_height)
                     ImGui.TableNextRow(ctx)
                     ImGui.TableNextColumn(ctx)
 
-                    local icon = GetIconForFile(item.name)
+                    local icon = state.show_file_icons and GetIconForFile(item.name) or ""
                     local color = GetColorForFile(item.name)
 
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, color)
@@ -1168,7 +1228,8 @@ local function DrawFileList(list_height)
 
                     local flags = ImGui.SelectableFlags_AllowDoubleClick + ImGui.SelectableFlags_SpanAllColumns
 
-                    if ImGui.Selectable(ctx, icon .. " " .. item.name .. "##hist" .. i, is_selected, flags) then
+                    local display_name = (icon ~= "" and icon .. " " or "") .. item.name
+                    if ImGui.Selectable(ctx, display_name .. "##hist" .. i, is_selected, flags) then
                         state.selected_index = i
                         state.selected_file = item.path
                         state.script_info = GetFileInfo(item.path)
@@ -1195,6 +1256,18 @@ local function DrawFileList(list_height)
                         DrawTagAssignmentMenu(item.path)
                         ImGui.EndPopup(ctx)
                     end
+
+                    ImGui.TableNextColumn(ctx)
+                    ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.breadcrumb)
+                    if state.item_tags[item.path] then
+                        local tags = {}
+                        for t, _ in pairs(state.item_tags[item.path]) do table.insert(tags, t) end
+                        if #tags > 0 then
+                            table.sort(tags)
+                            ImGui.Text(ctx, table.concat(tags, ", "))
+                        end
+                    end
+                    ImGui.PopStyleColor(ctx)
 
                     ImGui.TableNextColumn(ctx)
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.size)
@@ -1226,14 +1299,14 @@ local function DrawFileList(list_height)
                         icon = ICONS.folder
                         color = is_fav and 0xFFFFFFFF or colors.folder
                     else
-                        icon = GetIconForFile(item.name)
+                        icon = state.show_file_icons and GetIconForFile(item.name) or ""
                         color = GetColorForFile(item.name)
                     end
 
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, color)
                     local flags = ImGui.SelectableFlags_AllowDoubleClick + ImGui.SelectableFlags_SpanAllColumns
 
-                    local display_name = icon .. " " .. item.name
+                    local display_name = (icon ~= "" and icon .. " " or "") .. item.name
                     if is_fav then display_name = display_name .. " " .. ICONS.favorite end
 
                     if ImGui.Selectable(ctx, display_name .. "##item" .. i, is_selected, flags) then
@@ -1447,7 +1520,7 @@ end
 
 local function DrawTagsBar()
     -- Manage Tags button
-    if ImGui.Button(ctx, "Manage Tags##manage_tags") then
+    if ImGui.Button(ctx, "🏷 Tags##manage_tags") then
         state.show_manage_tags = not state.show_manage_tags
     end
     if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Manage Tags (Add/Edit/Delete)") end
@@ -1597,6 +1670,7 @@ local function MainLoop()
         ImGui.End(ctx)
     end
     DrawSettingsWindow()
+    DrawAboutWindow()
     DrawManageTagsWindow()
     if open then
         DrawAddCustomPathModal()
