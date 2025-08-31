@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="f1be5962b56b428b9946da8ddc4e2a3e98f60e9c">
+<index version="1" name="Taras Scripts" commit="a58e5b64ad8269055bf5f23a106d095750caecd7">
   <category name="GUI Tools">
+    <reapack name="trs_ Rename Russian items and Filename To Translit.lua" type="script" desc="Транслитерация русских имен файлов в латиницу с GUI">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Production-ready GUI \u1080?\u1085?\u1089?\u1090?\u1088?\u1091?\u1084?\u1077?\u1085?\u1090? \u1076?\u1083?\u1103? \u1090?\u1088?\u1072?\u1085?\u1089?\u1083?\u1080?\u1090?\u1077?\u1088?\u1072?\u1094?\u1080?\u1080? \u1072?\u1091?\u1076?\u1080?\u1086? \u1092?\u1072?\u1081?\u1083?\u1086?\u1074? \u1074? REAPER\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1054?\u1089?\u1085?\u1086?\u1074?\u1085?\u1099?\u1077? \u1074?\u1086?\u1079?\u1084?\u1086?\u1078?\u1085?\u1086?\u1089?\u1090?\u1080?:\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1056?\u1077?\u1078?\u1080?\u1084?\u1099? \u1089?\u1082?\u1072?\u1085?\u1080?\u1088?\u1086?\u1074?\u1072?\u1085?\u1080?\u1103?: \u1090?\u1086?\u1083?\u1100?\u1082?\u1086? \u1092?\u1072?\u1081?\u1083?\u1099? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072? \u1080?\u1083?\u1080? \u1074?\u1089?\u1077? \u1076?\u1086?\u1089?\u1090?\u1091?\u1087?\u1085?\u1099?\u1077? \u1072?\u1091?\u1076?\u1080?\u1086?\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1058?\u1088?\u1072?\u1085?\u1089?\u1083?\u1080?\u1090?\u1077?\u1088?\u1072?\u1094?\u1080?\u1103? \u1082?\u1080?\u1088?\u1080?\u1083?\u1083?\u1080?\u1094?\u1099? \u1074? \u1083?\u1072?\u1090?\u1080?\u1085?\u1080?\u1094?\u1091?\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1041?\u1077?\u1079?\u1086?\u1087?\u1072?\u1089?\u1085?\u1086?\u1077? \u1088?\u1072?\u1079?\u1088?\u1077?\u1096?\u1077?\u1085?\u1080?\u1077? \u1082?\u1086?\u1085?\u1092?\u1083?\u1080?\u1082?\u1090?\u1086?\u1074? \u1089? \u1089?\u1091?\u1092?\u1092?\u1080?\u1082?\u1089?\u1072?\u1084?\u1080?\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1055?\u1088?\u1077?\u1076?\u1087?\u1088?\u1086?\u1089?\u1084?\u1086?\u1090?\u1088? \u1080? dry-run \u1088?\u1077?\u1078?\u1080?\u1084?\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1042?\u1099?\u1073?\u1086?\u1088?\u1086?\u1095?\u1085?\u1086?\u1077? \u1087?\u1077?\u1088?\u1077?\u1080?\u1084?\u1077?\u1085?\u1086?\u1074?\u1072?\u1085?\u1080?\u1077?\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1069?\u1082?\u1089?\u1087?\u1086?\u1088?\u1090? \u1074? CSV\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1048?\u1089?\u1090?\u1086?\u1088?\u1080?\u1103? \u1086?\u1087?\u1077?\u1088?\u1072?\u1094?\u1080?\u1081? \u1089? \u1074?\u1086?\u1079?\u1084?\u1086?\u1078?\u1085?\u1086?\u1089?\u1090?\u1100?\u1102? \u1086?\u1090?\u1082?\u1072?\u1090?\u1072?\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u1050?\u1086?\u1088?\u1088?\u1077?\u1082?\u1090?\u1085?\u1099?\u1081? offline/online \u1088?\u1077?\u1078?\u1080?\u1084? \u1076?\u1083?\u1103? \u1085?\u1072?\u1076?\u1077?\u1078?\u1085?\u1086?\u1075?\u1086? \u1087?\u1077?\u1088?\u1077?\u1080?\u1084?\u1077?\u1085?\u1086?\u1074?\u1072?\u1085?\u1080?\u1103?\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1058?\u1088?\u1077?\u1073?\u1086?\u1074?\u1072?\u1085?\u1080?\u1103?:\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab REAPER\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab ReaImGui extension\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab SWS Extensions (\u1076?\u1083?\u1103? \u1082?\u1086?\u1084?\u1072?\u1085?\u1076?\u1099? _BR_TOGGLE_ITEM_ONLINE)\sa180\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="1.4.0" author="Taras Umanskiy" time="2026-08-31T19:19:26Z">
+        <changelog><![CDATA[v.1.4.0 + КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: обновление путей перенесено ПОСЛЕ возврата items в online режим
+        + Изменена последовательность шагов: offline → wait → rename → wait → online → wait → update_paths → done
+        + Добавлен новый шаг 19 для обновления путей в проекте (после online)
+        + Добавлены шаги 16-18 для паузы после возврата в online (90мс стабилизации)
+        + Теперь 7 шагов вместо 6: шаги перенумерованы (16→20 для done)
+        + Это должно решить проблему с неправильными путями к файлам и items
+v.1.3.0 + Исправлены корректные API функции: CountTakes вместо CountMediaItemTakes, GetTake вместо GetMediaItemTake
+        + Добавлено сохранение и восстановление выделения items при offline/online переключении
+        + Улучшена функция retarget_project_references с добавлением UpdateTimeline и подсчётом обновлённых путей
+        + Добавлено отображение количества обновлённых путей в статусе шага 3
+        + Исправлена работа set_items_offline для корректного сохранения выделения
+v.1.2.0 + Использование команды SWS _BR_TOGGLE_ITEM_ONLINE для offline/online переключения
+        + Заменена функция set_takes_offline на set_items_offline с корректной работой через items, а не takes
+        + Исправлена проверка состояния items перед переключением
+        + Переименованы affected_takes → affected_items во всех местах
+        + Исправлена ошибка ImGui_BeginChild (boolean → WindowFlags_None)
+v.1.1.0 + Исправлен механизм offline-переименования файлов
+        + Заменены устаревшие API функции (CountTakes → CountMediaItemTakes, GetTake → GetMediaItemTake)
+        + Добавлена проверка MIDI takes для предотвращения ошибок
+        + Увеличено время ожидания после offline до 300мс (было 120мс)
+        + Добавлена дополнительная пауза 90мс после обновления путей перед возвратом в online
+        + Обновлена структура шагов: 0→offline, 1-10→wait(300ms), 11→rename, 12-14→wait(90ms), 15→online, 16→done
+        + Улучшены статусные сообщения с отображением текущего шага (1/6, 2/6 и т.д.)
+v.1.0.0 + Первая версия скрипта]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/a58e5b64ad8269055bf5f23a106d095750caecd7/GUI%20Tools/trs_%20Rename%20Russian%20items%20and%20Filename%20To%20Translit.lua</source>
+      </version>
+    </reapack>
     <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
@@ -127,6 +180,24 @@ v1.1
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Move%20selected%20items%20files%20to%20region%20folder.lua</source>
       </version>
     </reapack>
+    <reapack name="trs_Multi Channel Receive for selected tracks.lua" type="script" desc="Sequential Send/Receive Channels with GUI">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1057?\u1082?\u1088?\u1080?\u1087?\u1090? \u1089? GUI \u1076?\u1083?\u1103? \u1087?\u1077?\u1088?\u1077?\u1085?\u1072?\u1079?\u1085?\u1072?\u1095?\u1077?\u1085?\u1080?\u1103? \u1072?\u1091?\u1076?\u1080?\u1086?\u1082?\u1072?\u1085?\u1072?\u1083?\u1086?\u1074? \u1087?\u1086?\u1089?\u1099?\u1083?\u1086?\u1074? (Send) \u1080?\u1083?\u1080? \u1087?\u1086?\u1083?\u1091?\u1095?\u1077?\u1085?\u1080?\u1081? (Receive) \u1085?\u1072? \u1074?\u1099?\u1073?\u1088?\u1072?\u1085?\u1085?\u1099?\u1093? \u1090?\u1088?\u1077?\u1082?\u1072?\u1093? \u1087?\u1086?\u1089?\u1083?\u1077?\u1076?\u1086?\u1074?\u1072?\u1090?\u1077?\u1083?\u1100?\u1085?\u1086? (1/2->1/2, 3/4->1/2 \u1080? \u1090?.\u1076?.)\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.me/Tarasmetal</link>
+      </metadata>
+      <version name="3.1" author="Taras Umanskiy" time="2026-08-31T19:19:26Z">
+        <changelog><![CDATA[+ Changed Mode selector from Combo to Radio buttons
++ UI improvements]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/a58e5b64ad8269055bf5f23a106d095750caecd7/GUI%20Tools/trs_Multi%20Channel%20Receive%20for%20selected%20tracks.lua</source>
+      </version>
+    </reapack>
     <reapack name="trs_PlayBack HW Path Outputs.lua" type="script" desc="Playback HW Path Outputs">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
@@ -169,6 +240,16 @@ v.1.2 + Оптимизация кода]]></changelog>
 + Настройки теперь сохраняются в папку со скриптом
 + Code optimizations]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Routing%20Tools.lua</source>
+      </version>
+      <version name="1.7" author="smandrap" time="2026-08-31T19:19:26Z">
+        <changelog><![CDATA[+ Tooltip for Multi Out checkbox is now in English
++ Добавлена всплывающая подсказка для чекбокса Multi Out
++ Чекбокс Multi Out теперь сохраняет состояние и выделен желтым цветом
++ Добавлен чекбокс "Multi Out" для последовательного назначения каналов (1/2, 3/4, 5/6...)
++ Имя файла настроек теперь соответствует имени скрипта
++ Настройки теперь сохраняются в папку со скриптом
++ Code optimizations]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/a58e5b64ad8269055bf5f23a106d095750caecd7/GUI%20Tools/trs_Routing%20Tools.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Script Launcher.lua" type="script" desc="Script Launcher - File manager for launching REAPER scripts">
