@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="8dba9c2b89972b0c87cf5cd5a56622f6fbb80f37">
+<index version="1" name="Taras Scripts" commit="168aa4720d4bbfdaccbc4a11e1463995356ffea4">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
       <metadata>
@@ -88,6 +88,11 @@ v.1.0.0 + Начальный релиз: GUI генератор MIDI треко�
         <changelog><![CDATA[+ Code Fixies]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Label%20GUI%20Tools.lua</source>
         <source type="script" file="Functions/LabelFunctions.lua">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/Functions/LabelFunctions.lua</source>
+      </version>
+      <version name="1.1.0" author="Taras Umanskiy" time="2026-10-20T22:37:41Z">
+        <changelog><![CDATA[v.1.1.0 + Исправлена подстановка региона по позиции курсора и работа кнопок интерфейса.]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/168aa4720d4bbfdaccbc4a11e1463995356ffea4/GUI%20Tools/trs_Label%20GUI%20Tools.lua</source>
+        <source type="script" file="Functions/LabelFunctions.lua">https://github.com/Tarasmetal/ReaScripts/raw/168aa4720d4bbfdaccbc4a11e1463995356ffea4/GUI%20Tools/Functions/LabelFunctions.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Marker GUI Tools.lua" type="script" desc="Marker GUI Tools">
