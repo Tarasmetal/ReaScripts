@@ -1,5 +1,9 @@
 -- @description Обработка заметок/лейблов выделенных элементов с нумерацией по дорожкам
 -- @author Taras Umanskiy
+-- @version 1.1.0
+-- @about Функции обработки заметок и меток айтемов, включая подстановку имени региона по позиции курсора.
+-- @changelog
+--   v.1.1.0 + Исправлено получение имени региона для токена /r.
 
 function AddZerosAndOffset(number, zeros, offset)
 
@@ -85,10 +89,26 @@ function hex2rgb(HEX_COLOR)
     return '0x' .. hex .. 'FF'
 end
 
+local function getRegionNameAtPosition(position)
+    local _, marker_count, region_count = reaper.CountProjectMarkers(0)
+    local total_markers = marker_count + region_count
+    local matched_name = ""
+    local matched_start = -math.huge
 
+    for marker_index = 0, total_markers - 1 do
+        local _, is_region, start_position, end_position, region_name =
+            reaper.EnumProjectMarkers(marker_index)
 
+        if is_region and position >= start_position and position <= end_position
+            and start_position >= matched_start then
+            matched_name = region_name or ""
+            matched_start = start_position
+        end
+    end
 
-------------------------------------------------------------------------------------------------------------------
+    return matched_name
+end
+
 function main(text)
 
     reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the
@@ -126,7 +146,7 @@ function main(text)
         -- /T[offset, length] -- Track name
         -- /t[digits] -- Track number
 
-        input = text
+        local input = text
         msg('input = ' .. input)
 
         if string.find(input, "/E") then
@@ -165,12 +185,13 @@ function main(text)
 
         input = input:gsub("/T", track_name)
         input = input:gsub("/t", tostring(track_id))
-        item_pos = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
-        markeridx, regionidx = reaper.GetLastMarkerAndCurRegion( 0, item_pos )
-        retval, isrgn, pos, rgnend, name, idx = reaper.EnumProjectMarkers( regionidx )
-        input = input:gsub("/r", name )
+        local cursor_pos = reaper.GetCursorPosition()
+        local region_name = getRegionNameAtPosition(cursor_pos)
+        input = input:gsub("/r", function()
+            return region_name
+        end)
         -- input = input:gsub("/M", name ) -- добавлено
-        notes = reaper.ULT_GetMediaItemNote(item)
+        local notes = reaper.ULT_GetMediaItemNote(item)
         input = input:gsub("$notes", notes )
         input = input:gsub("\\n", "\r\n" )
 

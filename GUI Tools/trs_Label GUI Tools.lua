@@ -1,6 +1,6 @@
 -- @description Label GUI Tools
 -- @author Taras Umanskiy
--- @version 1.0
+-- @version 1.1.0
 -- @provides
 --   [main] .
 --   [script] Functions/LabelFunctions.lua
@@ -10,6 +10,7 @@
 --   # Инструменты для работы с метками в Reaper
 --   Этот скрипт предоставляет удобный графический интерфейс для управления и редактирования меток (Label) в проекте Reaper.  Он позволяет быстро переименовывать метки, добавлять информацию о регионе и треке, а также выполнять другие полезные операции.
 -- @changelog
+--   v.1.1.0 + Исправлена подстановка региона по позиции курсора и работа кнопок интерфейса.
 --  + Code Fixies
 
 r = reaper
@@ -22,7 +23,7 @@ function msg(value)
 end
 
 myTime = ''
-scrVersion = '0.1'
+scrVersion = '1.1.0'
 scrName = 'LABEL TOOLS' .. ' ' .. scrVersion .. ' | by Taras Umanskiy'
 
 ListDir = {}
@@ -33,14 +34,22 @@ scriptFileName = ListDir.scriptFileName
 
 windowTitle = scrName
 
-dofile(scriptDir .. "Functions/" .. "LabelFunctions.lua")
+local functionsFile = scriptDir .. "Functions/LabelFunctions.lua"
+local functionsHandle = io.open(functionsFile, "r")
+if not functionsHandle then
+  r.ShowMessageBox("Не найден файл:\n" .. functionsFile, "Label GUI Tools", 0)
+  return
+end
+functionsHandle:close()
+dofile(functionsFile)
 -----------------------------------------------------------------------------
 local ctx = r.ImGui_CreateContext(windowTitle)
-local size =  r.GetAppVersion():match('Win64') and 12 or 14
+local size =  r.GetAppVersion():match('Win64') and 12 or 12
 local font = reaper.ImGui_CreateFont('sans-serif', size)
 r.ImGui_Attach(ctx, font)
 click_count, text = 0, '/T /E'
 color = nil
+local executeAction = false
 -----------------------------------------------------------------------------
 
 function round(num)
@@ -76,8 +85,8 @@ function btnCol(name, string, col, i)
               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonHovered(), trs_HSV(col / 7.0, 0.7, 0.7, 1.0))
               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonActive(),  trs_HSV(col / 7.0, 0.8, 0.8, 1.0))
            if r.ImGui_Button(ctx, name) then
-              click_count, text = 0, string
-              click_count = click_count + 1
+              text = string
+              executeAction = true
            end
            r.ImGui_PopStyleColor(ctx, 3)
            r.ImGui_PopID(ctx)
@@ -102,11 +111,14 @@ function btnCmdCol(name, idCmd, helpText, col, i)
            r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonHovered(), trs_HSV(col / 7.0, 0.7, 0.7, 1.0))
            r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonActive(),  trs_HSV(col / 7.0, 0.8, 0.8, 1.0))
            if r.ImGui_Button(ctx, ''..name..'') then
-              click_count, text = 1, idCmd
               if idCmd ~= '' then
-                r.Main_OnCommand(r.NamedCommandLookup('' .. idCmd ..''), 0)
+                local commandId = r.NamedCommandLookup(idCmd)
+                if commandId ~= 0 then
+                  r.Main_OnCommand(commandId, 0)
+                else
+                  r.ShowMessageBox("Команда не найдена:\n" .. idCmd, "Label GUI Tools", 0)
+                end
               end
-              click_count = click_count + 1
            end
             r.ImGui_PopStyleColor(ctx, 3)
             r.ImGui_PopID(ctx)
@@ -200,8 +212,8 @@ local function RR()
 
     -- Проверить, что айтем существует
     if item then
-      -- Получить позицию курсора воспроизведения
-      local cursor_pos = reaper.GetCursorPosition()
+      -- Получить позицию айтема
+      local item_pos = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
       -- Получить имя региона, в котором находится курсор
       local RegionName = ""
       -- Получить количество регионов в проекте
@@ -210,8 +222,8 @@ local function RR()
       for j = 0, num_regions - 1 do
         -- Получить информацию о регионе
         local _, is_region, start_pos, end_pos, name = reaper.EnumProjectMarkers(j)
-        -- Проверить, что это регион и курсор внутри него
-        if is_region and cursor_pos >= start_pos and cursor_pos <= end_pos then
+        -- Проверить, что это регион и айтем внутри него
+        if is_region and item_pos >= start_pos and item_pos <= end_pos then
           -- Сохранить имя региона
           RegionName = tostring(name)
           -- Прервать цикл
@@ -249,8 +261,8 @@ local function RS()
 
     -- Проверить, что айтем существует
     if item then
-      -- Получить позицию курсора воспроизведения
-      local cursor_pos = reaper.GetCursorPosition()
+      -- Получить позицию айтема
+      local item_pos = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
       -- Получить имя региона, в котором находится курсор
       local RegionName = ""
       -- Получить количество регионов в проекте
@@ -259,8 +271,8 @@ local function RS()
       for j = 0, num_regions - 1 do
         -- Получить информацию о регионе
         local _, is_region, start_pos, end_pos, name = reaper.EnumProjectMarkers(j)
-        -- Проверить, что это регион и курсор внутри него
-        if is_region and cursor_pos >= start_pos and cursor_pos <= end_pos then
+        -- Проверить, что это регион и айтем внутри него
+        if is_region and item_pos >= start_pos and item_pos <= end_pos then
           -- Сохранить имя региона
           RegionName = tostring(name)
           -- Прервать цикл
@@ -286,28 +298,21 @@ local function RS()
     end
   end
 end
+local function showBPM()
+  return reaper.Master_GetTempo()
+end
+
 function frame()
   local rv
-    click_count = 0
-      function showBPM()
-          local bpm = reaper.Master_GetTempo()
-          -- r.ImGui_Text(ctx, 'BPM: ')
-          -- r.ImGui_SameLine(ctx)
-          -- r.ImGui_TextColored(ctx, 0x88FF00FF, bpm)
-          return tostring(bpm)
-      end
       myBPM = tostring(showBPM())
 
       r.ImGui_Text(ctx,  'Selected Items:' .. '\n')
            r.ImGui_SameLine(ctx)
            selected_items_count =  r.CountSelectedMediaItems(0)
            if selected_items_count > 0 then
-                 r.ImGui_TextColored(ctx, 0x88FF00FF, selected_items_count)
-               else if selected_items_count == 1 then
-                 r.ImGui_TextColored(ctx, 0xFF0036FF, selected_items_count)
+                 r.ImGui_TextColored(ctx, 0x88FF00FF, tostring(selected_items_count))
                else
-                 r.ImGui_TextColored(ctx, 0xFF0036FF, selected_items_count)
-              end
+                 r.ImGui_TextColored(ctx, 0xFF0036FF, "0")
            end
 
       btnCmdCol('Rename takes and source files','_XENAKIOS_RENMTAKEANDSOURCE','Xenakios/SWS: Rename takes and source files... (no undo)', 4,0)
@@ -333,27 +338,28 @@ function frame()
       btnCol('RENAME##NameIndex_BPM','/T_'..round(showBPM()) ..'', 7,5)r.ImGui_SameLine(ctx)r.ImGui_Text(ctx,  'Name_')r.ImGui_SameLine(ctx)r.ImGui_TextColored(ctx, 0xFFFF00FF,myBPM)r.ImGui_SameLine(ctx)r.ImGui_Text(ctx, '')
       btnCol('RENAME##NameIndexBPM','/T_/E '.. round(showBPM()) ..' bpm', 7,5)r.ImGui_SameLine(ctx)r.ImGui_Text(ctx,  'Name Index')r.ImGui_SameLine(ctx)r.ImGui_TextColored(ctx, 0xFFFF00FF, myBPM)r.ImGui_SameLine(ctx)r.ImGui_Text(ctx, 'BPM')
       r.ImGui_Text(ctx,  '  ')
-      btnCol('GO!', text, 9,3)
+      if r.ImGui_Button(ctx, 'GO!') then
+        executeAction = true
+      end
       r.ImGui_SameLine(ctx)
-  if click_count % 2 == 1 then
-      main(text) -- Execute your main function
-      notes_to_names() -- Execute your main function
-      delete() -- Execute your main function
+  if executeAction then
+      main(text)
+      notes_to_names()
+      delete()
+      executeAction = false
   end
       rv, text = r.ImGui_InputText(ctx, ' ',text)r.ImGui_Text(ctx,  ' ')
   end
-      r.ImGui_SameLine(ctx)
-      r.ImGui_TextColored(ctx, 0xFF0036FF, text)
 
 function loop()
-  r.ImGui_PushFont(ctx, font, size)
-  r.ImGui_PopFont(ctx)
   r.ImGui_SetNextWindowSize(ctx, 180, 150,  r.ImGui_Cond_FirstUseEver())
   local visible, open = r.ImGui_Begin(ctx, windowTitle, true)
   if visible then
-    frame(ctx)
-    r.ImGui_End(ctx)
+    r.ImGui_PushFont(ctx, font, size)
+    frame()
+    r.ImGui_PopFont(ctx)
   end
+  r.ImGui_End(ctx)
 
 -- Просто продолжаем цикл пока окно открыто
 if open then
