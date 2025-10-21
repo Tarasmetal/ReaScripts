@@ -1,6 +1,6 @@
 -- @description Label GUI Tools
 -- @author Taras Umanskiy
--- @version 1.1.0
+-- @version 1.6.0
 -- @provides
 --   [main] .
 --   [script] Functions/LabelFunctions.lua
@@ -10,6 +10,11 @@
 --   # Инструменты для работы с метками в Reaper
 --   Этот скрипт предоставляет удобный графический интерфейс для управления и редактирования меток (Label) в проекте Reaper.  Он позволяет быстро переименовывать метки, добавлять информацию о регионе и треке, а также выполнять другие полезные операции.
 -- @changelog
+--   v.1.6.0 + Настройки пресетов перенесены в trs_Label GUI Tools.ini.
+--   v.1.5.0 + Кнопки Add, GO и поле ввода размещены в одной строке.
+--   v.1.4.0 + Добавлена кнопка Check для выделения айтемов с одинаковым источником.
+--   v.1.3.0 + Добавлена кнопка Check для выделения айтемов с одинаковым источником.
+--   v.1.2.0 + Добавлена кнопка Add для сохранения пользовательских пресетов.
 --   v.1.1.0 + Исправлена подстановка региона по позиции курсора и работа кнопок интерфейса.
 --  + Code Fixies
 
@@ -23,7 +28,7 @@ function msg(value)
 end
 
 myTime = ''
-scrVersion = '1.1.0'
+scrVersion = '1.6.0'
 scrName = 'LABEL TOOLS' .. ' ' .. scrVersion .. ' | by Taras Umanskiy'
 
 ListDir = {}
@@ -50,6 +55,133 @@ r.ImGui_Attach(ctx, font)
 click_count, text = 0, '/T /E'
 color = nil
 local executeAction = false
+local presets = {}
+local settingsFile = scriptDir .. 'trs_Label GUI Tools.ini'
+
+local function encodeIniValue(value)
+  return value:gsub('\\', '\\\\'):gsub('\r', '\\r'):gsub('\n', '\\n')
+end
+
+local function decodeIniValue(value)
+  local decoded = {}
+  local index = 1
+  while index <= #value do
+    local char = value:sub(index, index)
+    if char == '\\' and index < #value then
+      local escaped = value:sub(index + 1, index + 1)
+      if escaped == 'n' then
+        decoded[#decoded + 1] = '\n'
+      elseif escaped == 'r' then
+        decoded[#decoded + 1] = '\r'
+      else
+        decoded[#decoded + 1] = escaped
+      end
+      index = index + 2
+    else
+      decoded[#decoded + 1] = char
+      index = index + 1
+    end
+  end
+  return table.concat(decoded)
+end
+
+local savePresets
+
+local function loadPresets()
+  local file = io.open(settingsFile, 'r')
+  if file then
+    for line in file:lines() do
+      local value = line:match('^Preset%d+=(.*)$')
+      if value then
+        presets[#presets + 1] = decodeIniValue(value)
+      end
+    end
+    file:close()
+    return
+  end
+
+  -- Import presets saved by previous versions, then persist them in the INI file.
+  local legacyPresets = r.GetExtState('trs_Label_GUI_Tools', 'presets')
+  for preset in legacyPresets:gmatch('[^\r\n]+') do
+    presets[#presets + 1] = preset
+  end
+  if #presets > 0 then
+    savePresets()
+    r.DeleteExtState('trs_Label_GUI_Tools', 'presets', true)
+  end
+end
+
+savePresets = function()
+  local file = io.open(settingsFile, 'w')
+  if not file then
+    r.ShowMessageBox('Не удалось сохранить настройки в файл:\n' .. settingsFile,
+      'Label GUI Tools', 0)
+    return
+  end
+
+  file:write('[Presets]\n')
+  for index, preset in ipairs(presets) do
+    file:write('Preset' .. index .. '=' .. encodeIniValue(preset) .. '\n')
+  end
+  file:close()
+end
+
+local function hasPreset(value)
+  for _, preset in ipairs(presets) do
+    if preset == value then
+      return true
+    end
+  end
+  return false
+end
+
+loadPresets()
+
+local function normalizeSourcePath(path)
+  return path:gsub('\\', '/'):lower()
+end
+
+local function checkSameSource()
+  local selectedItem = r.GetSelectedMediaItem(0, 0)
+  if not selectedItem then
+    return
+  end
+
+  local selectedTake = r.GetActiveTake(selectedItem)
+  if not selectedTake then
+    return
+  end
+
+  local selectedSource = r.GetMediaItemTake_Source(selectedTake)
+  if not selectedSource then
+    return
+  end
+
+  local selectedPath = r.GetMediaSourceFileName(selectedSource, '')
+  if selectedPath == '' then
+    return
+  end
+  selectedPath = normalizeSourcePath(selectedPath)
+
+  r.SelectAllMediaItems(0, false)
+
+  local itemCount = r.CountMediaItems(0)
+  for itemIndex = 0, itemCount - 1 do
+    local item = r.GetMediaItem(0, itemIndex)
+    local take = r.GetActiveTake(item)
+    if take then
+      local source = r.GetMediaItemTake_Source(take)
+      if source then
+        local sourcePath = r.GetMediaSourceFileName(source, '')
+        if sourcePath ~= '' and normalizeSourcePath(sourcePath) == selectedPath then
+          r.SetMediaItemSelected(item, true)
+        end
+      end
+    end
+  end
+
+  r.UpdateArrange()
+end
 -----------------------------------------------------------------------------
 
 function round(num)
@@ -315,6 +447,10 @@ function frame()
                  r.ImGui_TextColored(ctx, 0xFF0036FF, "0")
            end
 
+      if r.ImGui_Button(ctx, 'Check##SameSource') then
+        checkSameSource()
+      end
+      r.ImGui_SameLine(ctx)
       btnCmdCol('Rename takes and source files','_XENAKIOS_RENMTAKEANDSOURCE','Xenakios/SWS: Rename takes and source files... (no undo)', 4,0)
       -- btnFuncCol('rename playback item', 'RR', 'XXX', 0) -- Load lua file script
       -- if r.ImGui_Button(ctx, 'RENAME TAKE - REGION + TRACKNAME') then
@@ -338,17 +474,42 @@ function frame()
       btnCol('RENAME##NameIndex_BPM','/T_'..round(showBPM()) ..'', 7,5)r.ImGui_SameLine(ctx)r.ImGui_Text(ctx,  'Name_')r.ImGui_SameLine(ctx)r.ImGui_TextColored(ctx, 0xFFFF00FF,myBPM)r.ImGui_SameLine(ctx)r.ImGui_Text(ctx, '')
       btnCol('RENAME##NameIndexBPM','/T_/E '.. round(showBPM()) ..' bpm', 7,5)r.ImGui_SameLine(ctx)r.ImGui_Text(ctx,  'Name Index')r.ImGui_SameLine(ctx)r.ImGui_TextColored(ctx, 0xFFFF00FF, myBPM)r.ImGui_SameLine(ctx)r.ImGui_Text(ctx, 'BPM')
       r.ImGui_Text(ctx,  '  ')
+      if r.ImGui_Button(ctx, 'Add') then
+        local preset = text:match('^%s*(.-)%s*$')
+        if preset ~= '' and not hasPreset(preset) then
+          presets[#presets + 1] = preset
+          savePresets()
+        end
+      end
+      r.ImGui_SameLine(ctx)
       if r.ImGui_Button(ctx, 'GO!') then
         executeAction = true
       end
       r.ImGui_SameLine(ctx)
+      local inputWidth = r.ImGui_GetContentRegionAvail(ctx)
+      r.ImGui_SetNextItemWidth(ctx, inputWidth)
+      rv, text = r.ImGui_InputText(ctx, '##preset_input', text)
+      for index, preset in ipairs(presets) do
+        r.ImGui_PushID(ctx, 'saved_preset_' .. index)
+        if r.ImGui_Button(ctx, preset) then
+          text = preset
+          executeAction = true
+        end
+        r.ImGui_SameLine(ctx)
+        if r.ImGui_Button(ctx, 'X') then
+          table.remove(presets, index)
+          savePresets()
+          r.ImGui_PopID(ctx)
+          break
+        end
+        r.ImGui_PopID(ctx)
+      end
   if executeAction then
       main(text)
       notes_to_names()
       delete()
       executeAction = false
   end
-      rv, text = r.ImGui_InputText(ctx, ' ',text)r.ImGui_Text(ctx,  ' ')
   end
 
 function loop()
