@@ -1,12 +1,40 @@
 -- @description TRACK RENAME GUI TOOLS
 -- @author Taras Umanskiy
--- @version 4.8
+-- @version 4.33
 -- @provides [main] .
 --  [script] TrackPresets/trs_TrackGUITools_default.lua
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
 -- @about Скрипт предоставляет мощный графический интерфейс для управления именами треков, панорамированием и цветами в REAPER. Поддерживает систему пресетов, HEX-коды цветов и удобную навигацию.
 -- @changelog
+--   v.4.33 + Колесо мыши над основным окном переключает треки: вверх — предыдущий, вниз — следующий, как W/S.
+--   v.4.32 + Clone не переносит цвета треков, если кнопка C выключена.
+--   v.4.31 + СКМ по Clone разбивает имена только по пробелам, сохраняя пустой префикс при начальном пробеле и символы - и _.
+--   v.4.30 + СКМ по имени первой колонки дописывает его к текущему названию выделенных треков как добавочное имя.
+--   v.4.29 + При удержании Shift можно последовательно перетащить несколько добавочных имён на основную ячейку; порядок сохраняется.
+--   v.4.28 + Shift-перетаскивание добавочной ячейки на основное имя запоминает сочетание для последующих добавочных имён до отпускания Shift.
+--   v.4.27 + Выбранное основное имя сохраняется при последовательных кликах по добавочным ячейкам, пока удерживается Shift.
+--   v.4.26 + Shift+ЛКМ позволяет выбрать основное имя и объединить его с добавочной ячейкой другого ряда; цвет берётся из выбранной основной строки.
+--   v.4.25 + Меню пресетов переведено на английский, заголовок заменён на PRESETS.
+--   v.4.24 + Жёлтое название текущего пресета перемещено справа от стрелок переключения.
+--   v.4.23 + Название текущего пресета в верхней строке снова выделено жёлтым цветом.
+--   v.4.22 + Имя текущего пресета отображается в верхнем меню в формате «Пресеты: default».
+--   v.4.21 + Кнопки Index, LR, P и C перенесены в верхнюю строку после Clone.
+--   v.4.20 + Стрелки переключения пресетов и кнопка Clone размещены справа от меню «Пресеты».
+--   v.4.19 + Управление пресетами и импорт имён треков перенесены в верхнее меню «Пресеты».
+--   v.4.18 + Ctrl+перетаскивание добавочной ячейки копирует её справа от целевой со сдвигом остальных; на macOS поддерживаются Cmd и Control.
+--   v.4.17 + Shift+ЛКМ по добавочной ячейке также применяет цвет строки, если включена кнопка C.
+--   v.4.16 + Ctrl+ЛКМ по +Add загружает панораму из default preset в trs_TrackGUITools_default.lua; на macOS поддерживаются Cmd и Control.
+--   v.4.15 + Ctrl+ЛКМ по панораме задаёт следующему треку противоположное значение; на macOS поддерживаются Cmd и Control.
+--   v.4.14 + На macOS переход после переименования поддерживает Cmd+ЛКМ и Control+ЛКМ (без эмуляции ПКМ); Shift+ЛКМ работает на обеих платформах.
+--   v.4.13 + Shift+ЛКМ по добавочному имени заменяет название на первую ячейку строки и добавочное имя, затем выбирает следующий трек.
+--   v.4.12 + Ctrl+ЛКМ по добавочному имени также выбирает следующий трек после переименования.
+--   v.4.11 + Ctrl+ЛКМ по кнопке имени после переименования выбирает следующий трек.
+--   v.4.10 + Добавлена кнопка C справа от P для включения/выключения цветов кнопок и применения цветов к трекам; состояние сохраняется.
+--   v.4.9 + Добавлена сортировка пресетов по имени без учёта регистра и проверка существования файла при создании пресета.
+--   + Объединена логика сохранения текущего пресета; очистка пресета сбрасывает также значения панорамирования.
+--   + Добавлены блоки Undo для нумерации дубликатов, переименования L/R и изменения панорамирования треков.
+--   v.4.8
 --   + ПКМ на кнопке панорамы открывает поле InputInt прямо на месте кнопок; Enter/клик мимо — сохранение и выход, Escape — выход без сохранения.
 --   + Убрана кнопка "+ Add" из окна панорамирования (добавление строки теперь через Insert).
 --   + В окне панорамирования клавиши Insert и Delete работают на обеих кнопках (-val и val) по аналогии с главным окном.
@@ -36,7 +64,7 @@ console = false
 function msg(value) if console then r.ShowConsoleMsg(tostring(value) .. "\n") end end
 
 title = 'TRACK RENAME GUI TOOLS'
-ver = '4.8'
+ver = '4.33'
 author = 'Taras Umanskiy'
 about = title .. ' ' .. ver .. ' | by ' .. author
 ListDir = {}
@@ -60,6 +88,9 @@ function GetAllPresetFiles(path)
     end
     i = i + 1
   end
+  table.sort(files, function(a, b)
+    return a:lower() < b:lower()
+  end)
   return files
 end
 saveFile = ListDir.scriptDir .. "TrackPresets" .. "/" .. "default.txt"
@@ -97,6 +128,54 @@ local allPresetFiles = {}
 -- Глобальный массив панорамирования (независим от track_set)
 pan_set = {}
 
+function GetCurrentPresetPath()
+  return allPresetFiles[currentPresetIndex]
+end
+
+function SaveCurrentPreset()
+  local currentPath = GetCurrentPresetPath()
+  if currentPath then
+    SavePreset(currentPath, track_set)
+  end
+end
+
+function ResetPreset()
+  track_set = {}
+  pan_set = {}
+end
+
+function CreateEmptyPreset(path)
+  ResetPreset()
+  SavePreset(path, track_set)
+end
+
+function AddPresetFile(path)
+  table.insert(allPresetFiles, path)
+  table.sort(allPresetFiles, function(a, b)
+    return a:lower() < b:lower()
+  end)
+  for i, presetPathItem in ipairs(allPresetFiles) do
+    if presetPathItem == path then
+      currentPresetIndex = i
+      break
+    end
+  end
+end
+
+function PresetFileExists(path)
+  return r.file_exists(path)
+end
+
+function BeginUndoBlock(description)
+  r.Undo_BeginBlock()
+  return description
+end
+
+function EndUndoBlock(description)
+  r.Undo_EndBlock(description, -1)
+  r.UpdateArrange()
+end
+
 function SavePreset(saveFile, track_set)
   local file = io.open(saveFile, "w")
   if file then
@@ -122,7 +201,9 @@ function SavePreset(saveFile, track_set)
   end
 end
 
-function cloneSelectedTracksToSet(split_prefix_suffix)
+local colorsEnabled = r.GetExtState("trs_TrackGUITools", "colorsEnabled") ~= "0"
+
+function cloneSelectedTracksToSet(split_prefix_suffix, spaces_only)
   local track_count = reaper.CountSelectedTracks(0)
   if track_count == 0 then
     reaper.ShowMessageBox("Не выбрано ни одного трека!", "Ошибка", 0)
@@ -142,12 +223,18 @@ function cloneSelectedTracksToSet(split_prefix_suffix)
     if split_prefix_suffix then
       -- Пытаемся найти разделитель (пробел, дефис или подчеркивание)
       -- Ищем первое слово как префикс, остальное как суффиксы
-      local prefix, rest = name:match("^%s*([^%s%-_]+)%s*[ %-_]%s*(.*)$")
+      local prefix, rest
+      if spaces_only then
+        -- Первый пробел отделяет префикс, который может быть пустым.
+        prefix, rest = name:match("^([^ ]*) +(.*)$")
+      else
+        prefix, rest = name:match("^%s*([^%s%-_]+)%s*[ %-_]%s*(.*)$")
+      end
       if prefix and rest then
         main_text = prefix
         -- Разбиваем остаток на части по разделителям
         local count = 1
-        for part in rest:gmatch("([^%s%-_]+)") do
+        for part in rest:gmatch(spaces_only and "([^ ]+)" or "([^%s%-_]+)") do
           if count <= 5 then
             suffixes[count] = part
             count = count + 1
@@ -169,14 +256,12 @@ function cloneSelectedTracksToSet(split_prefix_suffix)
       text_add_4 = suffixes[4],
       text_add_5 = suffixes[5],
       pan = false,
-      color = has_color and color or false
+      color = colorsEnabled and has_color and color or false
     }
     table.insert(track_set, new_set)
   end
 
-  if #allPresetFiles > 0 and allPresetFiles[currentPresetIndex] then
-    SavePreset(allPresetFiles[currentPresetIndex], track_set)
-  end
+  SaveCurrentPreset()
 end
 
 function LoadPreset(saveFile)
@@ -261,6 +346,9 @@ if lastPresetPath ~= "" and reaper.file_exists(lastPresetPath) then
   end
   if not found then
     table.insert(allPresetFiles, lastPresetPath)
+    table.sort(allPresetFiles, function(a, b)
+      return a:lower() < b:lower()
+    end)
   end
 end
 
@@ -350,6 +438,7 @@ function renameSelectedTracks()
   end
   local trackNames = {}
   local renameCounters = {}
+  BeginUndoBlock("Number duplicate track names")
 
   local function removeExtraSpaces(name)
     return name:match("^%s*(.-)%s*$"):gsub("%s+", " ")
@@ -373,6 +462,7 @@ function renameSelectedTracks()
       renameCounters[trackName] = renameCounters[trackName] + 1
     end
   end
+  EndUndoBlock("Number duplicate track names")
 end
 
 function hasSuffix(name)
@@ -388,6 +478,7 @@ function processDuplicateTracksLR()
 
   local tracks = {}
   local name_counts = {}
+  BeginUndoBlock("Rename duplicate tracks as L/R")
 
   for i = 0, track_count - 1 do
     local track = reaper.GetSelectedTrack(0, i)
@@ -437,6 +528,7 @@ function processDuplicateTracksLR()
       end
     end
   end
+  EndUndoBlock("Rename duplicate tracks as L/R")
 end
 
 -- Pan window state
@@ -452,33 +544,60 @@ local font = reaper.ImGui_CreateFont('Arial-Regular', size)
 -- local font = reaper.ImGui_CreateFont('sans-serif', size)
 reaper.ImGui_Attach(ctx, font)
 
+local nextTrackModifier = r.ImGui_Mod_Ctrl()
+if r.GetOS():match("OSX") then
+  -- На macOS ReaImGui меняет местами Cmd и Control; принимаем оба.
+  nextTrackModifier = nextTrackModifier | r.ImGui_Mod_Super()
+end
+
+local function selectNextTrackAfterRename(track_count, force_next)
+  if track_count > 0 and (force_next or (r.ImGui_GetKeyMods(ctx) & nextTrackModifier) ~= 0) then
+    -- При групповом переименовании переходим за последний выделенный трек.
+    local last_track = r.GetSelectedTrack(0, track_count - 1)
+    local next_index = r.GetMediaTrackInfo_Value(last_track, "IP_TRACKNUMBER")
+    local next_track = r.GetTrack(0, next_index)
+    if next_track then
+      r.SetOnlyTrackSelected(next_track)
+    end
+  end
+end
+
+local pendingNameRow
+local pendingNamePreset
+local pendingNameSuffixes = {}
+
 local function myWindow()
+  if (r.ImGui_GetKeyMods(ctx) & r.ImGui_Mod_Shift()) == 0
+    or pendingNamePreset ~= allPresetFiles[currentPresetIndex] then
+    pendingNameRow = nil
+    pendingNameSuffixes = {}
+  end
   local rv
   -- Кнопки с равной шириной
   local btnWidth = 80
   local spacing = 4
   r.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_ItemSpacing(), spacing, spacing)
 
-  -- Кнопка PRESETS
-  r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
-  if r.ImGui_Button(ctx, "PRESETS", btnWidth, 0) then
-    r.ImGui_OpenPopup(ctx, "Presets List")
-  end
-  r.ImGui_PopStyleColor(ctx, 1)
-
-  -- Popup со списком пресетов
-  if r.ImGui_BeginPopup(ctx, "Presets List") then
-    -- Кнопки управления в начале списка
-    if r.ImGui_Button(ctx, "New", btnWidth, 0) then
-      r.ImGui_OpenPopup(ctx, "New Preset")
+  local preset_dialog
+  local currentPresetPath = allPresetFiles[currentPresetIndex]
+  local currentPresetName = currentPresetPath and currentPresetPath:match("([^/\\]+)%.txt$")
+  local presetMenuLabel = "PRESETS###presets_menu"
+  if r.ImGui_BeginMenuBar(ctx) then
+    if r.ImGui_BeginMenu(ctx, presetMenuLabel) then
+    if r.ImGui_MenuItem(ctx, "New...") then
+      preset_dialog = "New Preset"
     end
-    r.ImGui_SameLine(ctx)
-    if r.ImGui_Button(ctx, "Clear", btnWidth, 0) then
-      track_set = {}
-      SavePreset(allPresetFiles[currentPresetIndex], track_set)
+    if r.ImGui_MenuItem(ctx, "Save") then
+      SaveCurrentPreset()
     end
-    r.ImGui_SameLine(ctx)
-    if r.ImGui_Button(ctx, "Delete", btnWidth, 0) then
+    if r.ImGui_MenuItem(ctx, "Save As...") then
+      preset_dialog = "Save Preset As"
+    end
+    if r.ImGui_MenuItem(ctx, "Clear") then
+      ResetPreset()
+      SaveCurrentPreset()
+    end
+    if r.ImGui_MenuItem(ctx, "Delete") then
       if #allPresetFiles > 1 then
         os.remove(allPresetFiles[currentPresetIndex])
         table.remove(allPresetFiles, currentPresetIndex)
@@ -490,16 +609,98 @@ local function myWindow()
     end
 
     r.ImGui_Separator(ctx)
-
     for i, path in ipairs(allPresetFiles) do
       local fileName = path:match("[^/\\]+%.txt$")
       if fileName then
         fileName = fileName:gsub("%.txt$", "")
-        if r.ImGui_Selectable(ctx, fileName, currentPresetIndex == i) then
+        if r.ImGui_MenuItem(ctx, fileName .. "##preset_" .. i, nil, currentPresetIndex == i) then
           LoadPresetByIndex(i)
         end
       end
     end
+
+    r.ImGui_EndMenu(ctx)
+    end
+    if r.ImGui_SmallButton(ctx, "<##previous_preset") then
+      GoToPreviousPreset()
+    end
+    if r.ImGui_IsItemHovered(ctx) then
+      r.ImGui_SetTooltip(ctx, "Предыдущий пресет")
+    end
+    if r.ImGui_SmallButton(ctx, ">##next_preset") then
+      GoToNextPreset()
+    end
+    if r.ImGui_IsItemHovered(ctx) then
+      r.ImGui_SetTooltip(ctx, "Следующий пресет")
+    end
+    currentPresetPath = allPresetFiles[currentPresetIndex]
+    currentPresetName = currentPresetPath and currentPresetPath:match("([^/\\]+)%.txt$")
+    r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Text(), color_yellow)
+    r.ImGui_Text(ctx, currentPresetName or "—")
+    r.ImGui_PopStyleColor(ctx, 1)
+    if r.ImGui_SmallButton(ctx, "Clone") then
+      cloneSelectedTracksToSet(false)
+    end
+    if r.ImGui_IsItemHovered(ctx) then
+      r.ImGui_SetTooltip(ctx, "ЛКМ — клонировать имена выделенных треков в пресет\nПКМ — клонировать с разделением на префикс и суффиксы\nСКМ — разделять только по пробелам; начальный пробел — пустой префикс, - и _ сохраняются")
+    end
+    if r.ImGui_IsItemClicked(ctx, r.ImGui_MouseButton_Right()) then
+      cloneSelectedTracksToSet(true)
+    end
+    if r.ImGui_IsItemClicked(ctx, r.ImGui_MouseButton_Middle()) then
+      cloneSelectedTracksToSet(true, true)
+    end
+    r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
+    if r.ImGui_SmallButton(ctx, "Index") then
+      renameSelectedTracks()
+    end
+    if r.ImGui_IsItemHovered(ctx) then
+      r.ImGui_SetTooltip(ctx, "Пронумеровать дубликаты выделенных треков\n(добавляет индекс к одинаковым именам)")
+    end
+    r.ImGui_PopStyleColor(ctx, 1)
+
+    r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
+    if r.ImGui_SmallButton(ctx, "LR") then
+      processDuplicateTracksLR()
+    end
+    if r.ImGui_IsItemHovered(ctx) then
+      r.ImGui_SetTooltip(ctx, "Переименовать дубликаты выделенных треков\n(добавляет суффиксы L и R к парным трекам)")
+    end
+    r.ImGui_PopStyleColor(ctx, 1)
+
+    local panBtnColor = showPanWindow and 0x4A7C59FF or color_4
+    r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), panBtnColor)
+    if r.ImGui_SmallButton(ctx, "P") then
+      showPanWindow = not showPanWindow
+      reaper.SetExtState("trs_TrackGUITools", "showPanWindow", showPanWindow and "1" or "0", true)
+    end
+    if r.ImGui_IsItemHovered(ctx) then
+      r.ImGui_SetTooltip(ctx, "Показать/скрыть окно панорамирования\nПКМ — переключить сторону прилипания (лево/право)\nInsert — добавить строку после наведённой\nDelete — удалить наведённую строку")
+    end
+    if r.ImGui_IsItemClicked(ctx, r.ImGui_MouseButton_Right()) then
+      panWindowSide = (panWindowSide == "right") and "left" or "right"
+      reaper.SetExtState("trs_TrackGUITools", "panWindowSide", panWindowSide, true)
+    end
+    r.ImGui_PopStyleColor(ctx, 1)
+
+    -- Общий переключатель цветов
+    r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), colorsEnabled and 0x235959FF or color_4)
+    if r.ImGui_SmallButton(ctx, "C") then
+      colorsEnabled = not colorsEnabled
+      r.SetExtState("trs_TrackGUITools", "colorsEnabled", colorsEnabled and "1" or "0", true)
+    end
+    if r.ImGui_IsItemHovered(ctx) then
+      r.ImGui_SetTooltip(ctx, "Цвета: " .. (colorsEnabled and "включены" or "выключены") .. "\nВключить/выключить цвета кнопок и применение цветов к трекам")
+    end
+    r.ImGui_PopStyleColor(ctx, 1)
+
+    r.ImGui_EndMenuBar(ctx)
+  end
+  -- Открываем диалоги в контексте окна после закрытия меню.
+  if preset_dialog then
+    new_preset_name = ""
+    r.ImGui_OpenPopup(ctx, preset_dialog)
+  end
 
     -- Popup для создания НОВОГО пустого пресета
     if r.ImGui_BeginPopupModal(ctx, "New Preset", true, r.ImGui_WindowFlags_AlwaysAutoResize()) then
@@ -514,15 +715,15 @@ local function myWindow()
           end
           local fullPath = presetPath .. "/" .. newFilename
 
-          track_set = {} -- Пустой пресет
-          SavePreset(fullPath, track_set)
-
-          table.insert(allPresetFiles, fullPath)
-          currentPresetIndex = #allPresetFiles
-          reaper.SetExtState("trs_TrackGUITools", lastPresetExtStateKey, fullPath, true)
-
-          r.ImGui_CloseCurrentPopup(ctx)
-          new_preset_name = ""
+          if PresetFileExists(fullPath) then
+            reaper.ShowMessageBox("Пресет с таким именем уже существует.", "Ошибка", 0)
+          else
+            CreateEmptyPreset(fullPath)
+            AddPresetFile(fullPath)
+            reaper.SetExtState("trs_TrackGUITools", lastPresetExtStateKey, fullPath, true)
+            r.ImGui_CloseCurrentPopup(ctx)
+            new_preset_name = ""
+          end
         end
       end
       r.ImGui_SameLine(ctx)
@@ -531,17 +732,6 @@ local function myWindow()
       end
       r.ImGui_EndPopup(ctx)
     end
-
-    r.ImGui_EndPopup(ctx)
-  end
-
-  -- Кнопка SAVE AS
-  r.ImGui_SameLine(ctx)
-  r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
-  if r.ImGui_Button(ctx, "SAVE AS", btnWidth, 0) then
-    r.ImGui_OpenPopup(ctx, "Save Preset As")
-  end
-  r.ImGui_PopStyleColor(ctx, 1)
 
   -- Popup для сохранения пресета
   if r.ImGui_BeginPopupModal(ctx, "Save Preset As", true, r.ImGui_WindowFlags_AlwaysAutoResize()) then
@@ -556,25 +746,15 @@ local function myWindow()
         end
         local fullPath = presetPath .. "/" .. newFilename
 
-        SavePreset(fullPath, track_set)
-
-        -- Обновляем список и текущий индекс
-        local found = false
-        for i, path in ipairs(allPresetFiles) do
-            if path == fullPath then
-                found = true
-                currentPresetIndex = i
-                break
-            end
+        if PresetFileExists(fullPath) then
+          reaper.ShowMessageBox("Пресет с таким именем уже существует.", "Ошибка", 0)
+        else
+          SavePreset(fullPath, track_set)
+          AddPresetFile(fullPath)
+          reaper.SetExtState("trs_TrackGUITools", lastPresetExtStateKey, fullPath, true)
+          r.ImGui_CloseCurrentPopup(ctx)
+          new_preset_name = ""
         end
-        if not found then
-            table.insert(allPresetFiles, fullPath)
-            currentPresetIndex = #allPresetFiles
-        end
-        reaper.SetExtState("trs_TrackGUITools", lastPresetExtStateKey, fullPath, true)
-
-        r.ImGui_CloseCurrentPopup(ctx)
-        new_preset_name = "" -- Сброс имени
       else
          msg("Please enter a preset name.")
       end
@@ -586,82 +766,10 @@ local function myWindow()
     r.ImGui_EndPopup(ctx)
   end
 
-  -- Кнопка для предыдущего пресета
-  local navBtnWidth = 30 -- Ширина кнопок навигации
-  r.ImGui_SameLine(ctx)
-  r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
-  if r.ImGui_Button(ctx, "<", navBtnWidth, 0) then
-    GoToPreviousPreset()
-  end
-  r.ImGui_PopStyleColor(ctx, 1)
-
-  -- Кнопка для следующего пресета
-  r.ImGui_SameLine(ctx)
-  r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
-  if r.ImGui_Button(ctx, ">", navBtnWidth, 0) then
-    GoToNextPreset()
-  end
-  r.ImGui_PopStyleColor(ctx, 1)
-
-  -- Отображение имени текущего пресета
+  -- Начальная строка для пустого пресета
   if #allPresetFiles > 0 then
     local currentPresetName = allPresetFiles[currentPresetIndex]:match("[^/\\]+%.txt$")
     if currentPresetName then
-      currentPresetName = currentPresetName:gsub("%.txt$", "") -- Удаляем расширение .txt
-      r.ImGui_SameLine(ctx)
-      r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Text(), color_yellow)
-      r.ImGui_Text(ctx, "  " .. currentPresetName)
-      r.ImGui_PopStyleColor(ctx, 1)
-
-      r.ImGui_SameLine(ctx)
-      r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
-      if r.ImGui_Button(ctx, " Index", 50, 0) then
-        renameSelectedTracks()
-      end
-      if r.ImGui_IsItemHovered(ctx) then
-        r.ImGui_SetTooltip(ctx, "Пронумеровать дубликаты выделенных треков\n(добавляет индекс к одинаковым именам)")
-      end
-      r.ImGui_PopStyleColor(ctx, 1)
-
-      r.ImGui_SameLine(ctx)
-      r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
-      if r.ImGui_Button(ctx, "LR", 50, 0) then
-        processDuplicateTracksLR()
-      end
-      if r.ImGui_IsItemHovered(ctx) then
-        r.ImGui_SetTooltip(ctx, "Переименовать дубликаты выделенных треков\n(добавляет суффиксы L и R к парным трекам)")
-      end
-      r.ImGui_PopStyleColor(ctx, 1)
-
-      r.ImGui_SameLine(ctx)
-      r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
-      if r.ImGui_Button(ctx, "Clone", 50, 0) then
-        cloneSelectedTracksToSet(false)
-      end
-      if r.ImGui_IsItemHovered(ctx) then
-        r.ImGui_SetTooltip(ctx, "ЛКМ — клонировать имена выделенных треков в пресет\nПКМ — клонировать с разделением на префикс и суффиксы")
-      end
-      if r.ImGui_IsItemClicked(ctx, r.ImGui_MouseButton_Right()) then
-        cloneSelectedTracksToSet(true)
-      end
-      r.ImGui_PopStyleColor(ctx, 1)
-
-      r.ImGui_SameLine(ctx)
-      local panBtnColor = showPanWindow and 0x4A7C59FF or color_4
-      r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), panBtnColor)
-      if r.ImGui_Button(ctx, "P", 25, 0) then
-        showPanWindow = not showPanWindow
-        reaper.SetExtState("trs_TrackGUITools", "showPanWindow", showPanWindow and "1" or "0", true)
-      end
-      if r.ImGui_IsItemHovered(ctx) then
-        r.ImGui_SetTooltip(ctx, "Показать/скрыть окно панорамирования\nПКМ — переключить сторону прилипания (лево/право)\nInsert — добавить строку после наведённой\nDelete — удалить наведённую строку")
-      end
-      if r.ImGui_IsItemClicked(ctx, r.ImGui_MouseButton_Right()) then
-        panWindowSide = (panWindowSide == "right") and "left" or "right"
-        reaper.SetExtState("trs_TrackGUITools", "panWindowSide", panWindowSide, true)
-      end
-      r.ImGui_PopStyleColor(ctx, 1)
-
       -- Add Row button only if preset is empty or cleared
       if #track_set == 0 then
         local window_w = r.ImGui_GetWindowSize(ctx)
@@ -683,7 +791,7 @@ local function myWindow()
 
         if r.ImGui_Button(ctx, "START", btn_w, btn_h) then
           table.insert(track_set, {text = "New", pan = false})
-          SavePreset(allPresetFiles[currentPresetIndex], track_set)
+          SaveCurrentPreset()
         end
         r.ImGui_PopStyleColor(ctx, 3)
       end
@@ -694,22 +802,49 @@ local function myWindow()
   for _, set in ipairs(track_set) do
     -- Основная кнопка: заменяет название трека
     local btn_color = color_1
-    if type(set.color) == "number" then
+    if colorsEnabled and type(set.color) == "number" then
       local r_val, g_val, b_val = r.ColorFromNative(set.color)
       local darken_factor = 0.6 -- Коэффициент затемнения для отображения на кнопке
       btn_color = r.ImGui_ColorConvertDouble4ToU32((r_val * darken_factor) / 255, (g_val * darken_factor) / 255, (b_val * darken_factor) / 255, 1.0)
     end
+    if pendingNameRow == set then btn_color = 0x235959FF end
     r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), btn_color)
     if r.ImGui_Button(ctx, set.text .. "###main_btn_" .. _, btnWidth, 0) then
+      if (r.ImGui_GetKeyMods(ctx) & r.ImGui_Mod_Shift()) ~= 0 then
+        pendingNameRow = set
+        pendingNameSuffixes = {}
+        pendingNamePreset = allPresetFiles[currentPresetIndex]
+      else
+      pendingNameRow = nil
+      pendingNameSuffixes = {}
       local track_count = r.CountSelectedTracks(0)
+      BeginUndoBlock("Apply track name and color: " .. set.text)
       for i = 0, track_count - 1 do
         local track = r.GetSelectedTrack(0, i)
         if track then
           r.GetSetMediaTrackInfo_String(track, "P_NAME", set.text, true)
-          if type(set.color) == "number" then
+          if colorsEnabled and type(set.color) == "number" then
             r.SetTrackColor(track, set.color)
           end
         end
+      end
+      EndUndoBlock("Apply track name and color: " .. set.text)
+      selectNextTrackAfterRename(track_count)
+      end
+    end
+    if r.ImGui_IsItemClicked(ctx, r.ImGui_MouseButton_Middle()) then
+      local track_count = r.CountSelectedTracks(0)
+      if track_count > 0 then
+        BeginUndoBlock("Append track name: " .. set.text)
+        for i = 0, track_count - 1 do
+          local track = r.GetSelectedTrack(0, i)
+          if track then
+            local _, currentName = r.GetSetMediaTrackInfo_String(track, "P_NAME", "", false)
+            local newName = currentName .. (currentName ~= "" and set.text ~= "" and " " or "") .. set.text
+            r.GetSetMediaTrackInfo_String(track, "P_NAME", newName, true)
+          end
+        end
+        EndUndoBlock("Append track name: " .. set.text)
       end
     end
     r.ImGui_PopStyleColor(ctx, 1)
@@ -722,7 +857,7 @@ local function myWindow()
     -- Добавление новой строки при наведении и нажатии Insert
     if r.ImGui_IsItemHovered(ctx) and r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Insert()) then
       table.insert(track_set, _ + 1, {text = "New", pan = false})
-      SavePreset(allPresetFiles[currentPresetIndex], track_set)
+      SaveCurrentPreset()
     end
 
     -- Drag and Drop
@@ -733,6 +868,22 @@ local function myWindow()
     end
 
     if r.ImGui_BeginDragDropTarget(ctx) then
+      if (r.ImGui_GetKeyMods(ctx) & r.ImGui_Mod_Shift()) ~= 0 then
+        local accepted, data = r.ImGui_AcceptDragDropPayload(ctx, "SUFFIX_BTN")
+        if accepted then
+          local row_index, col_index = data:match("^(%d+),(%d+)$")
+          local source_row = track_set[tonumber(row_index)]
+          local suffix = source_row and source_row["text_add_" .. (col_index or "")]
+          if suffix and suffix ~= "" then
+            if pendingNameRow ~= set or pendingNamePreset ~= allPresetFiles[currentPresetIndex] then
+              pendingNameSuffixes = {}
+            end
+            pendingNameRow = set
+            pendingNamePreset = allPresetFiles[currentPresetIndex]
+            table.insert(pendingNameSuffixes, suffix)
+          end
+        end
+      end
       local payload_retval, payload_data = r.ImGui_AcceptDragDropPayload(ctx, "TRACK_ROW")
       if payload_retval then
         local src_index = tonumber(payload_data)
@@ -741,7 +892,7 @@ local function myWindow()
           local item = track_set[src_index]
           table.remove(track_set, src_index)
           table.insert(track_set, dst_index, item)
-          SavePreset(allPresetFiles[currentPresetIndex], track_set)
+          SaveCurrentPreset()
         end
       end
       r.ImGui_EndDragDropTarget(ctx)
@@ -752,7 +903,7 @@ local function myWindow()
       local changed, new_text = r.ImGui_InputText(ctx, "##edit_name", set.text)
       if changed then set.text = new_text end
       if r.ImGui_IsItemDeactivatedAfterEdit(ctx) then
-        SavePreset(allPresetFiles[currentPresetIndex], track_set)
+        SaveCurrentPreset()
       end
 
       r.ImGui_Separator(ctx)
@@ -765,7 +916,7 @@ local function myWindow()
         else
           set.color = false
         end
-        SavePreset(allPresetFiles[currentPresetIndex], track_set)
+        SaveCurrentPreset()
       end
 
       if type(set.color) == "number" then
@@ -777,14 +928,14 @@ local function myWindow()
         if changed then
           local r_new, g_new, b_new = r.ImGui_ColorConvertU32ToDouble4(new_col)
           set.color = r.ColorToNative(math.floor(r_new * 255), math.floor(g_new * 255), math.floor(b_new * 255))
-          SavePreset(allPresetFiles[currentPresetIndex], track_set)
+          SaveCurrentPreset()
         end
         if r.ImGui_IsItemClicked(ctx, 1) then
           local track = r.GetSelectedTrack(0, 0)
           if track then
             local track_color = r.GetTrackColor(track)
             set.color = track_color
-            SavePreset(allPresetFiles[currentPresetIndex], track_set)
+            SaveCurrentPreset()
           end
         end
       end
@@ -795,7 +946,7 @@ local function myWindow()
             for k = 1, 5 do
               if not set["text_add_" .. k] or set["text_add_" .. k] == "" then
                 set["text_add_" .. k] = "New"
-                SavePreset(allPresetFiles[currentPresetIndex], track_set)
+                SaveCurrentPreset()
                 break
               end
             end
@@ -804,13 +955,13 @@ local function myWindow()
 
       if r.ImGui_Button(ctx, "Add Row") then
         table.insert(track_set, _ + 1, {text = "New", pan = false})
-        SavePreset(allPresetFiles[currentPresetIndex], track_set)
+        SaveCurrentPreset()
         r.ImGui_CloseCurrentPopup(ctx)
       end
 
       if r.ImGui_Button(ctx, "Delete Row") then
         table.remove(track_set, _)
-        SavePreset(allPresetFiles[currentPresetIndex], track_set)
+        SaveCurrentPreset()
         r.ImGui_CloseCurrentPopup(ctx)
       end
 
@@ -832,6 +983,15 @@ local function myWindow()
 
         if button_clicked_left or button_clicked_middle then
           local track_count = r.CountSelectedTracks(0)
+          local replace_with_row = button_clicked_left and not button_clicked_middle
+            and (r.ImGui_GetKeyMods(ctx) & r.ImGui_Mod_Shift()) ~= 0
+          local name_row = set
+          if replace_with_row and pendingNamePreset == allPresetFiles[currentPresetIndex] then
+            for _, row in ipairs(track_set) do
+              if row == pendingNameRow then name_row = row; break end
+            end
+          end
+          BeginUndoBlock("Apply track suffix: " .. addText)
           for j = 0, track_count - 1 do
             local track = r.GetSelectedTrack(0, j)
             if track then
@@ -839,11 +999,22 @@ local function myWindow()
               local newName
               if button_clicked_middle then
                 newName = addText
+              elseif replace_with_row then
+                local middle = name_row == pendingNameRow and #pendingNameSuffixes > 0
+                  and table.concat(pendingNameSuffixes, " ")
+                newName = name_row.text .. (middle and (" " .. middle) or "") .. " " .. addText
               else
                 newName = currentName .. " " .. addText
               end
               r.GetSetMediaTrackInfo_String(track, "P_NAME", newName, true)
+              if replace_with_row and colorsEnabled and type(name_row.color) == "number" then
+                r.SetTrackColor(track, name_row.color)
+              end
             end
+          end
+          EndUndoBlock("Apply track suffix: " .. addText)
+          if button_clicked_left and not button_clicked_middle then
+            selectNextTrackAfterRename(track_count, replace_with_row)
           end
         end
         r.ImGui_PopStyleColor(ctx, 1)
@@ -851,7 +1022,7 @@ local function myWindow()
         -- Удаление суффикса при наведении и нажатии Delete
         if r.ImGui_IsItemHovered(ctx) and r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Delete()) then
           set["text_add_" .. i] = ""
-          SavePreset(allPresetFiles[currentPresetIndex], track_set)
+          SaveCurrentPreset()
         end
 
         -- Добавление нового суффикса при наведении и нажатии Insert
@@ -859,7 +1030,7 @@ local function myWindow()
           for k = 1, 5 do
             if not set["text_add_" .. k] or set["text_add_" .. k] == "" then
               set["text_add_" .. k] = "New"
-              SavePreset(allPresetFiles[currentPresetIndex], track_set)
+              SaveCurrentPreset()
               break
             end
           end
@@ -868,7 +1039,9 @@ local function myWindow()
         -- Drag and Drop Source
         if r.ImGui_BeginDragDropSource(ctx, r.ImGui_DragDropFlags_None()) then
           r.ImGui_SetDragDropPayload(ctx, "SUFFIX_BTN", _ .. "," .. i)
-          r.ImGui_Text(ctx, "Move " .. addText)
+          local copying = (r.ImGui_GetKeyMods(ctx) & nextTrackModifier) ~= 0
+          local combining = (r.ImGui_GetKeyMods(ctx) & r.ImGui_Mod_Shift()) ~= 0
+          r.ImGui_Text(ctx, (combining and "Combine with main name: " or copying and "Copy after: " or "Move ") .. addText)
           r.ImGui_EndDragDropSource(ctx)
         end
 
@@ -880,11 +1053,30 @@ local function myWindow()
             local src_row, src_col = tonumber(src_row_str), tonumber(src_col_str)
             local dst_row, dst_col = _, i
 
-            if src_row ~= dst_row or src_col ~= dst_col then
+            if (r.ImGui_GetKeyMods(ctx) & nextTrackModifier) ~= 0 then
+              local values = {}
+              local insert_after
+              for k = 1, 5 do
+                local value = track_set[dst_row]["text_add_" .. k]
+                if value and value ~= "" then
+                  values[#values + 1] = value
+                  if k == dst_col then insert_after = #values end
+                end
+              end
+              if #values < 5 and insert_after then
+                table.insert(values, insert_after + 1, track_set[src_row]["text_add_" .. src_col])
+                for k = 1, 5 do
+                  track_set[dst_row]["text_add_" .. k] = values[k] or ""
+                end
+                SaveCurrentPreset()
+              elseif #values == 5 then
+                r.ShowMessageBox("В строке уже пять добавочных ячеек. Освободите одну ячейку для вставки.", "Вставка ячейки", 0)
+              end
+            elseif src_row ~= dst_row or src_col ~= dst_col then
               local temp = track_set[src_row]["text_add_" .. src_col]
               track_set[src_row]["text_add_" .. src_col] = track_set[dst_row]["text_add_" .. dst_col]
               track_set[dst_row]["text_add_" .. dst_col] = temp
-              SavePreset(allPresetFiles[currentPresetIndex], track_set)
+              SaveCurrentPreset()
             end
           end
           r.ImGui_EndDragDropTarget(ctx)
@@ -895,19 +1087,19 @@ local function myWindow()
           local changed, new_text = r.ImGui_InputText(ctx, "##edit_suffix", set["text_add_" .. i])
           if changed then set["text_add_" .. i] = new_text end
           if r.ImGui_IsItemDeactivatedAfterEdit(ctx) then
-            SavePreset(allPresetFiles[currentPresetIndex], track_set)
+            SaveCurrentPreset()
           end
 
           if r.ImGui_Button(ctx, "Delete Suffix") then
             set["text_add_" .. i] = ""
-            SavePreset(allPresetFiles[currentPresetIndex], track_set)
+              SaveCurrentPreset()
             r.ImGui_CloseCurrentPopup(ctx)
           end
           if r.ImGui_Button(ctx, "Add Suffix") then
         for k = 1, 5 do
           if not set["text_add_" .. k] or set["text_add_" .. k] == "" then
             set["text_add_" .. k] = "New"
-            SavePreset(allPresetFiles[currentPresetIndex], track_set)
+            SaveCurrentPreset()
             break
           end
         end
@@ -926,7 +1118,7 @@ local function myWindow()
 
   if item_to_delete then
     table.remove(track_set, item_to_delete)
-    SavePreset(allPresetFiles[currentPresetIndex], track_set)
+    SaveCurrentPreset()
   end
 
   r.ImGui_PopStyleVar(ctx)
@@ -938,6 +1130,53 @@ local mainWinX, mainWinY, mainWinW, mainWinH = 0, 0, 0, 0
 
 local pan_edit_idx = nil
 local pan_edit_focused = false
+
+local function loadDefaultPanValues()
+  local path = scriptDir .. "TrackPresets/trs_TrackGUITools_default.lua"
+  local file, err = io.open(path, "r")
+  if not file then
+    r.ShowMessageBox("Не удалось открыть стандартный пресет:\n" .. tostring(err), "Ошибка", 0)
+    return nil
+  end
+  local source = file:read("*a")
+  file:close()
+  -- Читаем только блок default.txt, не выполняя код создания файлов пресетов.
+  local preset = source:match("file1:write%s*%(%[%[(.-)%]%]%s*%)")
+  local section = preset and preset:match("##PAN##%s*\n(.*)")
+  local values = {}
+  if section then
+    for line in section:gmatch("[^\r\n]+") do
+      local value = tonumber(line)
+      if value then values[#values + 1] = value end
+    end
+  end
+  if #values == 0 then
+    r.ShowMessageBox("В стандартном пресете не найдены значения панорамы.", "Ошибка", 0)
+    return nil
+  end
+  return values
+end
+
+local function applyTrackPan(pan_value, description)
+  local track_count = r.CountSelectedTracks(0)
+  if track_count == 0 then return end
+  local paired = (r.ImGui_GetKeyMods(ctx) & nextTrackModifier) ~= 0
+  BeginUndoBlock(description)
+  for i = 0, track_count - 1 do
+    local track = r.GetSelectedTrack(0, i)
+    if track then
+      r.SetMediaTrackInfo_Value(track, "D_PAN", pan_value)
+      if paired then
+        local next_index = r.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
+        local next_track = r.GetTrack(0, next_index)
+        if next_track then
+          r.SetMediaTrackInfo_Value(next_track, "D_PAN", -pan_value)
+        end
+      end
+    end
+  end
+  EndUndoBlock(description)
+end
 
 local function panWindow()
   if not showPanWindow then return end
@@ -974,7 +1213,7 @@ local function panWindow()
         end
         -- Выход из режима редактирования: Enter, клик мимо или Escape
         if r.ImGui_IsItemDeactivatedAfterEdit(ctx) then
-          SavePreset(allPresetFiles[currentPresetIndex], track_set)
+          SaveCurrentPreset()
         end
         if r.ImGui_IsItemDeactivated(ctx) or r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Escape()) then
           pan_edit_idx = nil
@@ -984,11 +1223,7 @@ local function panWindow()
         local panValue = val / 100.0
         r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_3)
         if r.ImGui_Button(ctx, " -" .. val .. "##panW_L_" .. idx, 34, 0) then
-          local tc = r.CountSelectedTracks(0)
-          for i = 0, tc - 1 do
-            local track = r.GetSelectedTrack(0, i)
-            if track then r.SetMediaTrackInfo_Value(track, "D_PAN", -panValue) end
-          end
+          applyTrackPan(-panValue, "Set track pan: -" .. val)
         end
         r.ImGui_PopStyleColor(ctx, 1)
 
@@ -999,7 +1234,7 @@ local function panWindow()
         -- Вставка по Insert при наведении (левая кнопка)
         if r.ImGui_IsItemHovered(ctx) and r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Insert()) then
           table.insert(pan_set, idx + 1, 0)
-          SavePreset(allPresetFiles[currentPresetIndex], track_set)
+          SaveCurrentPreset()
         end
         -- ПКМ на левой кнопке — переход в режим редактирования
         if r.ImGui_IsItemClicked(ctx, r.ImGui_MouseButton_Right()) then
@@ -1010,11 +1245,7 @@ local function panWindow()
         r.ImGui_SameLine(ctx)
         r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
         if r.ImGui_Button(ctx, " " .. val .. "##panW_R_" .. idx, 34, 0) then
-          local tc = r.CountSelectedTracks(0)
-          for i = 0, tc - 1 do
-            local track = r.GetSelectedTrack(0, i)
-            if track then r.SetMediaTrackInfo_Value(track, "D_PAN", panValue) end
-          end
+          applyTrackPan(panValue, "Set track pan: " .. val)
         end
         r.ImGui_PopStyleColor(ctx, 1)
 
@@ -1025,7 +1256,7 @@ local function panWindow()
         -- Вставка по Insert при наведении (правая кнопка)
         if r.ImGui_IsItemHovered(ctx) and r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Insert()) then
           table.insert(pan_set, idx + 1, 0)
-          SavePreset(allPresetFiles[currentPresetIndex], track_set)
+          SaveCurrentPreset()
         end
         -- ПКМ на правой кнопке — переход в режим редактирования
         if r.ImGui_IsItemClicked(ctx, r.ImGui_MouseButton_Right()) then
@@ -1037,13 +1268,24 @@ local function panWindow()
 
     if pan_to_delete then
       table.remove(pan_set, pan_to_delete)
-      SavePreset(allPresetFiles[currentPresetIndex], track_set)
+      SaveCurrentPreset()
     end
 
     if #pan_set == 0 then
       if r.ImGui_Button(ctx, "+ Add##pan_add_first", 76, 0) then
-        table.insert(pan_set, 0)
-        SavePreset(allPresetFiles[currentPresetIndex], track_set)
+        if (r.ImGui_GetKeyMods(ctx) & nextTrackModifier) ~= 0 then
+          local values = loadDefaultPanValues()
+          if values then
+            pan_set = values
+            SaveCurrentPreset()
+          end
+        else
+          table.insert(pan_set, 0)
+          SaveCurrentPreset()
+        end
+      end
+      if r.ImGui_IsItemHovered(ctx) then
+        r.ImGui_SetTooltip(ctx, "ЛКМ — добавить значение 0\nCtrl+ЛКМ (macOS: Cmd/Control) — загрузить панораму стандартного пресета")
       end
     end
 
@@ -1059,12 +1301,19 @@ local function loop()
   reaper.ImGui_PushFont(ctx, font, size)
 
   reaper.ImGui_SetNextWindowSizeConstraints(ctx, 100, 100, 999999, 999999)
-  local visible, open = reaper.ImGui_Begin(ctx, windowTitle, true, reaper.ImGui_WindowFlags_AlwaysAutoResize())
+  local visible, open = reaper.ImGui_Begin(ctx, windowTitle, true, reaper.ImGui_WindowFlags_AlwaysAutoResize() | r.ImGui_WindowFlags_MenuBar())
   if visible then
     -- Запоминаем позицию и размер основного окна для магнита
     mainWinX, mainWinY = r.ImGui_GetWindowPos(ctx)
     mainWinW, mainWinH = r.ImGui_GetWindowSize(ctx)
     myWindow()
+    if r.ImGui_IsWindowHovered(ctx) and not r.ImGui_IsAnyItemActive(ctx) then
+      local wheel = r.ImGui_GetMouseWheel(ctx)
+      if wheel ~= 0 then
+        local action = wheel > 0 and "_XENAKIOS_SELPREVTRACK" or "_XENAKIOS_SELNEXTTRACK"
+        r.Main_OnCommand(r.NamedCommandLookup(action), 0)
+      end
+    end
     reaper.ImGui_End(ctx)
   end
 
