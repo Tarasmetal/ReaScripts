@@ -1,6 +1,6 @@
 @description Taras Playback Playlist: project region playlists (ReaImGui)
 @author Taras Umanskiy
-@version 0.1.0
+@version 0.2.0
 @changelog Requires ReaImGui. Playlists are stored in PlaybackList beside the project file.
 @provides
   [main script] trs_Playback Playlist.lua

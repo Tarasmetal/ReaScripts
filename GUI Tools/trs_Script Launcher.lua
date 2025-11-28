@@ -1,6 +1,6 @@
 -- @description Script Launcher - File manager for launching REAPER scripts
 -- @author Taras Umanskiy
--- @version 2.9.8
+-- @version 2.9.14
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
@@ -35,12 +35,38 @@
 --   + v2.9.6: Кнопки Home и Drive перемещены в начало тулбара
 --   + v2.9.7: Исправлено отображение путей и тегов в разделах Favorites и History
 --   + v2.9.8: Добавлена настройка скрытия иконок файлов (View > Show File Icons)
+--   + v2.9.9: Цветные эмодзи на Windows и macOS через talagan_EmojImGui (ReaImGui 0.10+)
+--   + v2.9.10: Выравнивание эмодзи по фактическим метрикам шрифта и отступам элементов
+--   + v2.9.11: Исправлена ошибка сравнения числа с nil при измерении ширины пробела для эмодзи
+--   + v2.9.12: Исправлена обрезка цветных иконок: отсечение перенесено в draw list
+--   + v2.9.13: Увеличена вертикальная область отрисовки цветных иконок
+--   + v2.9.14: Иконки немного подняты для выравнивания по вертикали
 
-package.path = reaper.ImGui_GetBuiltinPath() .. '/?.lua'
-local ImGui = require 'imgui' '0.9.2'
+if not reaper.ImGui_GetBuiltinPath then
+    reaper.ShowMessageBox("Install ReaImGui 0.10 or newer via ReaPack.", "Script Launcher", 0)
+    return
+end
+
+local emoji_path = reaper.GetResourcePath():gsub("\\", "/") ..
+    "/Scripts/ReaTeam Scripts/Development/talagan_EmojImGui"
+package.path = reaper.ImGui_GetBuiltinPath() .. '/?.lua;' .. emoji_path .. '/?.lua;' .. package.path
+local imgui_ok, NativeImGui = pcall(function() return require 'imgui' '0.10.0' end)
+if not imgui_ok then
+    reaper.ShowMessageBox("Install ReaImGui 0.10 or newer via ReaPack.\n\n" .. tostring(NativeImGui), "Script Launcher", 0)
+    return
+end
+local emoji_ok, EmojImGui = pcall(require, 'emojimgui')
+if not emoji_ok then
+    reaper.ShowMessageBox("Install 'EmojImGui' by talagan via ReaPack (ReaTeam Scripts).\n" ..
+        "The package includes 'talagan_EmojImGui Demo.lua' and its fonts.\n\n" .. tostring(EmojImGui), "Script Launcher", 0)
+    return
+end
+-- Use forward slashes and the exact package directory case on macOS too.
+EmojImGui.Asset.SetPath(emoji_path .. '/assets/build')
+local ImGui = setmetatable({}, {__index = NativeImGui})
 
 local ctx = ImGui.CreateContext('Script Launcher')
-local VERSION = "2.9.8"
+local VERSION = "2.9.14"
 local SCRIPT_NAME = "Script Launcher"
 
 local SCRIPT_EXTENSIONS = {
@@ -67,6 +93,178 @@ local ICONS = {
     tag = "🏷️",
     help = "❓"
 }
+
+-- Like the EmojImGui demo, use its patched font AND its mapped codepoints.
+-- Keep normal text in the UI font: TweMoji does not contain ordinary letters.
+local font_ok, emoji_font = pcall(EmojImGui.Asset.Font, ctx, 'TweMoji')
+if not font_ok then
+    reaper.ShowMessageBox("Reinstall 'EmojImGui' via ReaPack to restore its fonts.\n\n" ..
+        tostring(emoji_font), "Script Launcher", 0)
+    return
+end
+local emoji_glyphs = {}
+local glyph_ok, glyph_error = pcall(function()
+    for _, icon in pairs(ICONS) do
+        local codepoints = {}
+        for _, codepoint in utf8.codes(icon) do
+            codepoints[#codepoints + 1] = string.format('%X', codepoint)
+        end
+        local id = table.concat(codepoints, '-')
+        local info = EmojImGui.Asset.CharInfo('TweMoji', id) or
+            EmojImGui.Asset.CharInfo('TweMoji', id:gsub('%-FE0F', '')) or
+            EmojImGui.Asset.CharInfo('TweMoji', id .. '-FE0F')
+        assert(info, 'Missing TweMoji icon: ' .. id)
+        emoji_glyphs[icon] = info.utf8
+        emoji_glyphs[icon:gsub(utf8.char(0xFE0F), '')] = info.utf8
+    end
+end)
+if not glyph_ok then
+    reaper.ShowMessageBox("Reinstall 'EmojImGui' via ReaPack to restore its icon data.\n\n" ..
+        tostring(glyph_error), "Script Launcher", 0)
+    return
+end
+local emoji_sequences = {}
+for sequence in pairs(emoji_glyphs) do emoji_sequences[#emoji_sequences + 1] = sequence end
+table.sort(emoji_sequences, function(a, b) return #a > #b end)
+
+-- Reserve real space in native widgets, then paint only the emoji into it.
+-- Native widgets retain keyboard navigation, sizing, tooltips and popup targets.
+local emoji_width_cache = {}
+local function EmojiLabel(context, label, widget)
+    local visible, suffix = label, ''
+    if widget then
+        local id_start = label:find('##', 1, true)
+        if id_start then visible = label:sub(1, id_start - 1) end
+        local stable_id = label:match('###(.*)$') or label
+        suffix = '###' .. stable_id
+    end
+    local size = ImGui.GetFontSize(context)
+    local space_width = ImGui.CalcTextSize(context, ' ')
+    -- Capture only the width; a final function argument expands all returns.
+    space_width = math.max(1, space_width)
+    -- TweMoji's advance is wider than the nominal font size. Measure the
+    -- actual glyph in its own font instead of reserving a font-size square.
+    local glyph_widths = emoji_width_cache[size]
+    if not glyph_widths then
+        glyph_widths = {}
+        ImGui.PushFont(context, emoji_font, size)
+        for _, glyph in pairs(emoji_glyphs) do
+            if not glyph_widths[glyph] then
+                glyph_widths[glyph] = ImGui.CalcTextSize(context, glyph)
+            end
+        end
+        ImGui.PopFont(context)
+        emoji_width_cache[size] = glyph_widths
+    end
+    local text, icons, position = '', {}, 1
+    while position <= #visible do
+        local found
+        for _, sequence in ipairs(emoji_sequences) do
+            if visible:sub(position, position + #sequence - 1) == sequence then
+                found = sequence
+                break
+            end
+        end
+        if found then
+            local glyph = emoji_glyphs[found]
+            local glyph_width = glyph_widths[glyph]
+            local padding = string.rep(' ', math.max(1, math.ceil(glyph_width / space_width)))
+            local slot_width = ImGui.CalcTextSize(context, padding)
+            icons[#icons + 1] = {
+                x = ImGui.CalcTextSize(context, text) + (slot_width - glyph_width) * 0.5,
+                glyph = glyph
+            }
+            text = text .. padding
+            position = position + #found
+        else
+            text = text .. visible:sub(position, position)
+            position = position + 1
+        end
+    end
+    return text .. suffix, icons, ImGui.CalcTextSize(context, text), size
+end
+
+local function PaintEmoji(context, icons, x, y, size, right)
+    if #icons == 0 or not ImGui.IsItemVisible(context) then return end
+    local draw_list = ImGui.GetWindowDrawList(context)
+    local alpha = ImGui.GetColor(context, ImGui.Col_Text) & 0xFF
+    local icon_y = y - math.max(1, math.floor(size / 13 + 0.5))
+    -- CPU fine clipping in AddTextEx can cut color glyph layers incorrectly.
+    -- Use the draw list's scissor instead, intersecting the window/column clip.
+    local vertical_padding = size * 0.25
+    ImGui.DrawList_PushClipRect(draw_list, x, y - vertical_padding, right,
+        y + size + vertical_padding, true)
+    for _, icon in ipairs(icons) do
+        ImGui.DrawList_AddTextEx(draw_list, emoji_font, size, x + icon.x, icon_y,
+            0xFFFFFF00 | alpha, icon.glyph)
+    end
+    ImGui.DrawList_PopClipRect(draw_list)
+end
+
+function ImGui.Button(context, label, ...)
+    if not label:find('[\128-\255]') then return NativeImGui.Button(context, label, ...) end
+    local text, icons, width, size = EmojiLabel(context, label, true)
+    local result = NativeImGui.Button(context, text, ...)
+    local x, y = ImGui.GetItemRectMin(context)
+    local right, bottom = ImGui.GetItemRectMax(context)
+    local align_x, align_y = ImGui.GetStyleVar(context, ImGui.StyleVar_ButtonTextAlign)
+    PaintEmoji(context, icons, x + math.max(0, right - x - width) * align_x,
+        y + math.max(0, bottom - y - size) * align_y, size, right)
+    return result
+end
+
+function ImGui.Selectable(context, label, ...)
+    if not label:find('[\128-\255]') then return NativeImGui.Selectable(context, label, ...) end
+    local text, icons, width, size = EmojiLabel(context, label, true)
+    local x, y = ImGui.GetCursorScreenPos(context)
+    local result = NativeImGui.Selectable(context, text, ...)
+    local right, bottom = ImGui.GetItemRectMax(context)
+    local _, spacing_y = ImGui.GetStyleVar(context, ImGui.StyleVar_ItemSpacing)
+    local align_x, align_y = ImGui.GetStyleVar(context, ImGui.StyleVar_SelectableTextAlign)
+    local text_x = x + math.max(0, right - x - width) * align_x
+    local text_y = y + math.max(0, bottom - spacing_y * 0.5 - y - size) * align_y
+    PaintEmoji(context, icons, text_x, text_y, size, right)
+    return result
+end
+
+function ImGui.MenuItem(context, label, ...)
+    if not label:find('[\128-\255]') then return NativeImGui.MenuItem(context, label, ...) end
+    local text, icons, _, size = EmojiLabel(context, label, true)
+    local text_x = ImGui.GetCursorScreenPos(context)
+    local result, selected = NativeImGui.MenuItem(context, text, ...)
+    local _, y = ImGui.GetItemRectMin(context)
+    local right, bottom = ImGui.GetItemRectMax(context)
+    PaintEmoji(context, icons, text_x, y + (bottom - y - size) * 0.5, size, right)
+    return result, selected
+end
+
+function ImGui.Text(context, label)
+    label = tostring(label)
+    if not label:find('[\128-\255]') then return NativeImGui.Text(context, label) end
+    local text, icons, width, size = EmojiLabel(context, label, false)
+    local x = ImGui.GetCursorScreenPos(context)
+    NativeImGui.Text(context, text)
+    local _, text_y = ImGui.GetItemRectMin(context)
+    PaintEmoji(context, icons, x, text_y, size, x + width)
+end
+
+function ImGui.TextColored(context, color, label)
+    ImGui.PushStyleColor(context, ImGui.Col_Text, color)
+    ImGui.Text(context, label)
+    ImGui.PopStyleColor(context)
+end
+
+function ImGui.InputTextWithHint(context, label, hint, value, ...)
+    local text, icons, _, size = EmojiLabel(context, hint, false)
+    local changed, new_value = NativeImGui.InputTextWithHint(context, label, text, value, ...)
+    if new_value == '' then
+        local x, y = ImGui.GetItemRectMin(context)
+        local right = ImGui.GetItemRectMax(context)
+        local padding_x, padding_y = ImGui.GetStyleVar(context, ImGui.StyleVar_FramePadding)
+        PaintEmoji(context, icons, x + padding_x, y + padding_y, size, right - padding_x)
+    end
+    return changed, new_value
+end
 
 local colors = {
     folder = 0xFFD700FF,
@@ -773,7 +971,7 @@ local function DrawSearchBar()
 end
 
 local function DrawFolderTree(list_height)
-    if ImGui.BeginChild(ctx, "FolderTree", state.tree_width, list_height, ImGui.ChildFlags_Border + ImGui.ChildFlags_ResizeX) then
+    if ImGui.BeginChild(ctx, "FolderTree", state.tree_width, list_height, ImGui.ChildFlags_Borders + ImGui.ChildFlags_ResizeX) then
         state.tree_width, _ = ImGui.GetWindowSize(ctx)
 
         local root_path = GetScriptsPath()
@@ -839,7 +1037,7 @@ end
 
 local function DrawFileList(list_height)
     ImGui.SameLine(ctx)
-    if ImGui.BeginChild(ctx, "FileList", 0, list_height, ImGui.ChildFlags_Border) then
+    if ImGui.BeginChild(ctx, "FileList", 0, list_height, ImGui.ChildFlags_Borders) then
 
         -- Подготовка списка видимых элементов
         local visible_items = {}
@@ -1421,7 +1619,7 @@ local function DrawInfoPanel()
         end
         ImGui.SameLine(ctx)
         local is_fav = IsFavorite(state.selected_file)
-        if ImGui.Button(ctx, is_fav and "Remove ⭐" or "Add ⭐") then
+        if ImGui.Button(ctx, (is_fav and "Remove " or "Add ") .. ICONS.favorite) then
             ToggleFavorite(state.selected_file)
         end
     end
@@ -1520,7 +1718,7 @@ end
 
 local function DrawTagsBar()
     -- Manage Tags button
-    if ImGui.Button(ctx, "🏷 Tags##manage_tags") then
+    if ImGui.Button(ctx, ICONS.tag .. " Tags##manage_tags") then
         state.show_manage_tags = not state.show_manage_tags
     end
     if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Manage Tags (Add/Edit/Delete)") end

@@ -1,16 +1,20 @@
 -- @description Playback Playlist Web bridge (run instead of the ReaImGui playlist)
 -- @author Taras Umanskiy
--- @version 1.1
+-- @version 1.2
+-- @provides [main] .
+-- @link http://vk.com/tarasmetal
+-- @donation https://vk.com/Tarasmetal
+-- @about Open trs_Playback_Playlist.html in REAPER Web Remote after running this script.
 -- @changelog
+--   v.1.2 + Пауза, кнопки <<< / >>>, Stop у играющего региона, общая длительность и перемотка внутри региона.
 --   v.1.1 + Смежные регионы играют непрерывно, повтор перехода выполняется на ходу.
--- @about Open playback_playlist.html in REAPER Web Remote after running this script.
 
 local r = reaper
 local section = 'TRS_PlaybackPlaylistWeb'
 local playlists, selected, next_id = {}, 1, 1
 local project, project_file = r.EnumProjects(-1, '')
-local playing, playing_playlist, step, single, consecutive = false, nil, 0, false, false
-local target_start, target_end, expected_end, seek_at, seek_from, retried, last_position
+local playing, playing_playlist, step, single, consecutive, paused = false, nil, 0, false, false, false
+local target_start, target_end, expected_end, seek_at, seek_from, seek_to, retried, last_position
 local error_text, last_command, revision = '', r.GetExtState(section, 'command'), 0
 
 local function encode(value)
@@ -102,22 +106,23 @@ local function regions()
 end
 
 local function stop(stop_transport)
-  playing, playing_playlist, step, single = false, nil, 0, false
-  expected_end, seek_at, seek_from, retried, last_position = nil, nil, nil, false, nil
+  playing, playing_playlist, step, single, paused = false, nil, 0, false, false
+  expected_end, seek_at, seek_from, seek_to, retried, last_position = nil, nil, nil, nil, false, nil
   if stop_transport then r.OnStopButton() end
 end
 
-local function seek()
+local function seek(position)
   local transport_playing = r.GetPlayState() & 1 ~= 0
   seek_from = transport_playing and r.GetPlayPosition2() or nil
+  seek_to = position or target_start
   seek_at = r.time_precise()
-  r.SetEditCurPos2(0, target_start, false, true)
+  r.SetEditCurPos2(0, seek_to, false, true)
   if not transport_playing then r.OnPlayButton() end
 end
 
 local function start(index, region, playlist, play_single)
   step, target_start, target_end = index, region.start_pos, region.end_pos
-  last_position, retried, single = nil, false, play_single
+  last_position, retried, single, paused = nil, false, play_single, false
   playing_playlist, playing = playlist, true
   seek()
 end
@@ -132,10 +137,52 @@ local function playable(index, playlist)
   end
 end
 
+local function playable_back(index, playlist)
+  local list = regions()
+  while playlist and index >= 1 do
+    for _, region in ipairs(list) do
+      if region.id == playlist.items[index] and region.end_pos > region.start_pos then return index, region end
+    end
+    index = index - 1
+  end
+end
+
+local function pause()
+  if not playing or paused then return end
+  paused = true
+  r.OnPauseButton()
+end
+
+local function resume()
+  if not playing or not paused then return end
+  paused = false
+  local position = r.GetPlayPosition2()
+  local rate = math.max(r.Master_GetPlayRate(project), 0.001)
+  expected_end = r.time_precise() + math.max(0, target_end - position) / rate + 1
+  last_position = position
+  r.OnPlayButton()
+end
+
+local function skip_previous(playlist)
+  local current = playing and playing_playlist == playlist and step or 1
+  local index, region = playable_back(current - 1, playlist)
+  if region then start(index, region, playlist, not consecutive) end
+end
+
+local function skip_next(playlist)
+  local current = playing and playing_playlist == playlist and step or 0
+  local index, region = playable(current + 1, playlist)
+  if region then
+    start(index, region, playlist, not consecutive)
+  elseif playing then
+    stop(true)
+  end
+end
+
 local function publish()
   local lines = { table.concat({ 'S', revision, selected, consecutive and 1 or 0,
     playing and playing_playlist and playing_playlist.id or 0, step, encode(error_text), location() and 1 or 0,
-    encode(project_file), math.floor(r.time_precise() * 1000) }, '|') }
+    encode(project_file), math.floor(r.time_precise() * 1000), paused and 1 or 0 }, '|') }
   for _, p in ipairs(playlists) do
     lines[#lines + 1] = table.concat({ 'P', p.id, encode(p.name), table.concat(p.items, ',') }, '|')
   end
@@ -220,9 +267,35 @@ local function handle(raw)
     consecutive = arg == '1'
     if playing then single = not consecutive end
   elseif op == 'stop' then stop(true)
+  elseif op == 'pause' then pause()
+  elseif op == 'prev' and p then skip_previous(p)
+  elseif op == 'next' and p then skip_next(p)
+  elseif op == 'seek' then
+    local position = tonumber(arg)
+    if playing and position and position >= target_start and position < target_end then
+      retried = false
+      last_position = nil
+      if paused then
+        r.SetEditCurPos2(0, position, false, true)
+        local rate = math.max(r.Master_GetPlayRate(project), 0.001)
+        expected_end = r.time_precise() + math.max(0, target_end - position) / rate + 1
+        last_position = position
+        seek_at, seek_from, seek_to = nil, nil, nil
+      else
+        seek(position)
+      end
+    end
   elseif op == 'play' and p then
-    local index, region = playable(1, p)
-    if region then start(index, region, p, not consecutive) else stop(true) end
+    if playing and paused then
+      resume()
+    elseif not playing then
+      local index, region = playable(1, p)
+      if region then
+        start(index, region, p, not consecutive)
+      else
+        stop(true)
+      end
+    end
   elseif op == 'entry' and p then
     local index = tonumber(arg)
     if index and p.items[index] then
@@ -246,16 +319,25 @@ local function tick()
     local state, position, now = r.GetPlayState(), r.GetPlayPosition2(), r.time_precise()
     local transition_at = target_end - (target_end - target_start) / 4
     local stop_at = target_end - 0.015
-    if state & 1 == 0 or state & 2 ~= 0 then stop(false)
+    if state & 2 ~= 0 then
+      paused = true
+    elseif state & 1 == 0 then
+      stop(false)
+    elseif paused then
+      paused = false
+      local rate = math.max(r.Master_GetPlayRate(project), 0.001)
+      expected_end = now + math.max(0, target_end - position) / rate + 1
+      last_position = position
     elseif seek_at then
       local elapsed = now - seek_at
       local rate = math.max(r.Master_GetPlayRate(project), 0.001)
-      local waiting = seek_from and seek_from > target_start and position >= seek_from
-      if position >= target_start and position <= target_start + elapsed * rate + 0.1 and not waiting then
-        seek_at, seek_from, last_position = nil, nil, position
-        expected_end = now + (target_end - target_start) / rate + 1
+      local destination = seek_to or target_start
+      local waiting = seek_from and seek_from > destination and position >= seek_from
+      if position >= destination and position <= destination + elapsed * rate + 0.1 and not waiting then
+        seek_at, seek_from, seek_to, last_position = nil, nil, nil, position
+        expected_end = now + math.max(0, target_end - position) / rate + 1
       elseif elapsed > 2 then
-        if not single and not retried then retried = true; seek() else stop(true) end
+        if not single and not retried then retried = true; seek(destination) else stop(true) end
       end
     elseif position >= math.min(transition_at, stop_at) and last_position and position >= last_position and now <= expected_end then
       local index, region

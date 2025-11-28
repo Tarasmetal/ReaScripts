@@ -1,10 +1,20 @@
 -- @description Playback Playlist: project region playlists (ReaImGui)
 -- @author Taras Umanskiy
--- @version 1.18
+-- @version 1.27
+-- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
 -- @about Requires ReaImGui. Playlists are stored in PlaybackList beside the project file.
 -- @changelog
+--   v.1.27 + Переход запускается за 1/8 длительности региона, чтобы smooth seek успевал до конца.
+--   v.1.26 + Переход подготавливается за одну восьмую ноту до конца региона.
+--   v.1.25 + Чекбокс непрерывного воспроизведения перенесён вправо от кнопки >>>.
+--   v.1.24 + Красная кнопка Stop «s» снова сразу справа от >> у играющего региона.
+--   v.1.23 + Кнопка Stop «s» справа от длительности; под Total duration кнопки плеера <<<, Play, Pause, >>>.
+--   v.1.22 + Красная кнопка Stop «s» показывается справа от >> у играющего региона.
+--   v.1.21 + Длительность регионов отображается серым цветом справа от названия.
+--   v.1.20 + Показаны длительности регионов и общая длительность выбранного плейлиста с учётом повторов.
+--   v.1.19 + Подпись «Play consecutively» перенесена во всплывающую подсказку чекбокса.
 --   v.1.18 + Смежные регионы играют непрерывно, повтор перехода выполняется на ходу.
 --   v.1.17 + Исправлено подтверждение переходов между регионами, включая повторы и переходы назад.
 --   v.1.16 + Переход к следующему региону, когда остаётся 1/4 длительности текущего.
@@ -20,17 +30,21 @@
 --   v.1.6 + Поле Name уменьшено на треть; каждый плейлист хранится в отдельном файле, старый формат переносится автоматически.
 --   v.1.5 + Кнопка Project regions открывает и закрывает боковое окно регионов слева от плейлиста.
 
+
+local version = 1.27
+
 local r = reaper
 if not r.ImGui_CreateContext then
   r.MB('Install ReaImGui via ReaPack to run Playback Playlist.', 'Playback Playlist', 0)
   return
 end
 
-local ctx = r.ImGui_CreateContext('Playback Playlist')
+local ctx = r.ImGui_CreateContext('Playback Playlist ' .. version .. '')
 local playlists = {}
 local selected = 1
 local playing = false
 local playing_playlist
+local paused = false
 local single_region = false
 local play_consecutively = false
 local step = 0
@@ -84,6 +98,19 @@ local function find_region(id, list)
   for _, region in ipairs(list) do
     if region.id == id then return region end
   end
+end
+
+local function region_duration(region)
+  return math.max(0, region.end_pos - region.start_pos)
+end
+
+local function format_duration(seconds)
+  local milliseconds = math.floor(seconds * 1000 + 0.5)
+  local hours = milliseconds // 3600000
+  local minutes = milliseconds // 60000 % 60
+  local time = string.format('%02d:%02d.%03d', minutes, milliseconds // 1000 % 60, milliseconds % 1000)
+  if hours > 0 then return string.format('%02d:', hours) .. time end
+  return time
 end
 
 local function safe_name(name)
@@ -227,6 +254,7 @@ end
 local function stop_playlist(stop_transport)
   playing = false
   playing_playlist = nil
+  paused = false
   single_region = false
   step = 0
   expected_end = nil
@@ -253,6 +281,7 @@ local function start_region(index, region, playlist, play_single)
   single_region = play_single
   playing_playlist = playlist
   playing = true
+  paused = false
   seek_to_region_start()
 end
 
@@ -267,6 +296,33 @@ local function find_playable_step(index, playlist)
   end
 end
 
+local function find_playable_step_back(index, playlist)
+  local list = regions()
+  while playlist and index >= 1 do
+    local region = find_region(playlist.items[index], list)
+    if region and region.end_pos > region.start_pos then
+      return index, region
+    end
+    index = index - 1
+  end
+end
+
+local function pause_playlist()
+  if not playing or paused then return end
+  paused = true
+  r.OnPauseButton()
+end
+
+local function resume_playlist()
+  if not playing or not paused then return end
+  paused = false
+  local position = r.GetPlayPosition2()
+  local rate = r.Master_GetPlayRate(project)
+  expected_end = r.time_precise() + math.max(0, target_end - position) / rate + 1
+  last_position = position
+  r.OnPlayButton()
+end
+
 local function play_step(index, playlist)
   local next_index, region = find_playable_step(index, playlist)
   if region then
@@ -279,6 +335,34 @@ end
 local function play_region(index, region, playlist)
   if not region or region.end_pos <= region.start_pos then return end
   start_region(index, region, playlist, not play_consecutively)
+end
+
+local function play_or_resume(playlist)
+  if playing and paused then
+    resume_playlist()
+    return
+  end
+  if playing then return end
+  play_step(1, playlist)
+  if playing then single_region = not play_consecutively end
+end
+
+local function skip_previous(playlist)
+  local current = playing and playing_playlist == playlist and step or 1
+  local index, region = find_playable_step_back(current - 1, playlist)
+  if region then
+    start_region(index, region, playlist, not play_consecutively)
+  end
+end
+
+local function skip_next(playlist)
+  local current = playing and playing_playlist == playlist and step or 0
+  local index, region = find_playable_step(current + 1, playlist)
+  if region then
+    start_region(index, region, playlist, not play_consecutively)
+  elseif playing then
+    stop_playlist(true)
+  end
 end
 
 local function input_name(label, playlist)
@@ -321,8 +405,11 @@ local function move_item(items, from, to)
   save()
 end
 
+local duration_gap = 8
+
 local function fit_label(text, width)
   if r.ImGui_CalcTextSize(ctx, text) <= width then return text end
+  if width < r.ImGui_CalcTextSize(ctx, '...') then return '' end
   while #text > 0 and r.ImGui_CalcTextSize(ctx, text .. '...') > width do
     local start = utf8.offset(text, -1)
     text = start and text:sub(1, start - 1) or ''
@@ -392,25 +479,43 @@ local function draw(list)
     playlist.items = {}
     save()
   end
-  r.ImGui_SameLine(ctx)
-  if r.ImGui_Button(ctx, playing and 'Stop' or 'Play') then
-    if playing then
-      stop_playlist(true)
-    else
-      play_step(1, playlist)
-      if playing then single_region = not play_consecutively end
-    end
+  r.ImGui_Separator(ctx)
+  local regions_by_id = {}
+  for _, region in ipairs(list) do
+    regions_by_id[region.id] = region
   end
+  local total_duration = 0
+  for _, id in ipairs(playlist.items) do
+    local region = regions_by_id[id]
+    if region then total_duration = total_duration + region_duration(region) end
+  end
+  r.ImGui_Text(ctx, 'Total duration: ' .. format_duration(total_duration))
+  if r.ImGui_Button(ctx, '<<<') then skip_previous(playlist) end
+  if r.ImGui_IsItemHovered(ctx) then r.ImGui_SetTooltip(ctx, 'Previous region') end
+  r.ImGui_SameLine(ctx)
+  local can_play = not playing or paused
+  r.ImGui_BeginDisabled(ctx, not can_play)
+  if r.ImGui_Button(ctx, 'Play') then play_or_resume(playlist) end
+  r.ImGui_EndDisabled(ctx)
+  r.ImGui_SameLine(ctx)
+  r.ImGui_BeginDisabled(ctx, not playing or paused)
+  if r.ImGui_Button(ctx, 'Pause') then pause_playlist() end
+  r.ImGui_EndDisabled(ctx)
+  r.ImGui_SameLine(ctx)
+  if r.ImGui_Button(ctx, '>>>') then skip_next(playlist) end
+  if r.ImGui_IsItemHovered(ctx) then r.ImGui_SetTooltip(ctx, 'Next region') end
   r.ImGui_SameLine(ctx)
   local changed
-  changed, play_consecutively = r.ImGui_Checkbox(ctx, 'Play consecutively', play_consecutively)
+  changed, play_consecutively = r.ImGui_Checkbox(ctx, '##play_consecutively', play_consecutively)
+  if r.ImGui_IsItemHovered(ctx) then r.ImGui_SetTooltip(ctx, 'Play consecutively') end
   if changed and playing then single_region = not play_consecutively end
-  r.ImGui_Separator(ctx)
   r.ImGui_Text(ctx, 'Playlist entries (duplicates allowed)')
   local move_from, move_to
+  local duration_color = r.ImGui_GetStyleColor(ctx, r.ImGui_Col_TextDisabled())
+  local draw_list = r.ImGui_GetWindowDrawList(ctx)
   for i, id in ipairs(playlist.items) do
     r.ImGui_PushID(ctx, i)
-    local region = find_region(id, list)
+    local region = regions_by_id[id]
     local label = region and (region.name ~= '' and region.name or ('Region ' .. id)) or ('Missing region ' .. id)
     local is_playing = playing and playing_playlist == playlist and i == step
     if is_playing then
@@ -426,12 +531,36 @@ local function draw(list)
       play_region(i, region, playlist)
       is_playing = playing and playing_playlist == playlist and i == step
     end
+    if is_playing then
+      r.ImGui_SameLine(ctx)
+      r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), 0xFF0000FF)
+      r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonHovered(), 0xFF4444FF)
+      r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonActive(), 0xCC0000FF)
+      r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Text(), 0xFFFFFFFF)
+      if r.ImGui_SmallButton(ctx, 'S###stop_region') then
+        stop_playlist(true)
+        is_playing = false
+      end
+      r.ImGui_PopStyleColor(ctx, 4)
+      if r.ImGui_IsItemHovered(ctx) then r.ImGui_SetTooltip(ctx, 'Stop') end
+    end
     r.ImGui_SameLine(ctx)
     local width = math.max(40, r.ImGui_GetContentRegionAvail(ctx) - r.ImGui_CalcTextSize(ctx, 'x') - 24)
-    local text = i .. '. ' .. label
+    local duration = region and format_duration(region_duration(region)) or '--:--.---'
+    local time_label = '[' .. duration .. ']'
+    local time_width, time_height = r.ImGui_CalcTextSize(ctx, time_label)
+    local text = fit_label(i .. '. ' .. label, width - duration_gap - time_width - 8)
+    local row_x = r.ImGui_GetCursorScreenPos(ctx)
     if is_playing then r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Text(), 0xFFFF00FF) end
-    r.ImGui_Selectable(ctx, fit_label(text, width - 8) .. '###entry', false, 0, width, 0)
+    r.ImGui_Selectable(ctx, text .. '###entry', false, 0, width, 0)
     if is_playing then r.ImGui_PopStyleColor(ctx) end
+    -- Draw the duration inside the row without replacing the drag-and-drop item.
+    local _, top = r.ImGui_GetItemRectMin(ctx)
+    local _, bottom = r.ImGui_GetItemRectMax(ctx)
+    local text_width = r.ImGui_CalcTextSize(ctx, text, nil, nil, true)
+    local time_x = row_x + text_width + (text ~= '' and duration_gap or 0)
+    local time_y = math.floor((top + bottom - time_height) / 2)
+    r.ImGui_DrawList_AddText(draw_list, time_x, time_y, duration_color, time_label)
     if r.ImGui_BeginDragDropSource(ctx) then
       r.ImGui_SetDragDropPayload(ctx, 'PLAYLIST_ENTRY', tostring(i))
       r.ImGui_Text(ctx, label)
@@ -480,13 +609,21 @@ local function draw_regions(list)
     end
     r.ImGui_EndDisabled(ctx)
     r.ImGui_SameLine(ctx)
-    r.ImGui_Text(ctx, region.name ~= '' and region.name or 'Untitled')
+    local time_label = '[' .. format_duration(region_duration(region)) .. ']'
+    local label = region.name ~= '' and region.name or 'Untitled'
+    local width = r.ImGui_GetContentRegionAvail(ctx) - duration_gap - r.ImGui_CalcTextSize(ctx, time_label)
+    local text = fit_label(label, width)
+    if text ~= '' then
+      r.ImGui_Text(ctx, text)
+      r.ImGui_SameLine(ctx, 0, duration_gap)
+    end
+    r.ImGui_TextDisabled(ctx, time_label)
     r.ImGui_PopID(ctx)
   end
 end
 
 local function draw_regions_window(list, main_x, main_y, main_height)
-  local width, gap = 300, 8
+  local width, gap = 270, 8
   r.ImGui_SetNextWindowPos(ctx, main_x - width - gap, main_y)
   r.ImGui_SetNextWindowSize(ctx, width, main_height)
   local flags = r.ImGui_WindowFlags_NoDocking() | r.ImGui_WindowFlags_NoMove()
@@ -516,10 +653,17 @@ local function loop()
     local state = r.GetPlayState()
     local position = r.GetPlayPosition2()
     local now = r.time_precise()
-    local transition_at = target_end - (target_end - target_start) / 4
+    local transition_at = target_end - (target_end - target_start) / 16
     local stop_at = target_end - 0.015
-    if state & 1 == 0 or state & 2 ~= 0 then
+    if state & 2 ~= 0 then
+      paused = true
+    elseif state & 1 == 0 then
       stop_playlist(false)
+    elseif paused then
+      paused = false
+      local rate = r.Master_GetPlayRate(project)
+      expected_end = now + math.max(0, target_end - position) / rate + 1
+      last_position = position
     elseif seek_requested_at then
       -- The transport can still report the previous position while a seek is pending.
       local elapsed = now - seek_requested_at
@@ -567,8 +711,8 @@ local function loop()
       last_position = position
     end
   end
-  r.ImGui_SetNextWindowSize(ctx, 570, 480, r.ImGui_Cond_FirstUseEver())
-  local visible, open = r.ImGui_Begin(ctx, 'Playback Playlist', true)
+  r.ImGui_SetNextWindowSize(ctx, 270, 480, r.ImGui_Cond_FirstUseEver())
+  local visible, open = r.ImGui_Begin(ctx, 'Playback Playlist ' .. version .. '', true)
   if visible then
     local list = regions()
     draw(list)
