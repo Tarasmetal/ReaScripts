@@ -1,11 +1,15 @@
--- @description Action List Script Path Scan and Fix
+-- @description Action List Script Path Scan, Duplicate Detection and Fix
 -- @author Taras Umanskiy
--- @version 1.9.3
+-- @version 1.10.0
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
--- @about Мощный инструмент для пользователей REAPER, который помогает поддерживать чистоту в Action List, выявляя и устраняя "битые" ссылки на скрипты.
+-- @about Инструмент для REAPER: поиск и очистка битых ссылок на скрипты, обнаружение повторных регистраций скриптов в Action List и просмотр записей по секциям.
 -- @changelog
+--   + Added: Отдельная вкладка поиска повторных регистраций скриптов по пути.
+--   + Added: Переключатель для включения совпадений между секциями Action List (выключен по умолчанию).
+--   + Added: Проверка существования файлов и безопасное удаление выбранных невалидных записей с резервной копией reaper-kb.ini.
+--   + Added: Переход к скрипту в Action List по нажатию на Command ID.
 --   + Changed: Раскрашены результаты сканирования в GUI (Broken scripts - желтый, Filtered - зеленый).
 --   + Changed: Чекбоксы выбора скриптов теперь выключены по умолчанию после сканирования.
 --   + Changed: Кнопки "Выделить все" и "Снять выделение" теперь действуют только на отфильтрованные скрипты.
@@ -17,7 +21,7 @@
 
 local ctx = reaper.ImGui_CreateContext('ActionListScriptPathScanAndFix')
 local WINDOW_FLAGS = reaper.ImGui_WindowFlags_MenuBar()
-local VERSION = "1.9.3"
+local VERSION = "1.10.0"
 local SCRIPT_NAME = "Action List Script Path Scan and Fix" .. " " .. VERSION
 
 -- Настройки шрифтов и цветов
@@ -37,6 +41,11 @@ local error_msg = ""
 local fix_msg = ""
 local show_repo_window = false
 local unique_repos = {}
+local duplicate_groups = {}
+local duplicate_scan_complete = false
+local duplicate_error_msg = ""
+local duplicate_fix_msg = ""
+local include_cross_section_duplicates = false
 
 -- Функция парсинга reaper-reapack.ini для получения URL репозиториев
 local function GetReaPackRepoMap()
@@ -382,6 +391,199 @@ local function ScanForBrokenScripts()
     scan_complete = true
 end
 
+-- Поиск повторных записей Action List, указывающих на один и тот же файл скрипта
+local function ScanForDuplicateScripts()
+    duplicate_groups = {}
+    duplicate_scan_complete = false
+    duplicate_error_msg = ""
+    duplicate_fix_msg = ""
+
+    local resource_path = reaper.GetResourcePath()
+    local resource_path_norm = resource_path:gsub("\\", "/")
+    local kb_ini_path = resource_path .. "/reaper-kb.ini"
+    local file = io.open(kb_ini_path, "r")
+    if not file then
+        duplicate_error_msg = "Could not open reaper-kb.ini"
+        return
+    end
+
+    local scripts_by_path = {}
+    for line in file:lines() do
+        if line:match("^SCR") then
+            local parts = {}
+            for part in line:gmatch('%b""') do
+                table.insert(parts, part:sub(2, -2))
+            end
+
+            local cmd_id, name, path
+            if #parts >= 3 then
+                cmd_id, name, path = parts[#parts-2], parts[#parts-1], parts[#parts]
+            elseif #parts == 2 then
+                name, path = parts[1], parts[2]
+                local pre_quote = line:sub(1, (line:find('"') or 1) - 1)
+                for token in pre_quote:gmatch("%S+") do cmd_id = token end
+            end
+
+            local section_id = line:match("^SCR%s+%S+%s+(%S+)") or "unknown"
+            if cmd_id and name and path and path ~= "" then
+                local normalized_path = path:gsub("\\", "/")
+                local full_path = normalized_path
+                local exists = false
+                if normalized_path:match("^[a-zA-Z]:") or normalized_path:match("^/") then
+                    exists = file_exists(normalized_path)
+                else
+                    local try_paths = {
+                        resource_path_norm .. "/" .. normalized_path,
+                        resource_path_norm .. "/Scripts/" .. normalized_path
+                    }
+                    for _, candidate in ipairs(try_paths) do
+                        if file_exists(candidate) then
+                            full_path = candidate
+                            exists = true
+                            break
+                        end
+                    end
+                    if not exists then
+                        full_path = resource_path_norm .. "/" .. normalized_path
+                    end
+                end
+
+                -- Одна и та же команда может быть зарегистрирована в нескольких секциях.
+                -- Для поиска повторных регистраций группируем по пути, а секцию храним у записи.
+                local normalized_key = normalized_path:lower()
+                local group = scripts_by_path[normalized_key]
+                if not group then
+                    group = { path = normalized_path, scripts = {} }
+                    scripts_by_path[normalized_key] = group
+                end
+                table.insert(group.scripts, {
+                    id = "_" .. cmd_id,
+                    raw_id = cmd_id,
+                    section_id = section_id,
+                    name = name,
+                    full_path = full_path,
+                    valid = exists,
+                    selected = false
+                })
+            end
+        end
+    end
+    file:close()
+
+    for _, group in pairs(scripts_by_path) do
+        if #group.scripts > 1 then
+            table.insert(duplicate_groups, group)
+        end
+    end
+    table.sort(duplicate_groups, function(a, b) return a.path:lower() < b.path:lower() end)
+    duplicate_scan_complete = true
+end
+
+-- По умолчанию показываем совпадения только внутри одной секции.
+-- Флажок включает общий список совпадений между разными секциями.
+local function GetVisibleDuplicateGroups()
+    local visible_groups = {}
+    for _, group in ipairs(duplicate_groups) do
+        if include_cross_section_duplicates then
+            table.insert(visible_groups, group)
+        else
+            local scripts_by_section = {}
+            for _, script in ipairs(group.scripts) do
+                local section_group = scripts_by_section[script.section_id]
+                if not section_group then
+                    section_group = { path = group.path, scripts = {} }
+                    scripts_by_section[script.section_id] = section_group
+                end
+                table.insert(section_group.scripts, script)
+            end
+            for _, section_group in pairs(scripts_by_section) do
+                if #section_group.scripts > 1 then
+                    table.insert(visible_groups, section_group)
+                end
+            end
+        end
+    end
+    table.sort(visible_groups, function(a, b)
+        if a.path:lower() == b.path:lower() then
+            return (a.scripts[1].section_id or "") < (b.scripts[1].section_id or "")
+        end
+        return a.path:lower() < b.path:lower()
+    end)
+    return visible_groups
+end
+
+-- Удаляет выбранные записи Action List, предварительно создавая резервную копию INI.
+local function RemoveSelectedDuplicateEntries()
+    local ids_to_delete = {}
+    local selected_count = 0
+    for _, group in ipairs(duplicate_groups) do
+        for _, script in ipairs(group.scripts) do
+            if script.selected and not script.valid then
+                local key = script.section_id .. "\0" .. script.raw_id .. "\0" .. group.path:gsub("\\", "/"):lower()
+                ids_to_delete[key] = true
+                selected_count = selected_count + 1
+            end
+        end
+    end
+
+    if selected_count == 0 then
+        duplicate_fix_msg = "Select at least one invalid entry to remove."
+        return
+    end
+
+    local kb_ini_path = reaper.GetResourcePath() .. "/reaper-kb.ini"
+    local backup_path = kb_ini_path .. ".backup_" .. os.date("%Y%m%d_%H%M%S")
+    if not copy_file(kb_ini_path, backup_path) then
+        duplicate_error_msg = "Failed to create reaper-kb.ini backup. Nothing was removed."
+        return
+    end
+
+    local file = io.open(kb_ini_path, "r")
+    if not file then
+        duplicate_error_msg = "Could not open reaper-kb.ini for reading."
+        return
+    end
+
+    local lines = {}
+    local deleted_count = 0
+    for line in file:lines() do
+        local cmd_id, script_path, section_id
+        if line:match("^SCR") then
+            section_id = line:match("^SCR%s+%S+%s+(%S+)") or "unknown"
+            local parts = {}
+            for part in line:gmatch('%b""') do
+                table.insert(parts, part:sub(2, -2))
+            end
+            if #parts >= 3 then
+                cmd_id = parts[#parts-2]
+                script_path = parts[#parts]
+            elseif #parts == 2 then
+                script_path = parts[2]
+                local pre_quote = line:sub(1, (line:find('"') or 1) - 1)
+                for token in pre_quote:gmatch("%S+") do cmd_id = token end
+            end
+        end
+        local key = cmd_id and script_path and (section_id .. "\0" .. cmd_id .. "\0" .. script_path:gsub("\\", "/"):lower())
+        if key and ids_to_delete[key] then
+            deleted_count = deleted_count + 1
+        else
+            table.insert(lines, line)
+        end
+    end
+    file:close()
+
+    file = io.open(kb_ini_path, "w")
+    if not file then
+        duplicate_error_msg = "Could not open reaper-kb.ini for writing. Backup was created."
+        return
+    end
+    for _, line in ipairs(lines) do file:write(line .. "\n") end
+    file:close()
+
+    ScanForDuplicateScripts()
+    duplicate_fix_msg = string.format("Removed %d entries. Backup: %s", deleted_count, backup_path:match("([^/\\]+)$"))
+end
+
 -- Функция исправления ошибок (удаление битых ссылок)
 local function FixBrokenScripts()
     -- Подготовка списка ID для удаления (только выбранные)
@@ -495,6 +697,8 @@ local function loop()
         end
 
         -- Основной контент
+        if reaper.ImGui_BeginTabBar(ctx, "ActionListTabs") then
+        if reaper.ImGui_BeginTabItem(ctx, "Broken Paths") then
         if reaper.ImGui_Button(ctx, "Scan Action List") then
             ScanForBrokenScripts()
         end
@@ -625,6 +829,142 @@ local function loop()
             else
                  reaper.ImGui_TextColored(ctx, COLOR_GREEN, "All scripts found in their places!")
             end
+        end
+
+        reaper.ImGui_EndTabItem(ctx)
+        end
+
+        if reaper.ImGui_BeginTabItem(ctx, "Duplicates") then
+            if reaper.ImGui_Button(ctx, "Scan for Duplicates") then
+                ScanForDuplicateScripts()
+            end
+            reaper.ImGui_SameLine(ctx)
+            reaper.ImGui_Text(ctx, duplicate_scan_complete and "Scan complete." or "Press scan.")
+
+            if duplicate_scan_complete then
+                local toggle_changed, toggle_value = reaper.ImGui_Checkbox(ctx,
+                    "Include matches across sections", include_cross_section_duplicates)
+                if toggle_changed then
+                    include_cross_section_duplicates = toggle_value
+                    for _, group in ipairs(duplicate_groups) do
+                        for _, script in ipairs(group.scripts) do script.selected = false end
+                    end
+                end
+                local visible_duplicate_groups = GetVisibleDuplicateGroups()
+
+                reaper.ImGui_SameLine(ctx)
+                if reaper.ImGui_Button(ctx, "Select Invalid") then
+                    for _, group in ipairs(visible_duplicate_groups) do
+                        for _, script in ipairs(group.scripts) do
+                            script.selected = not script.valid
+                        end
+                    end
+                end
+                reaper.ImGui_SameLine(ctx)
+                if reaper.ImGui_Button(ctx, "Clear Selection") then
+                    for _, group in ipairs(visible_duplicate_groups) do
+                        for _, script in ipairs(group.scripts) do script.selected = false end
+                    end
+                end
+                reaper.ImGui_SameLine(ctx)
+                if reaper.ImGui_Button(ctx, "Remove Selected Invalid") then
+                    local confirm = reaper.MB(
+                        "Remove selected invalid script entries from Action List?\nA backup of reaper-kb.ini will be created.",
+                        "Confirm removal", 4)
+                    if confirm == 6 then RemoveSelectedDuplicateEntries() end
+                end
+            end
+
+            if duplicate_error_msg ~= "" then
+                reaper.ImGui_TextColored(ctx, COLOR_RED, "Error: " .. duplicate_error_msg)
+            end
+            if duplicate_fix_msg ~= "" then
+                reaper.ImGui_TextColored(ctx, COLOR_GREEN, duplicate_fix_msg)
+            end
+
+            if duplicate_scan_complete then
+                local duplicate_count = 0
+                local invalid_count = 0
+                local visible_duplicate_groups = GetVisibleDuplicateGroups()
+                for _, group in ipairs(visible_duplicate_groups) do
+                    duplicate_count = duplicate_count + #group.scripts
+                    for _, script in ipairs(group.scripts) do
+                        if not script.valid then invalid_count = invalid_count + 1 end
+                    end
+                end
+                reaper.ImGui_Separator(ctx)
+                reaper.ImGui_Text(ctx, "Duplicate paths:")
+                reaper.ImGui_SameLine(ctx)
+                reaper.ImGui_TextColored(ctx, COLOR_YELLOW, tostring(#visible_duplicate_groups))
+                reaper.ImGui_SameLine(ctx)
+                reaper.ImGui_Text(ctx, "Action List entries:")
+                reaper.ImGui_SameLine(ctx)
+                reaper.ImGui_TextColored(ctx, COLOR_YELLOW, tostring(duplicate_count))
+                reaper.ImGui_SameLine(ctx)
+                reaper.ImGui_Text(ctx, "Invalid files:")
+                reaper.ImGui_SameLine(ctx)
+                reaper.ImGui_TextColored(ctx, invalid_count > 0 and COLOR_RED or COLOR_GREEN, tostring(invalid_count))
+
+                if #visible_duplicate_groups > 0 and reaper.ImGui_BeginTable(ctx, "DuplicateScriptsTable", 5,
+                    reaper.ImGui_TableFlags_Borders() | reaper.ImGui_TableFlags_RowBg() | reaper.ImGui_TableFlags_Resizable()) then
+                    reaper.ImGui_TableSetupColumn(ctx, "Remove", reaper.ImGui_TableColumnFlags_WidthFixed(), 55)
+                    reaper.ImGui_TableSetupColumn(ctx, "Script Path")
+                    reaper.ImGui_TableSetupColumn(ctx, "Section", reaper.ImGui_TableColumnFlags_WidthFixed(), 80)
+                    reaper.ImGui_TableSetupColumn(ctx, "Command ID", reaper.ImGui_TableColumnFlags_WidthFixed(), 140)
+                    reaper.ImGui_TableSetupColumn(ctx, "Script Name / Status")
+                    reaper.ImGui_TableHeadersRow(ctx)
+                    for _, group in ipairs(visible_duplicate_groups) do
+                        for _, script in ipairs(group.scripts) do
+                            reaper.ImGui_TableNextRow(ctx)
+                            reaper.ImGui_TableSetColumnIndex(ctx, 0)
+                            if not script.valid then
+                                local changed, selected = reaper.ImGui_Checkbox(ctx, "##invalid" .. script.id, script.selected)
+                                if changed then script.selected = selected end
+                            else
+                                reaper.ImGui_Text(ctx, "—")
+                            end
+                            reaper.ImGui_TableSetColumnIndex(ctx, 1)
+                            reaper.ImGui_Text(ctx, group.path)
+                            if not script.valid and reaper.ImGui_IsItemHovered(ctx) then
+                                reaper.ImGui_SetTooltip(ctx, "File not found: " .. script.full_path)
+                            end
+                            reaper.ImGui_TableSetColumnIndex(ctx, 2)
+                            local section_name = script.section_id == "0" and "Main" or
+                                (script.section_id == "32060" and "MIDI Editor" or
+                                (script.section_id == "32061" and "MIDI Event List" or
+                                (script.section_id == "32062" and "MIDI Inline Editor" or
+                                (script.section_id == "32063" and "MIDI Piano Roll" or script.section_id))))
+                            reaper.ImGui_Text(ctx, section_name)
+                            reaper.ImGui_TableSetColumnIndex(ctx, 3)
+                            reaper.ImGui_Text(ctx, script.id)
+                            if reaper.ImGui_IsItemHovered(ctx) then
+                                reaper.ImGui_SetTooltip(ctx, "Click: find this script in Action List")
+                            end
+                            if reaper.ImGui_IsItemClicked(ctx) then
+                                local filename = group.path:match("([^/]+)$") or group.path
+                                reaper.ImGui_SetClipboardText(ctx, filename)
+                                reaper.Main_OnCommand(40605, 0) -- View: Show action list
+                                reaper.defer(function() SetActionListFilter(filename) end)
+                            end
+                            reaper.ImGui_TableSetColumnIndex(ctx, 4)
+                            if script.valid then
+                                reaper.ImGui_Text(ctx, script.name .. " (valid)")
+                            else
+                                reaper.ImGui_TextColored(ctx, COLOR_RED, script.name .. " (file missing)")
+                            end
+                        end
+                    end
+                    reaper.ImGui_EndTable(ctx)
+                elseif #visible_duplicate_groups == 0 then
+                    local empty_message = include_cross_section_duplicates and
+                        "No duplicate script paths found." or
+                        "No duplicate script paths found within the same section."
+                    reaper.ImGui_TextColored(ctx, COLOR_GREEN, empty_message)
+                end
+            end
+            reaper.ImGui_EndTabItem(ctx)
+        end
+        reaper.ImGui_EndTabBar(ctx)
         end
 
         reaper.ImGui_End(ctx)
