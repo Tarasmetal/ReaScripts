@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="18d76b638f2ff29226d453694300f3af126a3039">
+<index version="1" name="Taras Scripts" commit="0c4ce67cb1644baf3d27bb7577889571cc64ef2c">
   <category name="GUI Tools">
     <reapack name="trs_LabelGUITools.lua" type="script" desc="Label GUI Tools">
       <metadata>
@@ -148,6 +148,12 @@
         <changelog><![CDATA[+ Added support for HEX color codes in presets.
 + Code optimizations.]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/5976a195d03061310e6d394c8a89a5f491969e76/GUI%20Tools/trs_TrackGUITools.lua</source>
+      </version>
+      <version name="3.1" author="Taras Umanskiy" time="2025-12-11T22:54:06Z">
+        <changelog><![CDATA[+ Added multi-track support for renaming, coloring, and panning.
++ Added support for HEX color codes in presets.
++ Code optimizations.]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/0c4ce67cb1644baf3d27bb7577889571cc64ef2c/GUI%20Tools/trs_TrackGUITools.lua</source>
       </version>
     </reapack>
   </category>
