@@ -1,12 +1,13 @@
 -- @description RENAME TRACKS TOOLS: Ренейминг, Пресеты и Навигация для REAPER
 -- @author Taras Umanskiy
--- @version 3.0
+-- @version 3.1
 -- @metapackage
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
 -- @about Скрипт предоставляет мощный графический интерфейс для управления именами треков, панорамированием и цветами в REAPER. Поддерживает систему пресетов, HEX-коды цветов и удобную навигацию.
 -- @changelog
+--   + Added multi-track support for renaming, coloring, and panning.
 --   + Added support for HEX color codes in presets.
 --   + Code optimizations.
 
@@ -16,7 +17,7 @@ console = false
 function msg(value) if console then r.ShowConsoleMsg(tostring(value) .. "\n") end end
 
 title = 'RENAME TRACKS TOOLS'
-ver = '3.0'
+ver = '3.1'
 author = 'Taras Umanskiy'
 about = title .. ' ' .. ver .. ' | by ' .. author
 ListDir = {}
@@ -307,7 +308,7 @@ local function myWindow()
     local changed, text = r.ImGui_InputText(ctx, "Preset Name", new_preset_name)
     if changed then new_preset_name = text end
 
-    if r.ImGui_Button(ctx, "Save", 120, 0) then
+    if r.ImGui_Button(ctx, "Save", 120, 0) or r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Enter()) or r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_KeypadEnter()) then
       if new_preset_name ~= "" then
         local newFilename = new_preset_name
         if not newFilename:match("%.txt$") then
@@ -384,11 +385,14 @@ local function myWindow()
     end
     r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), btn_color)
     if r.ImGui_Button(ctx, set.text .. "###main_btn_" .. _, btnWidth, 0) then
-      local track = r.GetSelectedTrack(0, 0)
-      if track then
-        r.GetSetMediaTrackInfo_String(track, "P_NAME", set.text, true)
-        if type(set.color) == "number" then
-          r.SetTrackColor(track, set.color)
+      local track_count = r.CountSelectedTracks(0)
+      for i = 0, track_count - 1 do
+        local track = r.GetSelectedTrack(0, i)
+        if track then
+          r.GetSetMediaTrackInfo_String(track, "P_NAME", set.text, true)
+          if type(set.color) == "number" then
+            r.SetTrackColor(track, set.color)
+          end
         end
       end
     end
@@ -505,6 +509,10 @@ local function myWindow()
         SavePreset(allPresetFiles[currentPresetIndex], track_set)
         r.ImGui_CloseCurrentPopup(ctx)
       end
+
+      if r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Enter()) or r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_KeypadEnter()) then
+        r.ImGui_CloseCurrentPopup(ctx)
+      end
       r.ImGui_EndPopup(ctx)
     end
 
@@ -519,16 +527,19 @@ local function myWindow()
         local button_clicked_middle = r.ImGui_IsItemClicked(ctx, 2)
 
         if button_clicked_left or button_clicked_middle then
-          local track = r.GetSelectedTrack(0, 0)
-          if track then
-            local _, currentName = r.GetSetMediaTrackInfo_String(track, "P_NAME", "", false)
-            local newName
-            if button_clicked_middle then
-              newName = addText
-            else
-              newName = currentName .. " " .. addText
+          local track_count = r.CountSelectedTracks(0)
+          for j = 0, track_count - 1 do
+            local track = r.GetSelectedTrack(0, j)
+            if track then
+              local _, currentName = r.GetSetMediaTrackInfo_String(track, "P_NAME", "", false)
+              local newName
+              if button_clicked_middle then
+                newName = addText
+              else
+                newName = currentName .. " " .. addText
+              end
+              r.GetSetMediaTrackInfo_String(track, "P_NAME", newName, true)
             end
-            r.GetSetMediaTrackInfo_String(track, "P_NAME", newName, true)
           end
         end
         r.ImGui_PopStyleColor(ctx, 1)
@@ -581,6 +592,10 @@ local function myWindow()
         end
         r.ImGui_CloseCurrentPopup(ctx)
       end
+          
+      if r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Enter()) or r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_KeypadEnter()) then
+        r.ImGui_CloseCurrentPopup(ctx)
+      end
           r.ImGui_EndPopup(ctx)
         end
       end
@@ -593,9 +608,12 @@ local function myWindow()
       -- Кнопка для панорамирования влево
        r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_3)
       if r.ImGui_Button(ctx, " -" .. set.pan .. "##pan_L_" .. _, btnWidth / 2.1, 0) then
-        local track = r.GetSelectedTrack(0, 0)
-        if track then
-          r.SetMediaTrackInfo_Value(track, "D_PAN", -panValue)
+        local track_count = r.CountSelectedTracks(0)
+        for i = 0, track_count - 1 do
+          local track = r.GetSelectedTrack(0, i)
+          if track then
+            r.SetMediaTrackInfo_Value(track, "D_PAN", -panValue)
+          end
         end
       end
       r.ImGui_PopStyleColor(ctx, 1)
@@ -604,9 +622,12 @@ local function myWindow()
       -- Кнопка для панорамирования вправо
        r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
       if r.ImGui_Button(ctx, " " .. set.pan .. "##pan_R_" .. _, btnWidth / 2.1, 0) then
-        local track = r.GetSelectedTrack(0, 0)
-        if track then
-          r.SetMediaTrackInfo_Value(track, "D_PAN", panValue)
+        local track_count = r.CountSelectedTracks(0)
+        for i = 0, track_count - 1 do
+          local track = r.GetSelectedTrack(0, i)
+          if track then
+            r.SetMediaTrackInfo_Value(track, "D_PAN", panValue)
+          end
         end
       end
       r.ImGui_PopStyleColor(ctx, 1)
