@@ -1,16 +1,17 @@
 -- @description Marker GUI Tools
 -- @author Taras Umanskiy
--- @version 1.0
+-- @version 2.0
 -- @metapackage
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
--- @donation https://paypal.me/Tarasmetal
+-- @donation https://vk.com/Tarasmetal
 -- @about
 --   # КАК ЭТО РАБОТАЕТ?
 --   Основная идея и задача скрипта — максимально сократить время на разметку проекта, оставляя его красивым и понятным для всех, а главное для самого себя.
 --   Не отвлекайтесь от творческого процесса, перемещайтесь в любую точку проекта за пару секунд, чтобы записать, прослушать или внести кориктеровки в трекинг.
 -- @changelog
---  + Code Fixies
+--   + START/END markers now use the colors defined in the GUI
+--   + Code optimizations
 
 
 local r = reaper
@@ -25,10 +26,18 @@ end
 
 function LoadSettings()
   local w = {}
-  
+
   -- Load closable (ID)
   local val = reaper.GetExtState(EXT_SECTION, "closable")
   if val ~= "" then w.closable = (val == "true") else w.closable = false end
+
+  -- Load start_color
+  val = reaper.GetExtState(EXT_SECTION, "start_color")
+  if val ~= "" then w.start_color = val else w.start_color = nil end
+
+  -- Load end_color
+  val = reaper.GetExtState(EXT_SECTION, "end_color")
+  if val ~= "" then w.end_color = val else w.end_color = nil end
 
   w.cheads = {}
   -- Load closable_group (<)
@@ -53,7 +62,7 @@ function msg(value)
 end
 
 scrAuthor = 'Taras Umanskiy'
-version = '1.0'
+version = '2.0'
 scrName = 'MARKER TOOLS'
 scrAbout = scrName .. ' ' .. version .. ' by ' .. scrAuthor
 
@@ -291,14 +300,21 @@ if not widgets.cheads then
         r.ImGui_Text(ctx, '<')
         r.ImGui_SameLine(ctx)
           local col = 6
-           r.ImGui_PushID(ctx, col)
-           r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(),        trs_HSV(col / 7.0, 0.6, 0.6, 1.0))
-           r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonHovered(), trs_HSV(col / 7.0, 0.7, 0.7, 1.0))
-           r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonActive(),  trs_HSV(col / 7.0, 0.8, 0.8, 1.0))
+           r.ImGui_PushID(ctx, 'start_btn')
+
+           if widgets.start_color and widgets.start_color ~= "" then
+               local c_r, c_g, c_b = ParseColorToRGB(widgets.start_color)
+               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(),        r.ImGui_ColorConvertDouble4ToU32(c_r, c_g, c_b, 0.6))
+               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonHovered(), r.ImGui_ColorConvertDouble4ToU32(c_r, c_g, c_b, 0.8))
+               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonActive(),  r.ImGui_ColorConvertDouble4ToU32(c_r, c_g, c_b, 1.0))
+           else
+               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(),        trs_HSV(col / 7.0, 0.6, 0.6, 1.0))
+               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonHovered(), trs_HSV(col / 7.0, 0.7, 0.7, 1.0))
+               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonActive(),  trs_HSV(col / 7.0, 0.8, 0.8, 1.0))
+           end
 
         if r.ImGui_Button(ctx, 'START') then
-            r.ImGui_BulletText(ctx, '•')
-            insertMarkerStart('=START', 'pink')
+            insertMarkerStart('=START', widgets.start_color or 'pink')
         end
             if r.ImGui_IsItemHovered(ctx) then
                 r.ImGui_BeginTooltip(ctx)
@@ -311,6 +327,29 @@ if not widgets.cheads then
                 r.ImGui_PopTextWrapPos(ctx)
                 r.ImGui_EndTooltip(ctx)
               end
+
+        if r.ImGui_BeginPopupContextItem(ctx) then
+            r.ImGui_Text(ctx, 'Edit START Button Color')
+            r.ImGui_Separator(ctx)
+
+            local c_r, c_g, c_b = ParseColorToRGB(widgets.start_color)
+            if not widgets.start_color then c_r, c_g, c_b = 1, 0, 1 end -- Default Pink
+            local packed_col = r.ImGui_ColorConvertDouble4ToU32(c_r, c_g, c_b, 1.0)
+            local rv_color, new_packed_col = r.ImGui_ColorEdit4(ctx, 'Color', packed_col)
+            if rv_color then
+                local new_r, new_g, new_b, _ = r.ImGui_ColorConvertU32ToDouble4(new_packed_col)
+                widgets.start_color = RGBToHex(new_r, new_g, new_b)
+                SaveSetting("start_color", widgets.start_color)
+            end
+
+            if r.ImGui_Button(ctx, 'Reset Color') then
+                widgets.start_color = nil
+                SaveSetting("start_color", "")
+                r.ImGui_CloseCurrentPopup(ctx)
+            end
+            r.ImGui_EndPopup(ctx)
+        end
+
         r.ImGui_PopStyleColor(ctx, 3)
         r.ImGui_PopID(ctx)
         r.ImGui_SameLine(ctx)
@@ -437,7 +476,7 @@ if not widgets then
                 r.ImGui_PopID(ctx)
                 break
             end
-            
+
             r.ImGui_SameLine(ctx)
             if r.ImGui_Button(ctx, 'INSERT MARKER') then
                  table.insert(markersToShow, i + 1, {name='New', color=''})
@@ -449,6 +488,9 @@ if not widgets then
             end
             if r.ImGui_IsItemHovered(ctx) then
                  r.ImGui_SetTooltip(ctx, 'Insert New Marker After Current')
+            end
+            if r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Enter()) then
+                r.ImGui_CloseCurrentPopup(ctx)
             end
             r.ImGui_EndPopup(ctx)
         end
@@ -462,13 +504,21 @@ if not widgets then
         r.ImGui_SameLine(ctx)
 
       local col = 6
-           r.ImGui_PushID(ctx, col)
-       r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(),        trs_HSV(col / 7.0, 0.6, 0.6, 1.0))
-           r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonHovered(), trs_HSV(col / 7.0, 0.7, 0.7, 1.0))
-           r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonActive(),  trs_HSV(col / 7.0, 0.8, 0.8, 1.0))
+           r.ImGui_PushID(ctx, 'end_btn')
+
+           if widgets.end_color and widgets.end_color ~= "" then
+               local c_r, c_g, c_b = ParseColorToRGB(widgets.end_color)
+               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(),        r.ImGui_ColorConvertDouble4ToU32(c_r, c_g, c_b, 0.6))
+               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonHovered(), r.ImGui_ColorConvertDouble4ToU32(c_r, c_g, c_b, 0.8))
+               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonActive(),  r.ImGui_ColorConvertDouble4ToU32(c_r, c_g, c_b, 1.0))
+           else
+               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(),        trs_HSV(col / 7.0, 0.6, 0.6, 1.0))
+               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonHovered(), trs_HSV(col / 7.0, 0.7, 0.7, 1.0))
+               r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonActive(),  trs_HSV(col / 7.0, 0.8, 0.8, 1.0))
+           end
 
         if r.ImGui_Button(ctx, 'END') then
-            insertMarkerEnd("=END", 'pink')
+            insertMarkerEnd("=END", widgets.end_color or 'pink')
          end
           -- if  r.ImGui_IsItemHovered(ctx) then
           --      -- local cursor_pos = r.GetCursorPosition()
@@ -486,6 +536,29 @@ if not widgets then
                 r.ImGui_PopTextWrapPos(ctx)
                 r.ImGui_EndTooltip(ctx)
               end
+
+        if r.ImGui_BeginPopupContextItem(ctx) then
+            r.ImGui_Text(ctx, 'Edit END Button Color')
+            r.ImGui_Separator(ctx)
+
+            local c_r, c_g, c_b = ParseColorToRGB(widgets.end_color)
+            if not widgets.end_color then c_r, c_g, c_b = 1, 0, 1 end -- Default Pink
+            local packed_col = r.ImGui_ColorConvertDouble4ToU32(c_r, c_g, c_b, 1.0)
+            local rv_color, new_packed_col = r.ImGui_ColorEdit4(ctx, 'Color', packed_col)
+            if rv_color then
+                local new_r, new_g, new_b, _ = r.ImGui_ColorConvertU32ToDouble4(new_packed_col)
+                widgets.end_color = RGBToHex(new_r, new_g, new_b)
+                SaveSetting("end_color", widgets.end_color)
+            end
+
+            if r.ImGui_Button(ctx, 'Reset Color') then
+                widgets.end_color = nil
+                SaveSetting("end_color", "")
+                r.ImGui_CloseCurrentPopup(ctx)
+            end
+            r.ImGui_EndPopup(ctx)
+        end
+
         r.ImGui_PopStyleColor(ctx, 3)
         r.ImGui_PopID(ctx)
         r.ImGui_SameLine(ctx)

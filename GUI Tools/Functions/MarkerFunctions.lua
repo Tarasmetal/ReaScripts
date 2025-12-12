@@ -1,6 +1,6 @@
 -- @description Marker Functions
 -- @author Taras Umanskiy
--- @version 1.0
+-- @version 2.0
 -- @metapackage
 -- @provides [nomain] .
 -- @link http://vk.com/tarasmetal
@@ -9,6 +9,7 @@
 --   # Marker Functions
 -- @changelog
 --  + Code optimizations
+
 local r = reaper
 
 function msg(value)
@@ -265,7 +266,7 @@ end
 function insertMarker(name, color)
 
     reaper.Undo_BeginBlock()
-    
+
     color = convertColor(color)
 
     local _, num_markers, _ = reaper.CountProjectMarkers(0)
@@ -390,9 +391,10 @@ function setStartEndMarkers()
     if timeSelStart==timeSelEnd then no_undo() return end;
     reaper.Undo_BeginBlock();
     reaper.PreventUIRefresh(1);
-    local color = reaper.ColorToNative(255,0,255)|0x1000000
-    reaper.AddProjectMarker2(0,0,timeSelStart,0, nameLeft, 0, color)
-    reaper.AddProjectMarker2(0,0,timeSelEnd,0, nameRight, 99, color)
+    local colorStart = convertColor(widgets and widgets.start_color or 'pink')
+    local colorEnd = convertColor(widgets and widgets.end_color or 'pink')
+    reaper.AddProjectMarker2(0,0,timeSelStart,0, nameLeft, 0, colorStart)
+    reaper.AddProjectMarker2(0,0,timeSelEnd,0, nameRight, 99, colorEnd)
     reaper.PreventUIRefresh(-1);
     reaper.Undo_EndBlock('trs_Insert • START & END markers by time selection',-1);
     reaper.UpdateArrange();
