@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="0c4ce67cb1644baf3d27bb7577889571cc64ef2c">
+<index version="1" name="Taras Scripts" commit="6eac26744ca9b736e823c64c08c3418981a2bfe1">
   <category name="GUI Tools">
     <reapack name="trs_LabelGUITools.lua" type="script" desc="Label GUI Tools">
       <metadata>
@@ -30,11 +30,16 @@
 }
 ]]></description>
         <link rel="website">http://vk.com/tarasmetal</link>
-        <link rel="donation">https://paypal.me/Tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
       </metadata>
       <version name="1.0" author="Taras Umanskiy" time="2025-12-11T19:58:13Z">
         <changelog><![CDATA[+ Code Fixies]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/73968be986e60dd91143227f8768718413b5549a/GUI%20Tools/trs_MarkerGUITools.lua</source>
+      </version>
+      <version name="2.0" author="Taras Umanskiy" time="2025-12-12T01:30:52Z">
+        <changelog><![CDATA[+ START/END markers now use the colors defined in the GUI
++ Code optimizations]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/6eac26744ca9b736e823c64c08c3418981a2bfe1/GUI%20Tools/trs_MarkerGUITools.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Move selected items files to region folder.lua" type="script" desc="Move selected items files to region folder (GUI)">
@@ -190,6 +195,10 @@
       <version name="1.0" author="Taras Umanskiy" time="2025-12-11T19:58:14Z">
         <changelog><![CDATA[+ Code optimizations]]></changelog>
         <source>https://github.com/Tarasmetal/ReaScripts/raw/18d76b638f2ff29226d453694300f3af126a3039/GUI%20Tools/Functions/MarkerFunctions.lua</source>
+      </version>
+      <version name="2.0" author="Taras Umanskiy" time="2025-12-12T01:30:52Z">
+        <changelog><![CDATA[+ Code optimizations]]></changelog>
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/6eac26744ca9b736e823c64c08c3418981a2bfe1/GUI%20Tools/Functions/MarkerFunctions.lua</source>
       </version>
     </reapack>
     <reapack name="PresetFileLoadFunctions.lua" type="script" desc="Presets Functions">
