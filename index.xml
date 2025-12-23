@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="1c8028d17d9fab68eb5e4d89cc7f3fc6cb8e838a">
+<index version="1" name="Taras Scripts" commit="fce0d5eac52cc3fb6ffbfa533dd94280649866c0">
   <category name="GUI Tools">
+    <reapack name="trs_BrokenScriptPathScanner.lua" type="script" desc="Broken Script Path Scanner">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1057?\u1082?\u1088?\u1080?\u1087?\u1090? \u1076?\u1083?\u1103? \u1089?\u1082?\u1072?\u1085?\u1080?\u1088?\u1086?\u1074?\u1072?\u1085?\u1080?\u1103? Action List \u1080? \u1087?\u1086?\u1080?\u1089?\u1082?\u1072? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1086?\u1074? \u1089? \u1085?\u1077?\u1088?\u1072?\u1073?\u1086?\u1095?\u1080?\u1084?\u1080? \u1087?\u1091?\u1090?\u1103?\u1084?\u1080? (\u1091?\u1076?\u1072?\u1083?\u1077?\u1085?\u1085?\u1099?\u1077? \u1080?\u1083?\u1080? \u1087?\u1077?\u1088?\u1077?\u1084?\u1077?\u1097?\u1077?\u1085?\u1085?\u1099?\u1077? \u1092?\u1072?\u1081?\u1083?\u1099?).\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="1.5" author="Taras Umanskiy" time="2025-12-23T05:07:03Z">
+        <changelog><![CDATA[+ Initial release
++ Added right-click functionality to open Action List and copy Command ID
++ Fixed: Corrected Action List command ID (was 40060, now 40605)
++ Changed: Right-click now copies filename only (without path)
++ Added: Auto-insert filename into Action List filter (requires JS_ReaScriptAPI)]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/fce0d5eac52cc3fb6ffbfa533dd94280649866c0/GUI%20Tools/trs_BrokenScriptPathScanner.lua</source>
+      </version>
+    </reapack>
     <reapack name="trs_LabelGUITools.lua" type="script" desc="Label GUI Tools">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
