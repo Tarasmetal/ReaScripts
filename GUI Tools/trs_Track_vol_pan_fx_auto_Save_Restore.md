@@ -1,3 +1,5 @@
+[⬅️ На главную (Main)](../README.md)
+
 # Track Volume Pan & Automation Save/Restore (ReaImGui)
 
 > **Мощный инструмент для управления снимками микса в REAPER.**  

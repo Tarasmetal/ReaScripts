@@ -1,3 +1,5 @@
+[⬅️ На главную (Main)](../README.md)
+
 # SendBox | MODDED by Taras Umanskiy
 
 ## Описание

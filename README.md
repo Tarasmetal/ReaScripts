@@ -1,66 +1,51 @@
-[comment]: <> ([Marker GUI Tools]&#40;https://github.com/Tarasmetal/ReaScripts/raw/master/GUI%20Tools&#41; создан для работы в [REAPER DAW]&#40;https://www.reaper.fm/download.php&#41; WIN & OSX.)
-[Marker GUI Tools](https://github.com/Tarasmetal/ReaScripts/raw/master/GUI%20Tools) для работы в [REAPER DAW](https://www.reaper.fm/download.php) Windows.
-======
+# ReaScripts by Taras Umanskiy
 
-[![Marker GUI Tools Demo](img/Screenshot1.png)](img/Screenshot1.png)
+Коллекция Lua скриптов и GUI инструментов для [REAPER DAW](https://www.reaper.fm/), созданных для ускорения и улучшения рабочего процесса.
 
-🟢 Основная идея и задача скрипта — максимально сократить время на разметку проекта, оставляя его красивым и понятным для всех, а главное для самого себя.
-Не отвлекайтесь от творческого процесса, перемещайтесь в любую точку проекта за пару секунд, чтобы записать, прослушать или внести корректировки в трекинг.
+## 📥 Установка (Installation)
 
+Для корректной работы большинства скриптов необходимы установленные расширения [SWS Extension](https://sws-extension.org/) и [ReaPack](https://reapack.com/).
 
-### ✅ **`Основные функции скрипта`**
+### Добавление репозитория в ReaPack
 
-- ---
-- Загрузка и простое редактирование / создание пресетов.
-- Старт скрипта с последнего выбранного пресета.
-- ---
-- Быстрая разметка проекта по шаблону.
-- Добавление / удаление темп маркеров
-- Добавление / удаление регионов на выделенном фрагменте
-- Установка маркеров начала / конца проекта.
-- Установка маркеров начала / конца проекта с помощью выделения 
-- Установка нулевого 00:00:00 тайминга в любом месте проекта.
-- Скрипт запоминает индексацию каждого повторяющегося имени.
-- Возможность ( вкл / выкл ) индексацию / порядковый номер в имени.
-- Возможность использовать кастомные кнопки с любыми lua скриптами / функциями.
-- Удалить все маркеры / регионы.
-- Пересчитать порядковые номера для маркеров / регионов.
-- Конвертировать маркеры в регионы и обратно.
+1. Запустите REAPER.
+2. В главном меню перейдите: `Extensions` > `ReaPack` > `Import repositories...`
 
-🔴     Чтобы скрипту было комфортно необходимы дополнительные библиотеки,
-которые мы с вами и так используем в повседневной работе 🤝
+   [![ReaPack Menu](img/repo_menu.png)](img/repo_menu.png)
 
-### 🟢 **`Скачиваем и устанавливаем нужные библиотеки`**
+3. В появившемся окне вставьте ссылку на репозиторий:
 
-📩 **WIN** Download: [SWS](https://sws-extension.org/) & [ReaPack](https://reapack.com/)
+   ```text
+   https://github.com/Tarasmetal/ReaScripts/raw/master/index.xml
+   ```
 
-### 👀 **`Проверяем установку нужных репозиториев`** ВАЖНО 👇👇👇
+   [![Import Repository](img/repo_import.png)](img/repo_import.png)
 
+4. Нажмите **OK**.
+5. Теперь вы можете найти и установить инструменты через `Extensions` > `ReaPack` > `Browse packages...`.
 
-[![GUI Tools Check](img/repo.png)](img/repo.png)
+[![Check Repositories](img/repo.png)](img/repo.png)
 
-### `💻 Запускаем REAPER`
+---
 
-В главном **МЕНЮ** (**File**, **Edit** и т.д) должен появится раздел с названием
+## 🛠️ Доступные инструменты (Available Tools)
 
-`Extensions` > `ReaPack` > `Import repositories`
+Ниже представлен список основных инструментов с ссылками на подробную документацию.
 
+| Инструмент | Описание | Документация |
+| :--- | :--- | :---: |
+| **Marker GUI Tools** | Мощный инструмент для быстрой разметки проекта, работы с маркерами, регионами и пресетами разметки. | [📖 Инструкция](GUI%20Tools/trs_MarkerGUITools.md) |
+| **Label GUI Tools** | Инструменты для работы с текстовыми заметками и лейблами айтемов. | [📖 Инструкция](GUI%20Tools/trs_LabelGUITools.md) |
+| **Track GUI Tools** | Утилиты для управления треками, включая сохранение и загрузку пресетов треков. | [📖 Инструкция](GUI%20Tools/trs_TrackGUITools.md) |
+| **TCP/MCP Visible Tools** | Управление видимостью треков в окне аранжировки (TCP) и микшера (MCP). | [📖 Инструкция](GUI%20Tools/trs_TCP_MCP_Visible_Tools.md) |
+| **Routing Tools (SendBox)** | Инструменты для быстрой и удобной маршрутизации (Sends/Receives). | [📖 Инструкция](GUI%20Tools/trs_Routing_Tools.md) |
+| **PlayBack Routing** | Управление маршрутизацией сигнала для плейбэка. | [📖 Инструкция](GUI%20Tools/trs_PlayBackRouting.md) |
+| **Track Mix Save/Restore** | Автоматическое сохранение и восстановление громкости, панорамы и FX на треках. | [📖 Инструкция](GUI%20Tools/trs_Track_vol_pan_fx_auto_Save_Restore.md) |
+| **VST Macro Linker** | Скрипт для линковки макросов и параметров VST плагинов. | [📖 Инструкция](GUI%20Tools/trs_VST_Macro_Linker.md) |
 
-[![Screenshot](img/repo_menu.png)](img/repo_menu.png)
+---
 
-### `📤 Делаем импорт библиотеки`
+### 📞 Обратная связь (Contact)
 
-Осталось вставить ссылку в окно импорта 👇👇👇
-
-    https://github.com/Tarasmetal/ReaScripts/raw/master/index.xml
-
-[![Screenshot](img/repo_import.png)](img/repo_import.png)
-
-### 🟠 **Пример работы скрипта**
-[![Marker GUI Tools Demo](img/trs_MarkerTools_demo.gif)](img/trs_MarkerTools_demo.gif)
-## `<3 Special THX:`
-
-[**MPL**](https://vk.com/michael_pilyavskiy), [**SuperMaximus**](https://vk.com/maxsalkov), [**Aleksey** **Bezborodov**](https://vk.com/epitaph666).
-
-###### **Обратная связь:** **[Vk](http://vk.com/tarasmetal)** • [**Instagram**](http://instagram.com/Tarasmetal)
-
+* **VK:** [vk.com/tarasmetal](http://vk.com/tarasmetal)
+* **Instagram:** [@Tarasmetal](http://instagram.com/Tarasmetal)

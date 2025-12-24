@@ -1,3 +1,5 @@
+[⬅️ На главную (Main)](../README.md)
+
 # 🎚️ Track GUI Tools
 
 > **Мощный менеджер треков для REAPER с интерфейсом ReaImGui**
@@ -95,4 +97,3 @@
 - **Donation:** [Поддержать автора](https://vk.com/Tarasmetal)
 
 ---
-

@@ -1,3 +1,5 @@
+[⬅️ На главную (Main)](../README.md)
+
 # 📘 VST Macro Linker - Документация
 *Версия 3.56 | Автор: Taras Umanskiy*
 
