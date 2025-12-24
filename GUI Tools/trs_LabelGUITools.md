@@ -2,6 +2,8 @@
 
 # GUI Tools: trs_LabelGUITools
 
+![Demo](../img/trs_LabelGUITools_demo.png)
+
 **Автор:** Taras Umanskiy
 **Версия:** 1.0
 **Лицензия:** Metapackage

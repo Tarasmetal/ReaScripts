@@ -7,6 +7,10 @@
 
 ---
 
+![Demo](../img/trs_Track_vol_pan_fx_auto_Save_Restore.png)
+
+---
+
 | Информация | Значение |
 | :--- | :--- |
 | **Автор** | Taras Umanskiy |

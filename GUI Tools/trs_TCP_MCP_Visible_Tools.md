@@ -7,6 +7,10 @@
 
 ---
 
+![Demo](../img/trs_TCP_MCP_Visible_Tools.png)
+
+---
+
 | Информация | Значение |
 | :--- | :--- |
 | **Автор** | Taras Umanskiy |

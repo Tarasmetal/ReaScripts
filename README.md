@@ -36,7 +36,7 @@
 | :--- | :--- | :---: |
 | **Marker GUI Tools** | Мощный инструмент для быстрой разметки проекта, работы с маркерами, регионами и пресетами разметки. | [📖 Инструкция](GUI%20Tools/trs_MarkerGUITools.md) |
 | **Label GUI Tools** | Инструменты для работы с текстовыми заметками и лейблами айтемов. | [📖 Инструкция](GUI%20Tools/trs_LabelGUITools.md) |
-| **Track GUI Tools** | Утилиты для управления треками, включая сохранение и загрузку пресетов треков. | [📖 Инструкция](GUI%20Tools/trs_TrackGUITools.md) |
+| **Track GUI Tools** | Утилиты для взаимодействия с именами треков , включая сохранение и загрузку пресетов и т.д. | [📖 Инструкция](GUI%20Tools/trs_TrackGUITools.md) |
 | **TCP/MCP Visible Tools** | Управление видимостью треков в окне аранжировки (TCP) и микшера (MCP). | [📖 Инструкция](GUI%20Tools/trs_TCP_MCP_Visible_Tools.md) |
 | **Routing Tools (SendBox)** | Инструменты для быстрой и удобной маршрутизации (Sends/Receives). | [📖 Инструкция](GUI%20Tools/trs_Routing_Tools.md) |
 | **PlayBack Routing** | Управление маршрутизацией сигнала для плейбэка. | [📖 Инструкция](GUI%20Tools/trs_PlayBackRouting.md) |
