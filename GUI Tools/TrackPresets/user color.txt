@@ -1,0 +1,9 @@
+INSTRUM,Delay,Reverb,Filter,Mod,FX,false,#C40000
+REFERENCE,MIX,DEMO,PlayBack,LIVE,STUDIO,false,false
+,SUM,FX,DBL,BUS,,0,false
+BASS,DI,Sub,Lo,Hi,,25,#0080FF
+GTR,L,R,DI,BUS,,50,#6AD500
+Syn,Lead,Chrds,Pluck,Arp,,75,#CCD700
+Keys,Хуейс,Piano,Melody,BUS,,90,#BEAA00
+Strings,Ensemble,Cellos,Violas,Violins,,100,#00C2D7
+Vox,,Bck,Low,Mid,High,false,#FF8000
