@@ -1,0 +1,7 @@
+DRUMS,Delay,Reverb,Filter,Mod,FX,false,false
+BASS,DI,Sub,Lo,Hi,,25,false
+GTR,L,R,DI,BUS,,50,false
+Synth,Lead,Chrds,Pluck,Arp,,75,false
+Keys,Хуейс,Piano,Melody,BUS,,100,false
+Strings,Ensemble,Cellos,Violas,Violins,Хуелинс,false,false
+VOX,DBl,Bck,Low,Mid,High,false,false
