@@ -1,0 +1,46 @@
+desc:VST Macro Linker
+version: 3.60
+author: Taras Umanskiy
+about: Bridge plugin for VST Macro Linker Lua script. Hosts automation envelopes for the macro sliders and pads.
+changelog:
+  + Pads: Increased count to 16
+
+slider1:0<0,1,0.001>Macro 1
+slider2:0<0,1,0.001>Macro 2
+slider3:0<0,1,0.001>Macro 3
+slider4:0<0,1,0.001>Macro 4
+slider5:0<0,1,0.001>Macro 5
+slider6:0<0,1,0.001>Macro 6
+slider7:0<0,1,0.001>Macro 7
+slider8:0<0,1,0.001>Macro 8
+slider9:0<0,1,0.001>Macro 9
+slider10:0<0,1,0.001>Macro 10
+slider11:0<0,1,0.001>Macro 11
+slider12:0<0,1,0.001>Macro 12
+slider13:0<0,1,0.001>Macro 13
+slider14:0<0,1,0.001>Macro 14
+slider15:0<0,1,0.001>Macro 15
+slider16:0<0,1,0.001>Macro 16
+
+slider17:0<0,1,1>Pad 1
+slider18:0<0,1,1>Pad 2
+slider19:0<0,1,1>Pad 3
+slider20:0<0,1,1>Pad 4
+slider21:0<0,1,1>Pad 5
+slider22:0<0,1,1>Pad 6
+slider23:0<0,1,1>Pad 7
+slider24:0<0,1,1>Pad 8
+slider25:0<0,1,1>Pad 9
+slider26:0<0,1,1>Pad 10
+slider27:0<0,1,1>Pad 11
+slider28:0<0,1,1>Pad 12
+slider29:0<0,1,1>Pad 13
+slider30:0<0,1,1>Pad 14
+slider31:0<0,1,1>Pad 15
+slider32:0<0,1,1>Pad 16
+
+@init
+
+@slider
+
+@block

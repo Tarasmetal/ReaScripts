@@ -1,0 +1,5 @@
+Nice,
+Good,
+Shit,
+Bad,
+Error,
