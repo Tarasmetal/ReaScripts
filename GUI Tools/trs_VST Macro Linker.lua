@@ -1,12 +1,13 @@
 -- @description VST Macro Linker
 -- @author Taras Umanskiy
--- @version 3.97
+-- @version 3.98
 -- @provides [main] .
 -- @provides [script] trs_VST Macro Linker.jsfx
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
 -- @about Скрипт для линковки параметров VST в макросы и пады.
 -- @changelog
+--   + UI: Значения макросов и параметров Min/Max/Offset теперь отображаются как целые числа (0-127) для удобства.
 --   + Добавлено: Авто-линковка теперь срабатывает при повторном касании того же параметра (даже если значение изменилось незначительно).
 --   + Исправлено: Теперь можно линковать последний затронутый параметр в авто-режиме, просто "пошевелив" его после нажатия 'L'.
 --   + UI: Уменьшен размер ручек (Knobs) на 1/3 для компактности.
@@ -58,7 +59,7 @@ console = false -- DEBUG ENABLED
 function msg(value) if console then r.ShowConsoleMsg(tostring(value) .. "\n") end end
 
 title = 'VST Macro Linker'
-VERSION = '3.97'
+VERSION = '3.98'
 author = 'Taras Umanskiy'
 about = title .. ' ' .. VERSION .. ' | by ' .. author
 ListDir = {}
@@ -119,7 +120,7 @@ function UpdateUIStrings()
 
         -- Macros
         if i <= MAX_MACROS then
-            ui_cache[i].slider_format = macro_names[i] .. ": %.2f"
+            ui_cache[i].slider_format = macro_names[i] .. ": %.0f"
             ui_cache[i].btn_link = "Link##" .. i
             ui_cache[i].btn_learn = "M##" .. i
             ui_cache[i].btn_learn_cancel = "L##" .. i
@@ -914,12 +915,14 @@ function UpdateLinkedParams(specific_macro_idx)
 end
 
 -- --- GUI Functions ---
-local function DrawKnob(ctx, label, value, min_v, max_v, size)
+local function DrawKnob(ctx, label, value, min_v, max_v, size, format_str)
     local radius = size * 0.5
     local draw_list = r.ImGui_GetWindowDrawList(ctx)
     local x, y = r.ImGui_GetCursorScreenPos(ctx)
     local center_x, center_y = x + radius, y + radius
     
+    format_str = format_str or "%.2f"
+
     r.ImGui_InvisibleButton(ctx, label, size, size)
     local is_active = r.ImGui_IsItemActive(ctx)
     local is_hovered = r.ImGui_IsItemHovered(ctx)
@@ -942,8 +945,8 @@ local function DrawKnob(ctx, label, value, min_v, max_v, size)
     -- Double click to reset
     if is_hovered and r.ImGui_IsMouseDoubleClicked(ctx, 0) then
         new_val = (label:find("Curve") or label:find("Offset")) and 0.0 or 0.0
-        if label:find("Offset") then new_val = 0.5 end
-        if label:find("Max") then new_val = 1.0 end
+        if label:find("Offset") then new_val = (max_v == 127) and 63.5 or 0.5 end
+        if label:find("Max") then new_val = max_v end
         changed = true
     end
 
@@ -976,7 +979,7 @@ local function DrawKnob(ctx, label, value, min_v, max_v, size)
     
     -- Tooltip
     if is_hovered then
-        r.ImGui_SetTooltip(ctx, string.format("%s: %.2f", label:gsub("##.*", ""), new_val))
+        r.ImGui_SetTooltip(ctx, string.format("%s: " .. format_str, label:gsub("##.*", ""), new_val))
     end
     
     return changed, new_val
@@ -1118,17 +1121,17 @@ local function DrawLinkedParamsWindow(main_x, main_y, main_w)
                     end
 
                     r.ImGui_SameLine(ctx)
-                    local min_changed, min_v = DrawKnob(ctx, "Min", p.min_val, 0.0, 1.0, 20)
+                    local min_changed, min_v = DrawKnob(ctx, "Min", p.min_val * 127, 0, 127, 20, "%.0f")
                     if min_changed then
-                        p.min_val = min_v
+                        p.min_val = min_v / 127.0
                         if p.min_val > p.max_val then p.min_val = p.max_val end
                         UpdateLinkedParams(p.macro_idx)
                     end
 
                     r.ImGui_SameLine(ctx)
-                    local max_changed, max_v = DrawKnob(ctx, "Max", p.max_val, 0.0, 1.0, 20)
+                    local max_changed, max_v = DrawKnob(ctx, "Max", p.max_val * 127, 0, 127, 20, "%.0f")
                     if max_changed then
-                        p.max_val = max_v
+                        p.max_val = max_v / 127.0
                         if p.max_val < p.min_val then p.max_val = p.min_val end
                         UpdateLinkedParams(p.macro_idx)
                     end
@@ -1136,9 +1139,9 @@ local function DrawLinkedParamsWindow(main_x, main_y, main_w)
                     -- Offset Slider (Only for Macros, not Pads)
                     if p.macro_idx <= MAX_MACROS then
                         r.ImGui_SameLine(ctx)
-                        local off_changed, off_v = DrawKnob(ctx, "Offset", p.offset or 0.5, 0.0, 1.0, 20)
+                        local off_changed, off_v = DrawKnob(ctx, "Offset", (p.offset or 0.5) * 127, 0, 127, 20, "%.0f")
                         if off_changed then
-                            p.offset = off_v
+                            p.offset = off_v / 127.0
                             UpdateLinkedParams(p.macro_idx)
                         end
                     end
@@ -1496,13 +1499,13 @@ local function myWindow()
 
             r.ImGui_SameLine(ctx)
             r.ImGui_SetNextItemWidth(ctx, -1)
-            local changed, new_val = r.ImGui_SliderDouble(ctx, ui_cache[i].slider_id, macro_values[i], 0.0, 1.0, ui_cache[i].slider_format)
+            local changed, new_val = r.ImGui_SliderDouble(ctx, ui_cache[i].slider_id, macro_values[i] * 127, 0, 127, ui_cache[i].slider_format)
 
             local is_active = r.ImGui_IsItemActive(ctx)
             local is_edited = r.ImGui_IsItemEdited(ctx)
 
             if changed then
-                macro_values[i] = new_val
+                macro_values[i] = new_val / 127.0
                 UpdateLinkedParams(i)
             end
 
