@@ -1,12 +1,17 @@
--- @description VST Macro Linker (16 Colors)
+-- @description VST Macro Linker
 -- @author Taras Umanskiy
--- @version 3.60
+-- @version 3.92
 -- @provides [main] .
---   [script] trs_VST Macro Linker.jsfx
+-- @provides [script] trs_VST Macro Linker.jsfx
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
--- @about Скрипт для линковки параметров VST в цветные макросы (до 16 шт)
+-- @about Скрипт для линковки параметров VST в макросы и пады.
 -- @changelog
+--   + Добавлено: Окно 'Linked Parameters' теперь автоматически прикрепляется к правой стороне основного окна.
+--   + Исправлено: Нажатие 'L' больше не линкует мгновенно последний затронутый параметр. Теперь скрипт ждет следующего касания.
+--   + Добавлено: Клик средней кнопкой мыши по кнопке Link или Pad устанавливает его как цель для авто-линковки.
+--   + Добавлено: Выбор цели в режиме авто-линковки. Нажмите 1-9 в режиме 'L', чтобы зафиксировать линковку на конкретном макросе.
+--   + Добавлено: Режим авто-линковки (Горячая клавиша 'L'). Автоматическая линковка затронутых параметров на свободные макросы.
 --   + Optimization: Implemented Interlaced Sync (50% params per frame) to reduce CPU usage.
 --   + Optimization: Implemented Project State Caching to reduce API calls.
 --   + Optimization: Implemented UI String Caching to reduce garbage collection overhead (significant reduction in string allocations per frame).
@@ -45,7 +50,7 @@ console = false -- DEBUG ENABLED
 function msg(value) if console then r.ShowConsoleMsg(tostring(value) .. "\n") end end
 
 title = 'VST Macro Linker'
-VERSION = '3.60'
+VERSION = '3.92'
 author = 'Taras Umanskiy'
 about = title .. ' ' .. VERSION .. ' | by ' .. author
 ListDir = {}
@@ -61,6 +66,9 @@ local font = reaper.ImGui_CreateFont('sans-serif', size)
 reaper.ImGui_Attach(ctx, font)
 
 -- --- Application State ---
+local auto_link_mode = false
+local target_auto_macro_idx = nil -- nil means "next empty"
+local last_touched_fx_hash = ""
 -- Colors for 16 macros (RGBA)
 local macro_colors = {
     -- Set 1 (Original)
@@ -715,6 +723,9 @@ function AddLastTouchedParam(target_macro_idx)
 
     -- Update last linked macro index for Global Hotkeys
     last_linked_macro_idx = target_macro_idx
+    
+    -- Update hash to prevent double-linking in auto-mode
+    last_touched_fx_hash = string.format("%s_%d_%d", track_guid, fxnumber, paramnumber)
 
     -- Logic for Pads vs Macros
     local is_pad = (target_macro_idx > MAX_MACROS)
@@ -775,26 +786,62 @@ function GetNextEmptyMacroIndex()
     return 1 -- Fallback if all full
 end
 
+function EnableAutoLinkMode(target_idx)
+    auto_link_mode = true
+    target_auto_macro_idx = target_idx
+    
+    -- Capture current state to avoid immediate link of the last touched param
+    local retval, tracknumber, fxnumber, paramnumber = r.GetLastTouchedFX()
+    if retval then
+        local track = r.CSurf_TrackFromID(tracknumber, false)
+        if track then
+            local track_guid = r.GetTrackGUID(track)
+            last_touched_fx_hash = string.format("%s_%d_%d", track_guid, fxnumber, paramnumber)
+        else
+            last_touched_fx_hash = ""
+        end
+    else
+        last_touched_fx_hash = ""
+    end
+end
+
 function PollGlobalKeys()
     if not r.JS_VKeys_GetState then return end
 
     -- Get current state of all keys
     local state = r.JS_VKeys_GetState(0)
 
-    -- Key '1' (0x31): Link to last linked macro
-    local key1 = state:byte(0x31) ~= 0
-    if key1 and not key_state[0x31] then
-        AddLastTouchedParam(last_linked_macro_idx)
+    -- Keys '1' (0x31) to '9' (0x39)
+    for i = 1, 9 do
+        local vk = 0x30 + i
+        local key = state:byte(vk) ~= 0
+        if key and not key_state[vk] then
+            if auto_link_mode then
+                -- In Auto-Link mode, number keys set the target macro
+                target_auto_macro_idx = i
+            else
+                -- In normal mode, 1 and 2 have special functions
+                if i == 1 then
+                    AddLastTouchedParam(last_linked_macro_idx)
+                elseif i == 2 then
+                    local next_idx = GetNextEmptyMacroIndex()
+                    AddLastTouchedParam(next_idx)
+                end
+            end
+        end
+        key_state[vk] = key
     end
-    key_state[0x31] = key1
 
-    -- Key '2' (0x32): Link to next empty macro
-    local key2 = state:byte(0x32) ~= 0
-    if key2 and not key_state[0x32] then
-        local next_idx = GetNextEmptyMacroIndex()
-        AddLastTouchedParam(next_idx)
+    -- Key 'L' (0x4C): Toggle Auto-Link Mode
+    local keyL = state:byte(0x4C) ~= 0
+    if keyL and not key_state[0x4C] then
+        if auto_link_mode then
+            auto_link_mode = false
+        else
+            EnableAutoLinkMode(nil) -- nil means "next empty" behavior
+        end
     end
-    key_state[0x32] = key2
+    key_state[0x4C] = keyL
 end
 
 function UpdateLinkedParams(specific_macro_idx)
@@ -838,11 +885,181 @@ end
 
 -- --- GUI Functions ---
 
+local function DrawLinkedParamsWindow(main_x, main_y, main_w)
+    if show_linked_params then
+        local pad_w, pad_h = r.ImGui_GetStyleVar(ctx, r.ImGui_StyleVar_WindowPadding())
+        local item_spacing_x, item_spacing_y = r.ImGui_GetStyleVar(ctx, r.ImGui_StyleVar_ItemSpacing())
+        local frame_h_spacing = r.ImGui_GetFrameHeightWithSpacing(ctx)
+
+        r.ImGui_SetNextWindowSize(ctx, 450, 400, r.ImGui_Cond_FirstUseEver())
+        
+        if main_x then
+            -- Stick to the right of the main window
+            r.ImGui_SetNextWindowPos(ctx, main_x + main_w, main_y, r.ImGui_Cond_Always())
+        end
+
+        local visible, open = r.ImGui_Begin(ctx, "Linked Parameters", true)
+        
+        if visible then
+            -- Header Controls (Load/Save/Count)
+            if r.ImGui_Button(ctx, "L##Linked") then
+                local start_dir = GetProjectDir()
+                local retval, file = r.GetUserFileNameForRead(start_dir, "Load Linked Params", "ini")
+                if retval then LoadLinkedParams(file) end
+            end
+            if r.ImGui_IsItemHovered(ctx) then r.ImGui_SetTooltip(ctx, "Load Linked Parameters from file") end
+
+            r.ImGui_SameLine(ctx)
+            if r.ImGui_Button(ctx, "S##Linked") then
+                local start_dir = GetProjectDir()
+                if r.JS_Dialog_BrowseForSaveFile then
+                    local retval, file = r.JS_Dialog_BrowseForSaveFile("Save Linked Params", start_dir, "LinkedParams.ini", "INI files (.ini)\0*.ini\0All Files (*.*)\0*.*\0")
+                    if retval and file ~= "" then
+                        if not file:match("%.ini$") then file = file .. ".ini" end
+                        SaveLinkedParams(file)
+                    end
+                else
+                     local retval, file = r.GetUserFileNameForRead(start_dir, "Save Linked Params", "ini")
+                     if retval then SaveLinkedParams(file) end
+                end
+            end
+            if r.ImGui_IsItemHovered(ctx) then r.ImGui_SetTooltip(ctx, "Save Linked Parameters to a new file") end
+
+            r.ImGui_SameLine(ctx)
+            
+            -- Count Display
+            local part1 = "Linked Parameters : "
+            local part2 = tostring(#linked_params)
+            
+            r.ImGui_Text(ctx, part1)
+            r.ImGui_SameLine(ctx, 0, 0)
+            
+            local text_col = 0xFF4444FF -- Red
+            if #linked_params > 0 then text_col = 0x44CC44FF end -- Green
+            r.ImGui_TextColored(ctx, text_col, part2)
+
+            r.ImGui_Separator(ctx)
+
+            -- List of parameters
+            if r.ImGui_BeginChild(ctx, "ParamsList", 0, 0, 0) then -- 0 height = auto fill
+                local remove_idx = nil
+
+                for i, p in ipairs(linked_params) do
+                    r.ImGui_PushID(ctx, i)
+
+                    -- Determine color index (wrap if pad)
+                    local col_idx = p.macro_idx
+                    if col_idx > 16 then col_idx = col_idx - 16 end
+                    local col = macro_colors[col_idx] or 0xFFFFFFFF
+
+                    -- Color indicator stripe
+                    r.ImGui_ColorButton(ctx, "##ColorInd", col, r.ImGui_ColorEditFlags_NoTooltip() | r.ImGui_ColorEditFlags_NoDragDrop(), 10, 10)
+                    r.ImGui_SameLine(ctx)
+
+                    -- Remove button
+                    if r.ImGui_Button(ctx, "X") then
+                        remove_idx = i
+                    end
+                    r.ImGui_SameLine(ctx)
+
+                    -- Info
+                    r.ImGui_AlignTextToFramePadding(ctx)
+
+                    local label_prefix = "M"
+                    local disp_idx = p.macro_idx
+                    if p.macro_idx > 16 then
+                        label_prefix = "P"
+                        disp_idx = p.macro_idx - 16
+                    end
+
+                    local info_txt = string.format("%s%d [%s] %s : %s", label_prefix, disp_idx, p.track_name, p.fx_name, p.param_name)
+                    r.ImGui_TextColored(ctx, col, info_txt)
+
+                    -- Settings per param
+                    r.ImGui_Indent(ctx)
+
+                    -- Invert
+                    local inv_changed, inv_val = r.ImGui_Checkbox(ctx, "Invert", p.inverted)
+                    if inv_changed then
+                        p.inverted = inv_val
+                        UpdateLinkedParams(p.macro_idx)
+                    end
+
+                    r.ImGui_SameLine(ctx)
+                    r.ImGui_SetNextItemWidth(ctx, 60)
+                    local min_changed, min_v = r.ImGui_SliderDouble(ctx, "Min", p.min_val, 0.0, 1.0, "%.2f")
+                    if min_changed then
+                        p.min_val = min_v
+                        if p.min_val > p.max_val then p.min_val = p.max_val end
+                        UpdateLinkedParams(p.macro_idx)
+                    end
+
+                    r.ImGui_SameLine(ctx)
+                    r.ImGui_SetNextItemWidth(ctx, 60)
+                    local max_changed, max_v = r.ImGui_SliderDouble(ctx, "Max", p.max_val, 0.0, 1.0, "%.2f")
+                    if max_changed then
+                        p.max_val = max_v
+                        if p.max_val < p.min_val then p.max_val = p.min_val end
+                        UpdateLinkedParams(p.macro_idx)
+                    end
+
+                    -- Offset Slider (Only for Macros, not Pads)
+                    if p.macro_idx <= MAX_MACROS then
+                        r.ImGui_SameLine(ctx)
+                        r.ImGui_SetNextItemWidth(ctx, 60)
+                        local off_changed, off_v = r.ImGui_SliderDouble(ctx, "Offset", p.offset or 0.5, 0.0, 1.0, "%.2f")
+                        if off_changed then
+                            p.offset = off_v
+                            UpdateLinkedParams(p.macro_idx)
+                        end
+                    end
+
+                    r.ImGui_Unindent(ctx)
+                    r.ImGui_Separator(ctx)
+
+                    r.ImGui_PopID(ctx)
+                end
+
+                if remove_idx then
+                    table.remove(linked_params, remove_idx)
+                    BuildLinkIndex()
+                end
+
+                r.ImGui_EndChild(ctx)
+            end
+            
+            r.ImGui_End(ctx)
+        end
+        
+        if not open then
+            show_linked_params = false
+        end
+    end
+end
+
 local function myWindow()
     -- Common Style Vars
     local pad_w, pad_h = r.ImGui_GetStyleVar(ctx, r.ImGui_StyleVar_WindowPadding())
     local item_spacing_x, item_spacing_y = r.ImGui_GetStyleVar(ctx, r.ImGui_StyleVar_ItemSpacing())
     local frame_h_spacing = r.ImGui_GetFrameHeightWithSpacing(ctx)
+
+    -- Auto-Link Status Indicator
+    if auto_link_mode then
+        r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Text(), 0xFFFF00FF)
+        local target_text = " -> Auto-Next"
+        if target_auto_macro_idx then
+            if target_auto_macro_idx <= MAX_MACROS then
+                target_text = " -> Macro " .. target_auto_macro_idx
+            else
+                target_text = " -> Pad " .. (target_auto_macro_idx - MAX_MACROS)
+            end
+        end
+        r.ImGui_Text(ctx, "● AUTO-LINK ACTIVE (L)" .. target_text)
+        r.ImGui_PopStyleColor(ctx)
+        r.ImGui_SameLine(ctx)
+        local avail_w = r.ImGui_GetContentRegionAvail(ctx)
+        r.ImGui_SetCursorPosX(ctx, r.ImGui_GetCursorPosX(ctx) + avail_w - 120)
+    end
 
     -- Info / Header
     -- r.ImGui_TextColored(ctx, 0x992222FF, 'Last Touched: ' .. (last_touched_param or "None"))
@@ -1118,6 +1335,11 @@ local function myWindow()
                 AddLastTouchedParam(i)
             end
 
+            -- Middle Click to set as Auto-Link Target
+            if r.ImGui_IsItemClicked(ctx, 2) then
+                EnableAutoLinkMode(i)
+            end
+
             -- Right Click to Remove Links
             if r.ImGui_IsItemClicked(ctx, 1) then
                 RemoveLinksForMacro(i)
@@ -1126,7 +1348,7 @@ local function myWindow()
             r.ImGui_PopStyleColor(ctx, 3)
 
             if r.ImGui_IsItemHovered(ctx) then
-                r.ImGui_SetTooltip(ctx, "L-Click: Link Last Touched Parameter\nR-Click: Remove All Links from " .. macro_names[i])
+                r.ImGui_SetTooltip(ctx, "L-Click: Link Last Touched Parameter\nM-Click: Set as Auto-Link Target (L)\nR-Click: Remove All Links from " .. macro_names[i])
             end
 
             r.ImGui_SameLine(ctx)
@@ -1289,6 +1511,11 @@ local function myWindow()
             end
         end
 
+        -- Middle Click Actions
+        if r.ImGui_IsItemClicked(ctx, 2) then
+            EnableAutoLinkMode(pad_idx)
+        end
+
         -- Tooltip
         if r.ImGui_IsItemHovered(ctx) then
             local status_txt = is_on and "ON" or "OFF"
@@ -1300,7 +1527,7 @@ local function myWindow()
             end
             if learning_macro_idx == pad_idx then map_txt = " [LEARNING...]" end
 
-            r.ImGui_SetTooltip(ctx, string.format("%s\nState: %s%s\nL-Click: Toggle\nCtrl+L-Click: Link Param\nR-Click: Remove Link Param\nCtrl+R-Click: Toggle MIDI Learn", macro_names[pad_idx], status_txt, map_txt))
+            r.ImGui_SetTooltip(ctx, string.format("%s\nState: %s%s\nL-Click: Toggle\nCtrl+L-Click: Link Param\nM-Click: Set as Auto-Link Target (L)\nR-Click: Remove Link Param\nCtrl+R-Click: Toggle MIDI Learn", macro_names[pad_idx], status_txt, map_txt))
         end
 
         r.ImGui_PopStyleColor(ctx, pushed_colors)
@@ -1317,157 +1544,9 @@ local function myWindow()
 
     r.ImGui_Separator(ctx)
 
-    -- Linked Params Header & Controls
-    r.ImGui_AlignTextToFramePadding(ctx)
-
-    -- Toggle Button (Arrow)
-    if r.ImGui_ArrowButton(ctx, "##ToggleLinkedParams", show_linked_params and r.ImGui_Dir_Down() or r.ImGui_Dir_Right()) then
+    -- Toggle Button for Linked Params Window
+    if r.ImGui_Button(ctx, show_linked_params and "Hide Linked Params Window" or "Show Linked Params Window") then
         show_linked_params = not show_linked_params
-    end
-    r.ImGui_SameLine(ctx)
-
-    -- Buttons (Left aligned next to arrow)
-    if r.ImGui_Button(ctx, "L##Linked") then
-        local start_dir = GetProjectDir()
-        local retval, file = r.GetUserFileNameForRead(start_dir, "Load Linked Params", "ini")
-        if retval then LoadLinkedParams(file) end
-    end
-    if r.ImGui_IsItemHovered(ctx) then r.ImGui_SetTooltip(ctx, "Load Linked Parameters from file") end
-
-    r.ImGui_SameLine(ctx)
-    if r.ImGui_Button(ctx, "S##Linked") then
-        local start_dir = GetProjectDir()
-        if r.JS_Dialog_BrowseForSaveFile then
-            local retval, file = r.JS_Dialog_BrowseForSaveFile("Save Linked Params", start_dir, "LinkedParams.ini", "INI files (.ini)\0*.ini\0All Files (*.*)\0*.*\0")
-            if retval and file ~= "" then
-                if not file:match("%.ini$") then file = file .. ".ini" end
-                SaveLinkedParams(file)
-            end
-        else
-             local retval, file = r.GetUserFileNameForRead(start_dir, "Save Linked Params", "ini")
-             if retval then SaveLinkedParams(file) end
-        end
-    end
-    if r.ImGui_IsItemHovered(ctx) then r.ImGui_SetTooltip(ctx, "Save Linked Parameters to a new file") end
-
-    r.ImGui_SameLine(ctx)
-
-    -- Text (Right aligned)
-    local part1 = "Linked Parameters : "
-    local part2 = tostring(#linked_params)
-    local part3 = ""
-
-    local w1 = r.ImGui_CalcTextSize(ctx, part1)
-    local w2 = r.ImGui_CalcTextSize(ctx, part2)
-    local w3 = r.ImGui_CalcTextSize(ctx, part3)
-    local total_w = w1 + w2 + w3
-
-    local avail_w = r.ImGui_GetContentRegionAvail(ctx)
-    r.ImGui_SetCursorPosX(ctx, r.ImGui_GetCursorPosX(ctx) + avail_w - total_w)
-
-    r.ImGui_Text(ctx, part1)
-    r.ImGui_SameLine(ctx, 0, 0)
-
-    local text_col = 0xFF4444FF -- Red
-    if #linked_params > 0 then text_col = 0x44CC44FF end -- Green
-    r.ImGui_TextColored(ctx, text_col, part2)
-
-    r.ImGui_SameLine(ctx, 0, 0)
-    r.ImGui_Text(ctx, part3)
-
-    -- List of parameters
-    if show_linked_params then
-        -- Calculate height for 8 items
-        -- One item = 2 rows + separator
-        -- Height = (2 * fh) + is_y (approx for separator)
-        local list_h = ((frame_h_spacing * 2) + item_spacing_y) * 8 + (pad_h * 2)
-
-        if r.ImGui_BeginChild(ctx, "ParamsList", 0, list_h, 1) then
-            local remove_idx = nil
-
-            for i, p in ipairs(linked_params) do
-                r.ImGui_PushID(ctx, i)
-
-                -- Determine color index (wrap if pad)
-                local col_idx = p.macro_idx
-                if col_idx > 16 then col_idx = col_idx - 16 end
-                local col = macro_colors[col_idx] or 0xFFFFFFFF
-
-                -- Color indicator stripe
-                r.ImGui_ColorButton(ctx, "##ColorInd", col, r.ImGui_ColorEditFlags_NoTooltip() | r.ImGui_ColorEditFlags_NoDragDrop(), 10, 10)
-                r.ImGui_SameLine(ctx)
-
-                -- Remove button
-                if r.ImGui_Button(ctx, "X") then
-                    remove_idx = i
-                end
-                r.ImGui_SameLine(ctx)
-
-                -- Info
-                r.ImGui_AlignTextToFramePadding(ctx)
-
-                local label_prefix = "M"
-                local disp_idx = p.macro_idx
-                if p.macro_idx > 16 then
-                    label_prefix = "P"
-                    disp_idx = p.macro_idx - 16
-                end
-
-                local info_txt = string.format("%s%d [%s] %s : %s", label_prefix, disp_idx, p.track_name, p.fx_name, p.param_name)
-                r.ImGui_TextColored(ctx, col, info_txt)
-
-                -- Settings per param
-                r.ImGui_Indent(ctx)
-
-                -- Invert
-                local inv_changed, inv_val = r.ImGui_Checkbox(ctx, "Invert", p.inverted)
-                if inv_changed then
-                    p.inverted = inv_val
-                    UpdateLinkedParams(p.macro_idx)
-                end
-
-                r.ImGui_SameLine(ctx)
-                r.ImGui_SetNextItemWidth(ctx, 60)
-                local min_changed, min_v = r.ImGui_SliderDouble(ctx, "Min", p.min_val, 0.0, 1.0, "%.2f")
-                if min_changed then
-                    p.min_val = min_v
-                    if p.min_val > p.max_val then p.min_val = p.max_val end
-                    UpdateLinkedParams(p.macro_idx)
-                end
-
-                r.ImGui_SameLine(ctx)
-                r.ImGui_SetNextItemWidth(ctx, 60)
-                local max_changed, max_v = r.ImGui_SliderDouble(ctx, "Max", p.max_val, 0.0, 1.0, "%.2f")
-                if max_changed then
-                    p.max_val = max_v
-                    if p.max_val < p.min_val then p.max_val = p.min_val end
-                    UpdateLinkedParams(p.macro_idx)
-                end
-
-                -- Offset Slider (Only for Macros, not Pads)
-                if p.macro_idx <= MAX_MACROS then
-                    r.ImGui_SameLine(ctx)
-                    r.ImGui_SetNextItemWidth(ctx, 60)
-                    local off_changed, off_v = r.ImGui_SliderDouble(ctx, "Offset", p.offset or 0.5, 0.0, 1.0, "%.2f")
-                    if off_changed then
-                        p.offset = off_v
-                        UpdateLinkedParams(p.macro_idx)
-                    end
-                end
-
-                r.ImGui_Unindent(ctx)
-                r.ImGui_Separator(ctx)
-
-                r.ImGui_PopID(ctx)
-            end
-
-            if remove_idx then
-                table.remove(linked_params, remove_idx)
-                BuildLinkIndex()
-            end
-
-            r.ImGui_EndChild(ctx)
-        end
     end
 end
 
@@ -1521,10 +1600,34 @@ local function loop()
   -- Poll Global Hotkeys
   PollGlobalKeys()
 
+  -- Auto-Link Mode Logic
+  if auto_link_mode then
+      local retval, tracknumber, fxnumber, paramnumber = r.GetLastTouchedFX()
+      if retval then
+          local track = r.CSurf_TrackFromID(tracknumber, false)
+          if track then
+              local track_guid = r.GetTrackGUID(track)
+              local current_hash = string.format("%s_%d_%d", track_guid, fxnumber, paramnumber)
+               
+               if current_hash ~= last_touched_fx_hash then
+                   local target_idx = target_auto_macro_idx or GetNextEmptyMacroIndex()
+                   AddLastTouchedParam(target_idx)
+                   last_touched_fx_hash = current_hash
+               end
+           end
+      end
+  end
+
   reaper.ImGui_PushFont(ctx, font, size)
+  
+  -- MAIN WINDOW
+  local main_x, main_y, main_w, main_h
   reaper.ImGui_SetNextWindowSize(ctx, 500, 500, reaper.ImGui_Cond_FirstUseEver())
   local visible, open = reaper.ImGui_Begin(ctx, windowTitle, true, reaper.ImGui_WindowFlags_AlwaysAutoResize())
   if visible then
+    main_x, main_y = reaper.ImGui_GetWindowPos(ctx)
+    main_w, main_h = reaper.ImGui_GetWindowSize(ctx)
+    
     -- Hotkey H to toggle Linked Params
     if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_H()) then
         show_linked_params = not show_linked_params
@@ -1533,12 +1636,13 @@ local function loop()
     myWindow()
     reaper.ImGui_End(ctx)
   end
+
+  -- LINKED PARAMS WINDOW (Independent)
+  DrawLinkedParamsWindow(main_x, main_y, main_w)
+  
   reaper.ImGui_PopFont(ctx)
 
-  if open then
-    if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Escape()) then open = false end
-  end
-
+  -- Quit if Main Window Closed
   if open then
     reaper.defer(loop)
   end
