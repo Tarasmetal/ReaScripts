@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="6aa3c5a9ac815a944ecc5854f2d035d44ce285c6">
+<index version="1" name="Taras Scripts" commit="c36e0b8340acc6b437759f21c8d8f426f362617b">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID name Fixer.lua" type="script" desc="Action List and toolbars Command ID name Fixer">
       <metadata>
@@ -324,14 +324,18 @@ v1.1
         <changelog><![CDATA[+ Pads: Increased count to 16]]></changelog>
         <source>https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/trs_VST%20Macro%20Linker.jsfx</source>
       </version>
+      <version name="3.92" author="Taras Umanskiy" time="2026-02-15T03:55:43Z">
+        <changelog><![CDATA[+ Pads: Increased count to 16]]></changelog>
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/c36e0b8340acc6b437759f21c8d8f426f362617b/GUI%20Tools/trs_VST%20Macro%20Linker.jsfx</source>
+      </version>
     </reapack>
-    <reapack name="trs_VST Macro Linker.lua" type="script" desc="VST Macro Linker (16 Colors)">
+    <reapack name="trs_VST Macro Linker.lua" type="script" desc="VST Macro Linker">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \u1057?\u1082?\u1088?\u1080?\u1087?\u1090? \u1076?\u1083?\u1103? \u1083?\u1080?\u1085?\u1082?\u1086?\u1074?\u1082?\u1080? \u1087?\u1072?\u1088?\u1072?\u1084?\u1077?\u1090?\u1088?\u1086?\u1074? VST \u1074? \u1094?\u1074?\u1077?\u1090?\u1085?\u1099?\u1077? \u1084?\u1072?\u1082?\u1088?\u1086?\u1089?\u1099? (\u1076?\u1086? 16 \u1096?\u1090?)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1057?\u1082?\u1088?\u1080?\u1087?\u1090? \u1076?\u1083?\u1103? \u1083?\u1080?\u1085?\u1082?\u1086?\u1074?\u1082?\u1080? \u1087?\u1072?\u1088?\u1072?\u1084?\u1077?\u1090?\u1088?\u1086?\u1074? VST \u1074? \u1084?\u1072?\u1082?\u1088?\u1086?\u1089?\u1099? \u1080? \u1087?\u1072?\u1076?\u1099?.\par}
 }
 ]]></description>
         <link rel="website">http://vk.com/tarasmetal</link>
@@ -371,6 +375,46 @@ v1.1
 + Pads: Toggle MIDI Learn mode on/off with Ctrl+R-Click]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/trs_VST%20Macro%20Linker.lua</source>
         <source type="script" file="trs_VST Macro Linker.jsfx">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/trs_VST%20Macro%20Linker.jsfx</source>
+      </version>
+      <version name="3.92" author="Taras Umanskiy" time="2026-02-15T03:55:43Z">
+        <changelog><![CDATA[+ Добавлено: Окно 'Linked Parameters' теперь автоматически прикрепляется к правой стороне основного окна.
++ Исправлено: Нажатие 'L' больше не линкует мгновенно последний затронутый параметр. Теперь скрипт ждет следующего касания.
++ Добавлено: Клик средней кнопкой мыши по кнопке Link или Pad устанавливает его как цель для авто-линковки.
++ Добавлено: Выбор цели в режиме авто-линковки. Нажмите 1-9 в режиме 'L', чтобы зафиксировать линковку на конкретном макросе.
++ Добавлено: Режим авто-линковки (Горячая клавиша 'L'). Автоматическая линковка затронутых параметров на свободные макросы.
++ Optimization: Implemented Interlaced Sync (50% params per frame) to reduce CPU usage.
++ Optimization: Implemented Project State Caching to reduce API calls.
++ Optimization: Implemented UI String Caching to reduce garbage collection overhead (significant reduction in string allocations per frame).
++ Optimization: Preset list caching (disk IO reduction).
++ Optimization: ExtState caching for last used preset.
++ Optimization: Throttled backend validation (CPU reduction).
++ Optimization: ImGui style vars caching.
++ Optimization: Added Track Caching to reduce CPU usage (GetTrackByGUID).
++ Optimization: Added Lookup Tables for Linked Parameters to speed up GUI and processing.
++ Optimization: Targeted parameter updates (only update parameters for the changed macro).
++ Added: Track Automation Mode switches (Trim/Read, Read, Touch, Latch, Latch Prev, Write).
++ UI: Moved Automation controls to top section (below Automation toggle).
++ Fixed: Master Track parameters can now be controlled correctly (Added Master Track check in GetTrackByGUID).
++ Pads: Linking now defaults "Min" to 0.0 (instead of current value).
++ Pads: Hidden "Offset" slider in Linked Parameters list (not needed for buttons).
++ Added hotkey 'H' to toggle Linked Parameters visibility.
++ Added "Offset" slider to Linked Parameters (Default 0.50).
++ Allows shifting the modulation range up or down.
++ Simplification: Removed "Position" parameter.
++ Linking Logic: Initial parameter value is now automatically set to "Min" value.
++ This allows modulation to start from the current parameter position.
++ Global Persistence: "Automation" checkbox state is now remembered globally via ExtState
++ Added "Automation" checkbox to toggle JSFX backend connection
++ Script now works purely as a controller if Automation is OFF
++ Saved Automation state in settings
++ Pads: Increased count to 16
++ Pads: Added automation sync with JSFX backend
++ Pads: Fix tooltip state always showing OFF (scoping issue)
++ Pads: Fix toggle behavior logic (explicit check)
++ Pads: MIDI Learn mode now displays Pad in Yellow with Black text
++ Pads: Toggle MIDI Learn mode on/off with Ctrl+R-Click]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/c36e0b8340acc6b437759f21c8d8f426f362617b/GUI%20Tools/trs_VST%20Macro%20Linker.lua</source>
+        <source type="script" file="trs_VST Macro Linker.jsfx">https://github.com/Tarasmetal/ReaScripts/raw/c36e0b8340acc6b437759f21c8d8f426f362617b/GUI%20Tools/trs_VST%20Macro%20Linker.jsfx</source>
       </version>
     </reapack>
   </category>
