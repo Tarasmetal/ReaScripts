@@ -3,6 +3,7 @@
 -- @version 1.8
 -- @provides [main] .
 --   [script] trs_Track color auto loader.txt
+--   [script] trs_Track color auto loader lite.txt
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
 -- @about Скрипт для автоматической окраски треков по имени и создания градиентов для папок (поддержка 2 и 3 цветов).
