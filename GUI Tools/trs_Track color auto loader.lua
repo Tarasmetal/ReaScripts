@@ -1,6 +1,6 @@
 -- @description Track Color Auto Loader & Gradients
 -- @author Taras Umanskiy
--- @version 1.8
+-- @version 1.9
 -- @provides [main] .
 --   [script] trs_Track color auto loader.txt
 --   [script] trs_Track color auto loader lite.txt
