@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="fa6d3ab7543a248f0e0293665a3e77c3b6fdc21d">
+<index version="1" name="Taras Scripts" commit="195902a4d740a8f267f029a9844c29e99c95efb5">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID name Fixer.lua" type="script" desc="Action List and toolbars Command ID name Fixer">
       <metadata>
@@ -280,6 +280,23 @@ v1.1
 + Code optimizations]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/trs_Track%20color%20auto%20loader.lua</source>
         <source type="script" file="trs_Track color auto loader.txt">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/trs_Track%20color%20auto%20loader.txt</source>
+      </version>
+      <version name="1.9" author="Taras Umanskiy" time="2026-02-19T02:41:07Z">
+        <changelog><![CDATA[+ Added support for 3-color gradients for Folder rules (Start-Mid-End)
++ UI: Added ability to add/remove 3rd color for folders via context menu or button
++ Added 'RUN_WITHOUT_GUI' flag to allow running script in headless mode (apply colors and exit)
++ Fix: Allow loading rules with empty patterns (names)
++ Added 'Receive' rule type (colors track based on source track name of receives)
++ Feature: Right-click on color palette to copy selected track color
++ Improvement: Folder tracks can now use Suffix/Prefix rules for their own color while maintaining gradients for children
++ Added 'Folder' rule type for folder gradients
++ Added secondary color support for gradients
++ Added Save As and Load Preset functionality
++ Fix: Prevent child tracks from being overwritten by other rules
++ Code optimizations]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/195902a4d740a8f267f029a9844c29e99c95efb5/GUI%20Tools/trs_Track%20color%20auto%20loader.lua</source>
+        <source type="script" file="trs_Track color auto loader.txt">https://github.com/Tarasmetal/ReaScripts/raw/195902a4d740a8f267f029a9844c29e99c95efb5/GUI%20Tools/trs_Track%20color%20auto%20loader.txt</source>
+        <source type="script" file="trs_Track color auto loader lite.txt">https://github.com/Tarasmetal/ReaScripts/raw/195902a4d740a8f267f029a9844c29e99c95efb5/GUI%20Tools/trs_Track%20color%20auto%20loader%20lite.txt</source>
       </version>
     </reapack>
     <reapack name="trs_Track GUI Tools.lua" type="script" desc="TRACK RENAME GUI TOOLS">
