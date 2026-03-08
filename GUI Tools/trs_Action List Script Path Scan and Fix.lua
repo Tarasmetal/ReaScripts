@@ -1,11 +1,12 @@
 -- @description Action List Script Path Scan and Fix
 -- @author Taras Umanskiy
--- @version 1.9.1
+-- @version 1.9.2
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
 -- @about Мощный инструмент для пользователей REAPER, который помогает поддерживать чистоту в Action List, выявляя и устраняя "битые" ссылки на скрипты.
 -- @changelog
+--   + Changed: Чекбоксы выбора скриптов теперь выключены по умолчанию после сканирования.
 --   + Changed: Кнопки "Выделить все" и "Снять выделение" теперь действуют только на отфильтрованные скрипты.
 --   + Added: Фильтр для поиска скриптов в списке.
 --   + Added: Чекбоксы для выбора конкретных скриптов для удаления.
@@ -15,7 +16,7 @@
 
 local ctx = reaper.ImGui_CreateContext('ActionListScriptPathScanAndFix')
 local WINDOW_FLAGS = reaper.ImGui_WindowFlags_MenuBar()
-local VERSION = "1.9.1"
+local VERSION = "1.9.2"
 local SCRIPT_NAME = "Action List Script Path Scan and Fix" .. " " .. VERSION
 
 -- Настройки шрифтов и цветов
@@ -367,7 +368,7 @@ local function ScanForBrokenScripts()
                         name = name,
                         path = path,
                         full_path = full_path,
-                        selected = true -- По умолчанию выбрано для удаления
+                        selected = false -- По умолчанию НЕ выбрано для удаления
                     })
                 end
             end
