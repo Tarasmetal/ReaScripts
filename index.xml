@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="562d4fbb92e521016271f339dd318efe86ed0440">
+<index version="1" name="Taras Scripts" commit="ec1250fd18a5a513f2d757b451c7ae5d1e07748a">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
       <metadata>
@@ -7,7 +7,7 @@
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \u1050?\u1086?\u1085?\u1074?\u1077?\u1088?\u1090?\u1080?\u1088?\u1091?\u1077?\u1090? \u1089?\u1083?\u1091?\u1095?\u1072?\u1081?\u1085?\u1099?\u1077? RS ID \u1074? KeyMap \u1080? \u1084?\u1077?\u1085?\u1102? \u1092?\u1072?\u1081?\u1083?\u1072?\u1093? \u1074? \u1095?\u1080?\u1090?\u1072?\u1077?\u1084?\u1099?\u1077? \u1080?\u1084?\u1077?\u1085?\u1072? \u1085?\u1072? \u1086?\u1089?\u1085?\u1086?\u1074?\u1077? \u1086?\u1087?\u1080?\u1089?\u1072?\u1085?\u1080?\u1103? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1072?.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Converts random RS IDs in KeyMap and menu files to readable names based on script description.\par}
 }
 ]]></description>
         <link rel="website">http://vk.com/tarasmetal</link>
@@ -24,6 +24,19 @@
 + Добавлено: Создание резервной копии (*.ini.bck) перед обработкой
 + Добавлено: Опциональный фильтр поиска для обработки только совпадающих скриптов]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/562d4fbb92e521016271f339dd318efe86ed0440/GUI%20Tools/trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.lua</source>
+      </version>
+      <version name="1.9" author="Taras Umanskiy" time="2026-03-08T16:24:29Z">
+        <changelog><![CDATA[+ v1.9: Интерфейс переведен на английский язык
++ v1.8: Обновлено название и описание скрипта в метаданных
++ v1.7: Автоматический поиск reaper-kb.ini в папке ресурсов REAPER
++ v1.6: Внедрен "Безопасный режим" с предпросмотром изменений (Safe Mode with Preview)
++ Разделение логики анализа и применения изменений
++ Таблица предпросмотра с чекбоксами для выбора конкретных замен
++ Добавлена кнопка "Обработать меню" для обновления reaper-menu.ini
++ Сохранение маппинга ID для использования в обработке меню
++ Добавлено: Создание резервной копии (*.ini.bck) перед обработкой
++ Добавлено: Опциональный фильтр поиска для обработки только совпадающих скриптов]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/ec1250fd18a5a513f2d757b451c7ae5d1e07748a/GUI%20Tools/trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Action List Script Path Scan and Fix.lua" type="script" desc="Action List Script Path Scan and Fix">
