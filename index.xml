@@ -1,5 +1,413 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="4f03ec38b9dfd3be842149420498fc0368a7f4f6">
+<index version="1" name="Taras Scripts" commit="17e0278a15dd294a1aa0a792c2215d51188c93f8">
+  <category name="GUI Tools">
+    <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Converts random RS IDs in KeyMap and menu files to readable names based on script description.\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="2.1" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ v2.1: Исправлена ошибка с символами "_-_" в новых ID (теперь заменяются на "_")
++ v2.0: Изменен цвет текста в колонках Old ID (желтый) и New ID (зеленый) для лучшей читаемости
++ v1.9: Интерфейс переведен на английский язык
++ v1.8: Обновлено название и описание скрипта в метаданных
++ v1.7: Автоматический поиск reaper-kb.ini в папке ресурсов REAPER
++ v1.6: Внедрен "Безопасный режим" с предпросмотром изменений (Safe Mode with Preview)
++ Разделение логики анализа и применения изменений
++ Таблица предпросмотра с чекбоксами для выбора конкретных замен
++ Добавлена кнопка "Обработать меню" для обновления reaper-menu.ini
++ Сохранение маппинга ID для использования в обработке меню
++ Добавлено: Создание резервной копии (*.ini.bck) перед обработкой
++ Добавлено: Опциональный фильтр поиска для обработки только совпадающих скриптов]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Action List Script Path Scan and Fix.lua" type="script" desc="Action List Script Path Scan and Fix">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1052?\u1086?\u1097?\u1085?\u1099?\u1081? \u1080?\u1085?\u1089?\u1090?\u1088?\u1091?\u1084?\u1077?\u1085?\u1090? \u1076?\u1083?\u1103? \u1087?\u1086?\u1083?\u1100?\u1079?\u1086?\u1074?\u1072?\u1090?\u1077?\u1083?\u1077?\u1081? REAPER, \u1082?\u1086?\u1090?\u1086?\u1088?\u1099?\u1081? \u1087?\u1086?\u1084?\u1086?\u1075?\u1072?\u1077?\u1090? \u1087?\u1086?\u1076?\u1076?\u1077?\u1088?\u1078?\u1080?\u1074?\u1072?\u1090?\u1100? \u1095?\u1080?\u1089?\u1090?\u1086?\u1090?\u1091? \u1074? Action List, \u1074?\u1099?\u1103?\u1074?\u1083?\u1103?\u1103? \u1080? \u1091?\u1089?\u1090?\u1088?\u1072?\u1085?\u1103?\u1103? "\u1073?\u1080?\u1090?\u1099?\u1077?" \u1089?\u1089?\u1099?\u1083?\u1082?\u1080? \u1085?\u1072? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1099?.\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="1.9.3" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ Changed: Раскрашены результаты сканирования в GUI (Broken scripts - желтый, Filtered - зеленый).
++ Changed: Чекбоксы выбора скриптов теперь выключены по умолчанию после сканирования.
++ Changed: Кнопки "Выделить все" и "Снять выделение" теперь действуют только на отфильтрованные скрипты.
++ Added: Фильтр для поиска скриптов в списке.
++ Added: Чекбоксы для выбора конкретных скриптов для удаления.
++ Added: Кнопки "Выделить все" и "Снять выделение".
++ Changed: Обновлена логика удаления (удаляются только выбранные элементы).
++ Changed: Обновлена версия до 1.9.1.]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Label GUI Tools.lua" type="script" desc="Label GUI Tools">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 \u1048?\u1085?\u1089?\u1090?\u1088?\u1091?\u1084?\u1077?\u1085?\u1090?\u1099? \u1076?\u1083?\u1103? \u1088?\u1072?\u1073?\u1086?\u1090?\u1099? \u1089? \u1084?\u1077?\u1090?\u1082?\u1072?\u1084?\u1080? \u1074? Reaper\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1069?\u1090?\u1086?\u1090? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090? \u1087?\u1088?\u1077?\u1076?\u1086?\u1089?\u1090?\u1072?\u1074?\u1083?\u1103?\u1077?\u1090? \u1091?\u1076?\u1086?\u1073?\u1085?\u1099?\u1081? \u1075?\u1088?\u1072?\u1092?\u1080?\u1095?\u1077?\u1089?\u1082?\u1080?\u1081? \u1080?\u1085?\u1090?\u1077?\u1088?\u1092?\u1077?\u1081?\u1089? \u1076?\u1083?\u1103? \u1091?\u1087?\u1088?\u1072?\u1074?\u1083?\u1077?\u1085?\u1080?\u1103? \u1080? \u1088?\u1077?\u1076?\u1072?\u1082?\u1090?\u1080?\u1088?\u1086?\u1074?\u1072?\u1085?\u1080?\u1103? \u1084?\u1077?\u1090?\u1086?\u1082? (Label) \u1074? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1077? Reaper. \u1054?\u1085? \u1087?\u1086?\u1079?\u1074?\u1086?\u1083?\u1103?\u1077?\u1090? \u1073?\u1099?\u1089?\u1090?\u1088?\u1086? \u1087?\u1077?\u1088?\u1077?\u1080?\u1084?\u1077?\u1085?\u1086?\u1074?\u1099?\u1074?\u1072?\u1090?\u1100? \u1084?\u1077?\u1090?\u1082?\u1080?, \u1076?\u1086?\u1073?\u1072?\u1074?\u1083?\u1103?\u1090?\u1100? \u1080?\u1085?\u1092?\u1086?\u1088?\u1084?\u1072?\u1094?\u1080?\u1102? \u1086? \u1088?\u1077?\u1075?\u1080?\u1086?\u1085?\u1077? \u1080? \u1090?\u1088?\u1077?\u1082?\u1077?, \u1072? \u1090?\u1072?\u1082?\u1078?\u1077? \u1074?\u1099?\u1087?\u1086?\u1083?\u1085?\u1103?\u1090?\u1100? \u1076?\u1088?\u1091?\u1075?\u1080?\u1077? \u1087?\u1086?\u1083?\u1077?\u1079?\u1085?\u1099?\u1077? \u1086?\u1087?\u1077?\u1088?\u1072?\u1094?\u1080?\u1080?.\par}
+}
+]]></description>
+        <link rel="website">https://github.com/Tarasmetal/ReaScripts</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="1.0" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ Code Fixies]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Label%20GUI%20Tools.lua</source>
+        <source type="script" file="Functions/LabelFunctions.lua">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/Functions/LabelFunctions.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Marker GUI Tools.lua" type="script" desc="Marker GUI Tools">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 \u1050?\u1040?\u1050? \u1069?\u1058?\u1054? \u1056?\u1040?\u1041?\u1054?\u1058?\u1040?\u1045?\u1058??\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1054?\u1089?\u1085?\u1086?\u1074?\u1085?\u1072?\u1103? \u1080?\u1076?\u1077?\u1103? \u1080? \u1079?\u1072?\u1076?\u1072?\u1095?\u1072? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1072? \u8212- \u1084?\u1072?\u1082?\u1089?\u1080?\u1084?\u1072?\u1083?\u1100?\u1085?\u1086? \u1089?\u1086?\u1082?\u1088?\u1072?\u1090?\u1080?\u1090?\u1100? \u1074?\u1088?\u1077?\u1084?\u1103? \u1085?\u1072? \u1088?\u1072?\u1079?\u1084?\u1077?\u1090?\u1082?\u1091? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072?, \u1086?\u1089?\u1090?\u1072?\u1074?\u1083?\u1103?\u1103? \u1077?\u1075?\u1086? \u1082?\u1088?\u1072?\u1089?\u1080?\u1074?\u1099?\u1084? \u1080? \u1087?\u1086?\u1085?\u1103?\u1090?\u1085?\u1099?\u1084? \u1076?\u1083?\u1103? \u1074?\u1089?\u1077?\u1093?, \u1072? \u1075?\u1083?\u1072?\u1074?\u1085?\u1086?\u1077? \u1076?\u1083?\u1103? \u1089?\u1072?\u1084?\u1086?\u1075?\u1086? \u1089?\u1077?\u1073?\u1103?. \u1053?\u1077? \u1086?\u1090?\u1074?\u1083?\u1077?\u1082?\u1072?\u1081?\u1090?\u1077?\u1089?\u1100? \u1086?\u1090? \u1090?\u1074?\u1086?\u1088?\u1095?\u1077?\u1089?\u1082?\u1086?\u1075?\u1086? \u1087?\u1088?\u1086?\u1094?\u1077?\u1089?\u1089?\u1072?, \u1087?\u1077?\u1088?\u1077?\u1084?\u1077?\u1097?\u1072?\u1081?\u1090?\u1077?\u1089?\u1100? \u1074? \u1083?\u1102?\u1073?\u1091?\u1102? \u1090?\u1086?\u1095?\u1082?\u1091? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072? \u1079?\u1072? \u1087?\u1072?\u1088?\u1091? \u1089?\u1077?\u1082?\u1091?\u1085?\u1076?, \u1095?\u1090?\u1086?\u1073?\u1099? \u1079?\u1072?\u1087?\u1080?\u1089?\u1072?\u1090?\u1100?, \u1087?\u1088?\u1086?\u1089?\u1083?\u1091?\u1096?\u1072?\u1090?\u1100? \u1080?\u1083?\u1080? \u1074?\u1085?\u1077?\u1089?\u1090?\u1080? \u1082?\u1086?\u1088?\u1080?\u1082?\u1090?\u1077?\u1088?\u1086?\u1074?\u1082?\u1080? \u1074? \u1090?\u1088?\u1077?\u1082?\u1080?\u1085?\u1075?.\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="3.3" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ Добавлена возможность удаления пресета маркера клавишей Delete при наведении мыши
++ Добавлена возможность вставки нового пресета маркера клавишей Insert при наведении мыши (вставляет справа)
++ Исправлена нумерация ID первого маркера (теперь начинается с 1 вместо 0 при выключенном ID)
++ Автоматическое создание Default.txt с набором маркеров при первом запуске
++ Исправлена критическая ошибка при загрузке несуществующих пресетов (nil error)
++ Новый пресет и очистка пресета теперь создают пустой маркер " " по умолчанию
++ Кнопки New, Clear и Delete теперь расположены на одной строке
++ Обновлена логика создания пресета: ввод имени после нажатия "New"
++ Новый пресет теперь по умолчанию содержит маркер "Intro"
++ Изменена логика чекбокса ID (Вкл = с ID, Выкл = без ID)
++ Имя файла настроек теперь зависит от имени файла скрипта
++ Добавлены необходимые файлы функций в зависимость пакета (Functions/*.lua)]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Marker%20GUI%20Tools.lua</source>
+        <source type="script" file="MarkerPresets/Default rus.txt">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/MarkerPresets/Default%20rus.txt</source>
+        <source type="script" file="MarkerPresets/Default.txt">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/MarkerPresets/Default.txt</source>
+        <source type="script" file="MarkerPresets/PlayList.txt">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/MarkerPresets/PlayList.txt</source>
+        <source type="script" file="MarkerPresets/Takes.txt">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/MarkerPresets/Takes.txt</source>
+        <source type="script" file="Functions/MarkerFunctions.lua">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/Functions/MarkerFunctions.lua</source>
+        <source type="script" file="Functions/PresetFileLoadFunctions.lua">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/Functions/PresetFileLoadFunctions.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Move selected items files to region folder.lua" type="script" desc="Move selected items files to region folder">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Moves source files of selected items to a directory named after the region located at the edit cursor position OR the item's position. Includes a GUI to preview file moves before execution.\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="1.2" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[v1.2
+  + Added option to use Item Position for region detection (instead of just Edit Cursor).
+v1.1
+  + Changed logic: files are now moved to the folder of the region under the Edit Cursor.]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Move%20selected%20items%20files%20to%20region%20folder.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_PlayBack HW Path Outputs.lua" type="script" desc="Playback HW Path Outputs">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Automated track routing for REAPER. Disables master send and assigns hardware outputs based on track names.\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="1.1" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ Интерфейс переведен на английский язык
++ Оптимизация кода]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_PlayBack%20HW%20Path%20Outputs.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Routing Tools.lua" type="script" desc="SendBox | MODDED by Taras Umanskiy">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1069?\u1090?\u1086?\u1090? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?, "SendBox", \u1087?\u1088?\u1077?\u1076?\u1085?\u1072?\u1079?\u1085?\u1072?\u1095?\u1077?\u1085? \u1076?\u1083?\u1103? \u1072?\u1074?\u1090?\u1086?\u1084?\u1072?\u1090?\u1080?\u1079?\u1072?\u1094?\u1080?\u1080? \u1089?\u1086?\u1079?\u1076?\u1072?\u1085?\u1080?\u1103? \u1080? \u1091?\u1087?\u1088?\u1072?\u1074?\u1083?\u1077?\u1085?\u1080?\u1103? track sends \u1074? Reaper DAW. \u1054?\u1085? \u1087?\u1086?\u1079?\u1074?\u1086?\u1083?\u1103?\u1077?\u1090? \u1073?\u1099?\u1089?\u1090?\u1088?\u1086? \u1089?\u1086?\u1079?\u1076?\u1072?\u1074?\u1072?\u1090?\u1100? \u1084?\u1072?\u1088?\u1096?\u1088?\u1091?\u1090?\u1099? \u1084?\u1077?\u1078?\u1076?\u1091? \u1090?\u1088?\u1077?\u1082?\u1072?\u1084?\u1080?, \u1085?\u1072?\u1089?\u1090?\u1088?\u1072?\u1080?\u1074?\u1072?\u1090?\u1100? \u1088?\u1077?\u1078?\u1080?\u1084?\u1099? (send/receive), \u1074?\u1099?\u1073?\u1080?\u1088?\u1072?\u1090?\u1100? \u1082?\u1072?\u1085?\u1072?\u1083?\u1099? \u1080?\u1089?\u1090?\u1086?\u1095?\u1085?\u1080?\u1082?\u1072? \u1080? \u1085?\u1072?\u1079?\u1085?\u1072?\u1095?\u1077?\u1085?\u1080?\u1103?, \u1072? \u1090?\u1072?\u1082?\u1078?\u1077? \u1089?\u1086?\u1093?\u1088?\u1072?\u1085?\u1103?\u1090?\u1100? \u1080? \u1079?\u1072?\u1075?\u1088?\u1091?\u1078?\u1072?\u1090?\u1100? \u1085?\u1072?\u1089?\u1090?\u1088?\u1086?\u1081?\u1082?\u1080?.\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://paypal.me/Tarasmetal</link>
+      </metadata>
+      <version name="1.3" author="smandrap" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ Имя файла настроек теперь соответствует имени скрипта
++ Настройки теперь сохраняются в папку со скриптом
++ Code optimizations]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Routing%20Tools.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Script Launcher.lua" type="script" desc="Script Launcher - File manager for launching REAPER scripts">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1060?\u1072?\u1081?\u1083?\u1086?\u1074?\u1099?\u1081? \u1084?\u1077?\u1085?\u1077?\u1076?\u1078?\u1077?\u1088? \u1076?\u1083?\u1103? \u1079?\u1072?\u1087?\u1091?\u1089?\u1082?\u1072? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1086?\u1074? \u1089? \u1087?\u1088?\u1077?\u1074?\u1100?\u1102?, \u1080?\u1079?\u1073?\u1088?\u1072?\u1085?\u1085?\u1099?\u1084? \u1080? \u1080?\u1089?\u1090?\u1086?\u1088?\u1080?\u1077?\u1081?\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="2.7" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ Первый релиз
++ Полнофункциональный файловый менеджер
++ v1.1: Папки тоже можно добавлять в избранное
++ v1.2: Добавлена возможность добавления кастомных путей в избранное
++ v1.3: Исправлена проверка путей папок (регистронезависимая)
++ v1.4: Папки в избранном теперь отображаются белым цветом
++ v1.5: Настройки теперь сохраняются в .ini файл рядом со скриптом
++ v1.6: Скрипт теперь запоминает и открывает последнюю посещенную папку
++ v1.7: Добавлено контекстное меню для дерева папок (добавление в избранное)
++ v1.8: Скрипты теперь запускаются без добавления в Action List (без следов)
++ v1.9: Добавлена колонка Path в раздел Favorites
++ v2.0: Добавра возможность менять порядок элементов в избранном (Drag & Drop)
++ v2.1: Добавлен чекбокс "Recursive Search" для поиска файлов во всех подпапках
++ v2.2: Оптимизирован поиск: добавлено кеширование результатов и дебаунсинг (задержка)
++ v2.3: Исправлено добавление кастомных путей с завершающим слэшем
++ v2.4: Добавлена колонка Path в раздел History
++ v2.5: Исправлено отображение размера и описания в поиске, добавлена колонка Path в браузер
++ v2.6: Добавлена возможность изменения размера главного окна, адаптивная верстка
++ v2.7: Папки, добавленные в избранное, теперь отображаются белым цветом везде]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Script%20Launcher.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_TCP MCP Visible Tools.lua" type="script" desc="Track Visible Tools">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1048?\u1085?\u1089?\u1090?\u1088?\u1091?\u1084?\u1077?\u1085?\u1090? \u1076?\u1083?\u1103? \u1091?\u1087?\u1088?\u1072?\u1074?\u1083?\u1077?\u1085?\u1080?\u1103? \u1074?\u1080?\u1076?\u1080?\u1084?\u1086?\u1089?\u1090?\u1100?\u1102? \u1090?\u1088?\u1077?\u1082?\u1086?\u1074? \u1074? TCP \u1080? MCP. \u1055?\u1086?\u1079?\u1074?\u1086?\u1083?\u1103?\u1077?\u1090? \u1087?\u1086?\u1082?\u1072?\u1079?\u1099?\u1074?\u1072?\u1090?\u1100?/\u1089?\u1082?\u1088?\u1099?\u1074?\u1072?\u1090?\u1100? \u1090?\u1088?\u1077?\u1082?\u1080? \u1087?\u1086? \u1087?\u1088?\u1077?\u1092?\u1080?\u1082?\u1089?\u1091? \u1080?\u1083?\u1080? \u1089?\u1091?\u1092?\u1092?\u1080?\u1082?\u1089?\u1091? \u1080?\u1084?\u1077?\u1085?\u1080? \u1090?\u1088?\u1077?\u1082?\u1072?. \u1055?\u1086?\u1076?\u1076?\u1077?\u1088?\u1078?\u1080?\u1074?\u1072?\u1077?\u1090? \u1087?\u1088?\u1077?\u1076?\u1091?\u1089?\u1090?\u1072?\u1085?\u1086?\u1074?\u1083?\u1077?\u1085?\u1085?\u1099?\u1077? \u1080? \u1087?\u1086?\u1083?\u1100?\u1079?\u1086?\u1074?\u1072?\u1090?\u1077?\u1083?\u1100?\u1089?\u1082?\u1080?\u1077? \u1075?\u1088?\u1091?\u1087?\u1087?\u1099?.\par}
+}
+]]></description>
+        <link rel="website">https://github.com/Tarasmetal/ReaScripts</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="1.10" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ Store button names in a local .ini file (comma-separated)
++ Added Auto-Resize Window to fit content
++ New button now inserts after the current button instead of at the end
++ Moved (+) button to context menu
++ Added 'E' hotkey to toggle Edit Mode
++ Fixed button renaming issue (stable ID with ###)
++ Added Drag & Drop reordering in Edit Mode
++ Added editable buttons (Edit Mode)
++ Context menu for adding/renaming/deleting buttons
++ Code Fixies]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_TCP%20MCP%20Visible%20Tools.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Track automation mode toggle.lua" type="script" desc="trs_Track automation mode toggle">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1057?\u1082?\u1088?\u1080?\u1087?\u1090? \u1089? \u1089?\u1086?\u1074?\u1088?\u1077?\u1084?\u1077?\u1085?\u1085?\u1099?\u1084? \u1075?\u1088?\u1072?\u1092?\u1080?\u1095?\u1077?\u1089?\u1082?\u1080?\u1084? \u1080?\u1085?\u1090?\u1077?\u1088?\u1092?\u1077?\u1081?\u1089?\u1086?\u1084? \u1085?\u1072? \u1073?\u1072?\u1079?\u1077? ReaImGui \u1076?\u1083?\u1103? \u1091?\u1087?\u1088?\u1072?\u1074?\u1083?\u1077?\u1085?\u1080?\u1103? \u1088?\u1077?\u1078?\u1080?\u1084?\u1072?\u1084?\u1080? \u1072?\u1074?\u1090?\u1086?\u1084?\u1072?\u1090?\u1080?\u1079?\u1072?\u1094?\u1080?\u1080? \u1090?\u1088?\u1077?\u1082?\u1086?\u1074?. \u1055?\u1086?\u1076?\u1076?\u1077?\u1088?\u1078?\u1080?\u1074?\u1072?\u1077?\u1090? \u1087?\u1077?\u1088?\u1077?\u1082?\u1083?\u1102?\u1095?\u1077?\u1085?\u1080?\u1077? \u1074?\u1089?\u1077?\u1093? \u1088?\u1077?\u1078?\u1080?\u1084?\u1086?\u1074?: Trim/Read, Read, Touch, Write, Latch, Latch Preview.\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="1.7" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ Дополнительное уменьшение размеров кнопок и отступов
++ Уменьшен размер кнопок и шрифта
++ Исправлено удаление автоматизации (теперь работает через Chunk Parsing)
++ Добавлена кнопка удаления автоматизации
++ Исправлена ошибка вылета (ImGui_GetWindowContentRegionMax deprecated)
++ Code optimizations]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Track%20automation%20mode%20toggle.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Track color auto loader.lua" type="script" desc="Track Color Auto Loader &amp; Gradients">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1057?\u1082?\u1088?\u1080?\u1087?\u1090? \u1076?\u1083?\u1103? \u1072?\u1074?\u1090?\u1086?\u1084?\u1072?\u1090?\u1080?\u1095?\u1077?\u1089?\u1082?\u1086?\u1081? \u1086?\u1082?\u1088?\u1072?\u1089?\u1082?\u1080? \u1090?\u1088?\u1077?\u1082?\u1086?\u1074? \u1087?\u1086? \u1080?\u1084?\u1077?\u1085?\u1080? \u1080? \u1089?\u1086?\u1079?\u1076?\u1072?\u1085?\u1080?\u1103? \u1075?\u1088?\u1072?\u1076?\u1080?\u1077?\u1085?\u1090?\u1086?\u1074? \u1076?\u1083?\u1103? \u1087?\u1072?\u1087?\u1086?\u1082? (\u1087?\u1086?\u1076?\u1076?\u1077?\u1088?\u1078?\u1082?\u1072? 2 \u1080? 3 \u1094?\u1074?\u1077?\u1090?\u1086?\u1074?).\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="1.8" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ Added support for 3-color gradients for Folder rules (Start-Mid-End)
++ UI: Added ability to add/remove 3rd color for folders via context menu or button
++ Added 'RUN_WITHOUT_GUI' flag to allow running script in headless mode (apply colors and exit)
++ Fix: Allow loading rules with empty patterns (names)
++ Added 'Receive' rule type (colors track based on source track name of receives)
++ Feature: Right-click on color palette to copy selected track color
++ Improvement: Folder tracks can now use Suffix/Prefix rules for their own color while maintaining gradients for children
++ Added 'Folder' rule type for folder gradients
++ Added secondary color support for gradients
++ Added Save As and Load Preset functionality
++ Fix: Prevent child tracks from being overwritten by other rules
++ Code optimizations]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Track%20color%20auto%20loader.lua</source>
+        <source type="script" file="trs_Track color auto loader.txt">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Track%20color%20auto%20loader.txt</source>
+        <source type="script" file="trs_Track color auto loader lite.txt">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Track%20color%20auto%20loader%20lite.txt</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Track GUI Tools.lua" type="script" desc="TRACK RENAME GUI TOOLS">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1057?\u1082?\u1088?\u1080?\u1087?\u1090? \u1087?\u1088?\u1077?\u1076?\u1086?\u1089?\u1090?\u1072?\u1074?\u1083?\u1103?\u1077?\u1090? \u1084?\u1086?\u1097?\u1085?\u1099?\u1081? \u1075?\u1088?\u1072?\u1092?\u1080?\u1095?\u1077?\u1089?\u1082?\u1080?\u1081? \u1080?\u1085?\u1090?\u1077?\u1088?\u1092?\u1077?\u1081?\u1089? \u1076?\u1083?\u1103? \u1091?\u1087?\u1088?\u1072?\u1074?\u1083?\u1077?\u1085?\u1080?\u1103? \u1080?\u1084?\u1077?\u1085?\u1072?\u1084?\u1080? \u1090?\u1088?\u1077?\u1082?\u1086?\u1074?, \u1087?\u1072?\u1085?\u1086?\u1088?\u1072?\u1084?\u1080?\u1088?\u1086?\u1074?\u1072?\u1085?\u1080?\u1077?\u1084? \u1080? \u1094?\u1074?\u1077?\u1090?\u1072?\u1084?\u1080? \u1074? REAPER. \u1055?\u1086?\u1076?\u1076?\u1077?\u1088?\u1078?\u1080?\u1074?\u1072?\u1077?\u1090? \u1089?\u1080?\u1089?\u1090?\u1077?\u1084?\u1091? \u1087?\u1088?\u1077?\u1089?\u1077?\u1090?\u1086?\u1074?, HEX-\u1082?\u1086?\u1076?\u1099? \u1094?\u1074?\u1077?\u1090?\u1086?\u1074? \u1080? \u1091?\u1076?\u1086?\u1073?\u1085?\u1091?\u1102? \u1085?\u1072?\u1074?\u1080?\u1075?\u1072?\u1094?\u1080?\u1102?.\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="4.1" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ Добавлена возможность добавления строки (Insert на основной кнопке) и суффикса (Insert на кнопке суффикса) при наведении мыши.
++ Кнопка "Add Row" теперь большая, находится по центру и мигает красно-желтым цветом (для пустых пресетов).
++ Кнопка "Add Row" теперь отображается в главном интерфейсе, только если пресет пустой.
++ Добавлены кнопки New, Clear и Delete во всплывающее меню PRESETS для управления файлами пресетов.
++ Кнопка PRESETS теперь открывает список пресетов в виде всплывающего меню.
++ Добавлена возможность удаления ячейки или строки пресета клавишей Delete при наведении мыши.
++ Добавлена возможность клонирования имен треков с разделением на префиксы и суффиксы (ПКМ на кнопке Clone).
++ Добавлена кнопка "Clone" для добавления имен выделенных треков в список пресетов.
++ Добавлена кнопка "LR" для автоматического именования дубликатов треков (L/R).
++ Добавлена кнопка "Index" для нумерации дубликатов треков.
++ Added multi-track support for renaming, coloring, and panning.
++ Added support for HEX color codes in presets.
++ Code optimizations.]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Track%20GUI%20Tools.lua</source>
+        <source type="script" file="TrackPresets/default color.txt">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/TrackPresets/default%20color.txt</source>
+        <source type="script" file="TrackPresets/default.txt">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/TrackPresets/default.txt</source>
+        <source type="script" file="TrackPresets/user color.txt">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/TrackPresets/user%20color.txt</source>
+        <source type="script" file="TrackPresets/user.txt">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/TrackPresets/user.txt</source>
+        <source type="script" file="TrackPresets/trs_TrackGUITools_default.lua">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/TrackPresets/trs_TrackGUITools_default.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_Track vol pan fx auto Save Restore.lua" type="script" desc="Track Volume Pan &amp; Automation Save/Restore (ReaImGui)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1057?\u1082?\u1088?\u1080?\u1087?\u1090? \u1076?\u1083?\u1103? REAPER, \u1082?\u1086?\u1090?\u1086?\u1088?\u1099?\u1081? \u1089?\u1086?\u1093?\u1088?\u1072?\u1085?\u1103?\u1077?\u1090? \u1080? \u1074?\u1086?\u1089?\u1089?\u1090?\u1072?\u1085?\u1072?\u1074?\u1083?\u1080?\u1074?\u1072?\u1077?\u1090? \u1079?\u1085?\u1072?\u1095?\u1077?\u1085?\u1080?\u1103? \u1075?\u1088?\u1086?\u1084?\u1082?\u1086?\u1089?\u1090?\u1080? \u1080? \u1087?\u1072?\u1085?\u1086?\u1088?\u1072?\u1084?\u1099? \u1074?\u1089?\u1077?\u1093? \u1090?\u1088?\u1077?\u1082?\u1086?\u1074? \u1087?\u1088?\u1086?\u1077?\u1082?\u1090?\u1072?.\par}
+}
+]]></description>
+        <link rel="website">https://github.com/Tarasmetal/ReaScripts</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="1.2" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ Добавлена возможность редактирования уровня сброса громкости (my_vol) в интерфейсе.
++ Переписан интерфейс на ReaImGui
++ Первоначальная версия скрипта для сохранения и восстановления значений громкости и панорамы.]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_Track%20vol%20pan%20fx%20auto%20Save%20Restore.lua</source>
+      </version>
+    </reapack>
+    <reapack name="trs_VST Macro Linker.jsfx" type="effect" desc="VST Macro Linker">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Bridge plugin for VST Macro Linker Lua script. Hosts automation envelopes for the macro sliders and pads.\par}
+}
+]]></description>
+      </metadata>
+      <version name="3.98" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ Pads: Increased count to 16]]></changelog>
+        <source>https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_VST%20Macro%20Linker.jsfx</source>
+      </version>
+    </reapack>
+    <reapack name="trs_VST Macro Linker.lua" type="script" desc="VST Macro Linker">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1057?\u1082?\u1088?\u1080?\u1087?\u1090? \u1076?\u1083?\u1103? \u1083?\u1080?\u1085?\u1082?\u1086?\u1074?\u1082?\u1080? \u1087?\u1072?\u1088?\u1072?\u1084?\u1077?\u1090?\u1088?\u1086?\u1074? VST \u1074? \u1084?\u1072?\u1082?\u1088?\u1086?\u1089?\u1099? \u1080? \u1087?\u1072?\u1076?\u1099?.\par}
+}
+]]></description>
+        <link rel="website">http://vk.com/tarasmetal</link>
+        <link rel="donation">https://vk.com/Tarasmetal</link>
+      </metadata>
+      <version name="3.98" author="Taras Umanskiy" time="2026-03-08T22:24:24Z">
+        <changelog><![CDATA[+ UI: Значения макросов и параметров Min/Max/Offset теперь отображаются как целые числа (0-127) для удобства.
++ Добавлено: Авто-линковка теперь срабатывает при повторном касании того же параметра (даже если значение изменилось незначительно).
++ Исправлено: Теперь можно линковать последний затронутый параметр в авто-режиме, просто "пошевелив" его после нажатия 'L'.
++ UI: Уменьшен размер ручек (Knobs) на 1/3 для компактности.
++ UI: Новая цветовая схема ручек (Min: голубой, Max: оранжевый, Offset: фиолетовый, Curve: зеленый).
++ Исправлено: Ошибка 'attempt to call a nil value (field ImGui_GetID)' при использовании Knobs.
++ Добавлено: Использование Knobs (ручек) вместо слайдеров в окне Linked Parameters.
++ Добавлено: Кривые модуляции (Linear, Logarithmic, Exponential) для линкованных параметров.
++ Добавлено: Визуальный предпросмотр кривой и слайдер Tension в окне Linked Parameters.
++ Добавлено: Окно 'Linked Parameters' теперь автоматически прикрепляется к правой стороне основного окна.
++ Исправлено: Нажатие 'L' больше не линкует мгновенно последний затронутый параметр. Теперь скрипт ждет следующего касания.
++ Добавлено: Клик средней кнопкой мыши по кнопке Link или Pad устанавливает его как цель для авто-линковки.
++ Добавлено: Выбор цели в режиме авто-линковки. Нажмите 1-9 в режиме 'L', чтобы зафиксировать линковку на конкретном макросе.
++ Добавлено: Режим авто-линковки (Горячая клавиша 'L'). Автоматическая линковка затронутых параметров на свободные макросы.
++ Optimization: Implemented Interlaced Sync (50% params per frame) to reduce CPU usage.
++ Optimization: Implemented Project State Caching to reduce API calls.
++ Optimization: Implemented UI String Caching to reduce garbage collection overhead (significant reduction in string allocations per frame).
++ Optimization: Preset list caching (disk IO reduction).
++ Optimization: ExtState caching for last used preset.
++ Optimization: Throttled backend validation (CPU reduction).
++ Optimization: ImGui style vars caching.
++ Optimization: Added Track Caching to reduce CPU usage (GetTrackByGUID).
++ Optimization: Added Lookup Tables for Linked Parameters to speed up GUI and processing.
++ Optimization: Targeted parameter updates (only update parameters for the changed macro).
++ Added: Track Automation Mode switches (Trim/Read, Read, Touch, Latch, Latch Prev, Write).
++ UI: Moved Automation controls to top section (below Automation toggle).
++ Fixed: Master Track parameters can now be controlled correctly (Added Master Track check in GetTrackByGUID).
++ Pads: Linking now defaults "Min" to 0.0 (instead of current value).
++ Pads: Hidden "Offset" slider in Linked Parameters list (not needed for buttons).
++ Added hotkey 'H' to toggle Linked Parameters visibility.
++ Added "Offset" slider to Linked Parameters (Default 0.50).
++ Allows shifting the modulation range up or down.
++ Simplification: Removed "Position" parameter.
++ Linking Logic: Initial parameter value is now automatically set to "Min" value.
++ This allows modulation to start from the current parameter position.
++ Global Persistence: "Automation" checkbox state is now remembered globally via ExtState
++ Added "Automation" checkbox to toggle JSFX backend connection
++ Script now works purely as a controller if Automation is OFF
++ Saved Automation state in settings
++ Pads: Increased count to 16
++ Pads: Added automation sync with JSFX backend
++ Pads: Fix tooltip state always showing OFF (scoping issue)
++ Pads: Fix toggle behavior logic (explicit check)
++ Pads: MIDI Learn mode now displays Pad in Yellow with Black text
++ Pads: Toggle MIDI Learn mode on/off with Ctrl+R-Click]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_VST%20Macro%20Linker.lua</source>
+        <source type="script" file="trs_VST Macro Linker.jsfx">https://github.com/Tarasmetal/ReaScripts/raw/17e0278a15dd294a1aa0a792c2215d51188c93f8/GUI%20Tools/trs_VST%20Macro%20Linker.jsfx</source>
+      </version>
+    </reapack>
+  </category>
   <metadata>
     <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
