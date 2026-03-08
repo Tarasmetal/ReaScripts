@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="b407a48bc0958b69facb5bde84e494a41d08edfa">
+<index version="1" name="Taras Scripts" commit="f957839beac5917cac286d0a30748a7692b4bfcd">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
       <metadata>
@@ -110,6 +110,27 @@
         <source type="script" file="MarkerPresets/Takes.txt">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/MarkerPresets/Takes.txt</source>
         <source type="script" file="Functions/MarkerFunctions.lua">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/Functions/MarkerFunctions.lua</source>
         <source type="script" file="Functions/PresetFileLoadFunctions.lua">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/Functions/PresetFileLoadFunctions.lua</source>
+      </version>
+      <version name="3.3" author="Taras Umanskiy" time="2026-03-08T19:31:26Z">
+        <changelog><![CDATA[+ Добавлена возможность удаления пресета маркера клавишей Delete при наведении мыши
++ Добавлена возможность вставки нового пресета маркера клавишей Insert при наведении мыши (вставляет справа)
++ Исправлена нумерация ID первого маркера (теперь начинается с 1 вместо 0 при выключенном ID)
++ Автоматическое создание Default.txt с набором маркеров при первом запуске
++ Исправлена критическая ошибка при загрузке несуществующих пресетов (nil error)
++ Новый пресет и очистка пресета теперь создают пустой маркер " " по умолчанию
++ Кнопки New, Clear и Delete теперь расположены на одной строке
++ Обновлена логика создания пресета: ввод имени после нажатия "New"
++ Новый пресет теперь по умолчанию содержит маркер "Intro"
++ Изменена логика чекбокса ID (Вкл = с ID, Выкл = без ID)
++ Имя файла настроек теперь зависит от имени файла скрипта
++ Добавлены необходимые файлы функций в зависимость пакета (Functions/*.lua)]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/f957839beac5917cac286d0a30748a7692b4bfcd/GUI%20Tools/trs_Marker%20GUI%20Tools.lua</source>
+        <source type="script" file="MarkerPresets/Default rus.txt">https://github.com/Tarasmetal/ReaScripts/raw/f957839beac5917cac286d0a30748a7692b4bfcd/GUI%20Tools/MarkerPresets/Default%20rus.txt</source>
+        <source type="script" file="MarkerPresets/Default.txt">https://github.com/Tarasmetal/ReaScripts/raw/f957839beac5917cac286d0a30748a7692b4bfcd/GUI%20Tools/MarkerPresets/Default.txt</source>
+        <source type="script" file="MarkerPresets/PlayList.txt">https://github.com/Tarasmetal/ReaScripts/raw/f957839beac5917cac286d0a30748a7692b4bfcd/GUI%20Tools/MarkerPresets/PlayList.txt</source>
+        <source type="script" file="MarkerPresets/Takes.txt">https://github.com/Tarasmetal/ReaScripts/raw/f957839beac5917cac286d0a30748a7692b4bfcd/GUI%20Tools/MarkerPresets/Takes.txt</source>
+        <source type="script" file="Functions/MarkerFunctions.lua">https://github.com/Tarasmetal/ReaScripts/raw/f957839beac5917cac286d0a30748a7692b4bfcd/GUI%20Tools/Functions/MarkerFunctions.lua</source>
+        <source type="script" file="Functions/PresetFileLoadFunctions.lua">https://github.com/Tarasmetal/ReaScripts/raw/f957839beac5917cac286d0a30748a7692b4bfcd/GUI%20Tools/Functions/PresetFileLoadFunctions.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Move selected items files to region folder.lua" type="script" desc="Move selected items files to region folder">
