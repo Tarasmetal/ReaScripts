@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="25591748d67ecef2cd8f32556338bd81316a5de5">
+<index version="1" name="Taras Scripts" commit="562d4fbb92e521016271f339dd318efe86ed0440">
   <category name="GUI Tools">
-    <reapack name="trs_Action List and toolbars Command ID name Fixer.lua" type="script" desc="Action List and toolbars Command ID name Fixer">
+    <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
@@ -13,7 +13,7 @@
         <link rel="website">http://vk.com/tarasmetal</link>
         <link rel="donation">https://vk.com/Tarasmetal</link>
       </metadata>
-      <version name="1.8" author="Taras Umanskiy" time="2026-02-11T14:46:26Z">
+      <version name="1.8" author="Taras Umanskiy" time="2026-03-08T15:46:36Z">
         <changelog><![CDATA[+ v1.8: Обновлено название и описание скрипта в метаданных
 + v1.7: Автоматический поиск reaper-kb.ini в папке ресурсов REAPER
 + v1.6: Внедрен "Безопасный режим" с предпросмотром изменений (Safe Mode with Preview)
@@ -23,7 +23,7 @@
 + Сохранение маппинга ID для использования в обработке меню
 + Добавлено: Создание резервной копии (*.ini.bck) перед обработкой
 + Добавлено: Опциональный фильтр поиска для обработки только совпадающих скриптов]]></changelog>
-        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/6aa3c5a9ac815a944ecc5854f2d035d44ce285c6/GUI%20Tools/trs_Action%20List%20and%20toolbars%20Command%20ID%20name%20Fixer.lua</source>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/562d4fbb92e521016271f339dd318efe86ed0440/GUI%20Tools/trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Action List Script Path Scan and Fix.lua" type="script" desc="Action List Script Path Scan and Fix">
@@ -623,7 +623,7 @@ REAPER DAW
  | | {\b Script Launcher} | \u1060?\u1072?\u1081?\u1083?\u1086?\u1074?\u1099?\u1081? \u1084?\u1077?\u1085?\u1077?\u1076?\u1078?\u1077?\u1088? \u1076?\u1083?\u1103? \u1079?\u1072?\u1087?\u1091?\u1089?\u1082?\u1072? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1086?\u1074? \u1089? \u1087?\u1088?\u1077?\u1074?\u1100?\u1102?, \u1080?\u1079?\u1073?\u1088?\u1072?\u1085?\u1085?\u1099?\u1084? \u1080? \u1080?\u1089?\u1090?\u1086?\u1088?\u1080?\u1077?\u1081?. | {\field{\*\fldinst{HYPERLINK "DOC/trs_Script%20Launcher.md"}}{\fldrslt{\ul
 \u55357?\u56534? \u1048?\u1085?\u1089?\u1090?\u1088?\u1091?\u1082?\u1094?\u1080?\u1103?
 }}}
- | | {\b Action List and toolbars Command ID name Fixer} | \u1050?\u1086?\u1085?\u1074?\u1077?\u1088?\u1090?\u1080?\u1088?\u1091?\u1077?\u1090? \u1090?\u1077?\u1093?\u1085?\u1080?\u1095?\u1077?\u1089?\u1082?\u1080?\u1077? ID \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1086?\u1074? \u1074? \u1095?\u1080?\u1090?\u1072?\u1077?\u1084?\u1099?\u1077? \u1080?\u1084?\u1077?\u1085?\u1072? \u1085?\u1072? \u1086?\u1089?\u1085?\u1086?\u1074?\u1077? \u1080?\u1093? \u1086?\u1087?\u1080?\u1089?\u1072?\u1085?\u1080?\u1103? \u1074? {\f1 reaper-kb.ini} \u1080? \u1084?\u1077?\u1085?\u1102?. | {\field{\*\fldinst{HYPERLINK "DOC/trs_Action%20List%20and%20toolbars%20Command%20ID%20name%20Fixer.md"}}{\fldrslt{\ul
+ | | {\b Action List and toolbars Command ID Fixer} | \u1050?\u1086?\u1085?\u1074?\u1077?\u1088?\u1090?\u1080?\u1088?\u1091?\u1077?\u1090? \u1090?\u1077?\u1093?\u1085?\u1080?\u1095?\u1077?\u1089?\u1082?\u1080?\u1077? ID \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1086?\u1074? \u1074? \u1095?\u1080?\u1090?\u1072?\u1077?\u1084?\u1099?\u1077? \u1080?\u1084?\u1077?\u1085?\u1072? \u1085?\u1072? \u1086?\u1089?\u1085?\u1086?\u1074?\u1077? \u1080?\u1093? \u1086?\u1087?\u1080?\u1089?\u1072?\u1085?\u1080?\u1103? \u1074? {\f1 reaper-kb.ini} \u1080? \u1084?\u1077?\u1085?\u1102?. | {\field{\*\fldinst{HYPERLINK "DOC/trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.md"}}{\fldrslt{\ul
 \u55357?\u56534? \u1048?\u1085?\u1089?\u1090?\u1088?\u1091?\u1082?\u1094?\u1080?\u1103?
 }}}
  | | {\b Action List Script Path Scan and Fix} | \u1057?\u1082?\u1088?\u1080?\u1087?\u1090?, \u1082?\u1086?\u1090?\u1086?\u1088?\u1099?\u1081? \u1087?\u1086?\u1084?\u1086?\u1075?\u1072?\u1077?\u1090? \u1087?\u1086?\u1076?\u1076?\u1077?\u1088?\u1078?\u1080?\u1074?\u1072?\u1090?\u1100? \u1095?\u1080?\u1089?\u1090?\u1086?\u1090?\u1091? \u1074? Action List, \u1074?\u1099?\u1103?\u1074?\u1083?\u1103?\u1103? \u1080? \u1091?\u1089?\u1090?\u1088?\u1072?\u1085?\u1103?\u1103? "\u1073?\u1080?\u1090?\u1099?\u1077?" \u1089?\u1089?\u1099?\u1083?\u1082?\u1080? \u1085?\u1072? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1099?. | {\field{\*\fldinst{HYPERLINK "DOC/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.md"}}{\fldrslt{\ul
