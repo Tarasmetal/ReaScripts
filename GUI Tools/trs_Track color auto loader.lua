@@ -1,13 +1,15 @@
 -- @description Track Color Auto Loader & Gradients
 -- @author Taras Umanskiy
--- @version 1.8
+-- @version 2.0
 -- @provides [main] .
---   [script] trs_Track color auto loader.txt
---   [script] trs_Track color auto loader lite.txt
+--   [script] ColorPresets/*.txt
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
 -- @about Скрипт для автоматической окраски треков по имени и создания градиентов для папок (поддержка 2 и 3 цветов).
 -- @changelog
+--   + Added 'Clear Colors' button to reset all track colors to default
+--   + Project Structure: Presets are now stored in 'ColorPresets' subdirectory
+--   + Startup: Script now remembers and loads the last used preset automatically
 --   + Added support for 3-color gradients for Folder rules (Start-Mid-End)
 --   + UI: Added ability to add/remove 3rd color for folders via context menu or button
 --   + Added 'RUN_WITHOUT_GUI' flag to allow running script in headless mode (apply colors and exit)
@@ -22,13 +24,35 @@
 --   + Code optimizations
 
 local r = reaper
-local version = 1.8
-local RUN_WITHOUT_GUI = fasle -- Set to true to apply colors and exit without opening GUI
+local version = 2.0
+local RUN_WITHOUT_GUI = false -- Set to true to apply colors and exit without opening GUI
 
 local script_name = "Track Color Auto Loader & Gradients by Taras Umanskiy v." .. version
 local script_path = debug.getinfo(1,'S').source:sub(2):match('(.*[/\\])') or ''
-local default_config_file = script_path .. 'trs_Track color auto loader.txt'
+-- Ensure path separators are consistent
+local sep = package.config:sub(1,1)
+local presets_path = script_path .. 'ColorPresets' .. sep
+
+-- Create directory if not exists
+r.RecursiveCreateDirectory(presets_path, 0)
+
+local default_config_file = presets_path .. 'trs_Track color auto loader.txt'
 local current_config_file = default_config_file
+
+-- ExtState for storing last preset
+local EXT_SECTION = "TRS_TrackColorLoader"
+local EXT_KEY_LAST_PRESET = "LastPreset"
+
+-- Load last used preset if available
+local last_preset = r.GetExtState(EXT_SECTION, EXT_KEY_LAST_PRESET)
+if last_preset and last_preset ~= "" then
+    -- Verify file exists
+    local f = io.open(last_preset, "r")
+    if f then
+        f:close()
+        current_config_file = last_preset
+    end
+end
 
 -- Проверка наличия ReaImGui
 if not r.APIExists('ImGui_GetVersion') then
@@ -37,7 +61,7 @@ if not r.APIExists('ImGui_GetVersion') then
 end
 
 local ctx = r.ImGui_CreateContext(script_name)
-local font_size = r.GetAppVersion():match('Win64') and 12 or 14
+local font_size = r.GetAppVersion():match('Win64') and 12 or 13
 local font = r.ImGui_CreateFont('sans-serif', font_size)
 r.ImGui_Attach(ctx, font)
 
@@ -120,6 +144,7 @@ local function loadRules(filepath)
     file:close()
 
     current_config_file = target_file
+    r.SetExtState(EXT_SECTION, EXT_KEY_LAST_PRESET, current_config_file, true)
     is_modified = false
     status_msg = "Загружено: " .. extractFileName(current_config_file)
     status_time = r.time_precise()
@@ -151,13 +176,14 @@ local function saveRules(filepath)
     file:close()
 
     current_config_file = target_file
+    r.SetExtState(EXT_SECTION, EXT_KEY_LAST_PRESET, current_config_file, true)
     is_modified = false
     status_msg = "Сохранено: " .. extractFileName(current_config_file)
     status_time = r.time_precise()
 end
 
 local function saveAs()
-    local initial_folder = current_config_file:match('(.*[/\\])') or script_path
+    local initial_folder = current_config_file:match('(.*[/\\])') or presets_path
 
     if r.APIExists('JS_Dialog_BrowseForSaveFile') then
         local retval, file = r.JS_Dialog_BrowseForSaveFile("Save Preset As", initial_folder, "preset.txt", "Text files (.txt)\0*.txt\0All files (*.*)\0*.*\0")
@@ -173,7 +199,7 @@ local function saveAs()
             if user_input:match("[\\/]") then
                 new_path = user_input
             else
-                new_path = script_path .. user_input
+                new_path = presets_path .. user_input
             end
             saveRules(new_path)
         end
@@ -181,7 +207,7 @@ local function saveAs()
 end
 
 local function openPreset()
-    local initial_folder = current_config_file:match('(.*[/\\])') or script_path
+    local initial_folder = current_config_file:match('(.*[/\\])') or presets_path
     local retval, file = r.GetUserFileNameForRead(initial_folder, "Open Preset", "txt")
     if retval then
         loadRules(file)
@@ -323,11 +349,26 @@ local function applyColors()
     status_time = r.time_precise()
 end
 
+local function clearColors()
+    r.Undo_BeginBlock()
+    local count_tracks = r.CountTracks(0)
+    for i = 0, count_tracks - 1 do
+        local track = r.GetTrack(0, i)
+        if track then
+             r.SetMediaTrackInfo_Value(track, "I_CUSTOMCOLOR", 0)
+        end
+    end
+    r.UpdateArrange()
+    r.Undo_EndBlock("Clear Track Colors", -1)
+    status_msg = "Цвета треков сброшены."
+    status_time = r.time_precise()
+end
+
 -- --- UI Loop ---
 
 local function loop()
     local window_flags = r.ImGui_WindowFlags_MenuBar()
-    r.ImGui_SetNextWindowSize(ctx, 750, 400, r.ImGui_Cond_FirstUseEver()) -- Увеличил ширину для 3 цветов
+    r.ImGui_SetNextWindowSize(ctx, 400, 400, r.ImGui_Cond_FirstUseEver()) -- Увеличил ширину для кнопки Clear
 
     local visible, open = r.ImGui_Begin(ctx, script_name, true, window_flags)
 
@@ -379,6 +420,10 @@ local function loop()
         r.ImGui_SameLine(ctx)
         if r.ImGui_Button(ctx, "Run / Apply Colors") then
             applyColors()
+        end
+        r.ImGui_SameLine(ctx)
+        if r.ImGui_Button(ctx, "Clear Colors") then
+            clearColors()
         end
 
         r.ImGui_Separator(ctx)
