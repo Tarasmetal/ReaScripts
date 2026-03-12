@@ -3,6 +3,7 @@
 ![Author](https://img.shields.io/badge/Author-Taras%20Umanskiy-blue)![Platform](https://img.shields.io/badge/Platform-Windows%20(x64)-orange) ![Platform](https://img.shields.io/badge/Platform-Mac%20OS-yellow) ![API](https://img.shields.io/badge/API-Reaper%20%2F%20ReaImGui-green)
 
 Коллекция Lua скриптов и GUI инструментов для [REAPER DAW](https://www.reaper.fm/), созданных для ускорения и улучшения рабочего процесса.
+Документация постепенно будет дополняться и исправляться, поэтому не стесняйтесь обращаться за помощью или предложениями.
 
 ---
 
@@ -18,7 +19,7 @@
 ---
 
 ## **Track GUI Tools**
-**Описание:** Скрипт предоставляет удобный интерфейс на базе ReaImGui для мгновенного переименования треков, управления их цветом и панорамой. Этот инструмент идеально подходит для звукорежиссеров и композиторов, которым необходимо быстро привести структуру проекта в порядок, используя гибкую систему пресетов и автоматизированные функции именования.
+**Описание:** Скрипт предоставляет удобный интерфейс для мгновенного переименования треков, управления их цветом и панорамой. Этот инструмент идеально подходит для звукорежиссеров и композиторов, которым необходимо быстро привести структуру проекта в порядок, используя гибкую систему пресетов и автоматизированные функции именования.
 
 **[📖 Документация](docs/trs_Track%20GUI%20Tools.md)**
 
@@ -109,26 +110,26 @@
 
 ---
 
-## **Action List Fixer**
+## **Action List and toolbars Command ID Fixer**
 **Описание:** Конвертирует технические ID скриптов в читаемые имена на основе их описания в `reaper-kb.ini` и меню.
 
-**[📖 Документация](docs/trs_Action%20List%20and%20toolbars%20Command%20ID%20name%20Fixer.md)**
+**[📖 Документация](docs/trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.md)**
 
-![Demo](docs/trs_Action%20List%20and%20toolbars%20Command%20ID%20name%20Fixer.gif)
+![Demo](docs/trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.gif)
 <!-- Окошко для видео -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Command%20ID%20name%20Fixer.mp4" width="100%" controls></video> -->
 
 ---
 
-## **Action List Path Scan**
+## **Action List Script Path Scan and Fix**
 **Описание:** Скрипт, который помогает поддерживать чистоту в Action List, выявляя и устраняя "битые" ссылки на скрипты.
 
 **[📖 Документация](docs/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.md)**
 
-![Demo](docs/trs_Action%20List%20Script%20Path%20Scan.gif)
+![Demo](docs/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.gif)
 
 <!-- Окошко для видео -->
-<!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Action%20List%20Script%20Path%20Scan.mp4" width="100%" controls></video> -->
+<!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.mp4" width="100%" controls></video> -->
 
 ---
 
@@ -147,9 +148,9 @@
 ## **Automation Mode Toggler**
 **Описание:** Удобный GUI для переключения режимов автоматизации треков с функцией быстрого Toggle.
 
-**[📖 Документация](docs/trs_Track%20Automation%20Mode%20Toggler.md)**
+**[📖 Документация](docs/trs_Track%20automation%20mode%20toggle.md)**
 
-![Demo](docs/trs_Track%20Automation%20Mode%20Toggler.gif)
+![Demo](docs/trs_Track%20automation%20mode%20toggle.gif)
 <!-- Окошко для видео -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Automation%20Mode%20Toggler.mp4" width="100%" controls></video> -->
 
