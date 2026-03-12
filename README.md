@@ -24,6 +24,9 @@
 **[📖 Документация](docs/trs_Track%20GUI%20Tools.md)**
 
 ![Demo](docs/trs_Track%20GUI%20Tools.gif)
+
+**Создание нового пресета:**
+
 ![Demo](docs/trs_Track%20GUI%20Tools%202.gif)
 <!-- Окошко для видео -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Track%20GUI%20Tools.mp4" width="100%" controls></video> -->
@@ -92,7 +95,7 @@
 
 **[📖 Документация](docs/trs_Track%20vol%20pan%20fx%20auto%20Save%20Restore.md)**
 
-![Demo](docs/trs_Track%20Mix%20Save%20Restore.gif)
+![Demo](docs/trs_Track%20vol%20pan%20fx%20auto%20Save%20Restore.gif)
 
 <!-- Окошко для видео -->
 <!-- <video src="https://github.com/Tarasmetal/ReaTest/raw/master/VIDEO/trs_Track%20Mix%20Save%20Restore.mp4" width="100%" controls></video> -->
