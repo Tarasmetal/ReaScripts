@@ -1,6 +1,6 @@
 # ReaScripts by Taras Umanskiy
 
-![Author](https://img.shields.io/badge/Author-Taras%20Umanskiy-blue)![Platform](https://img.shields.io/badge/Platform-Windows%20(x64)-orange) ![Platform](https://img.shields.io/badge/Platform-Mac%20OS-yellow) ![API](https://img.shields.io/badge/API-Reaper%20%2F%20ReaImGui-green)
+![Author](https://img.shields.io/badge/Author-Taras%20Umanskiy-blue) ![Platform](https://img.shields.io/badge/Platform-Windows%20(x64)-orange) ![Platform](https://img.shields.io/badge/Platform-Mac%20OS-yellow) ![API](https://img.shields.io/badge/API-Reaper%20%2F%20ReaImGui-green)
 
 Представляю вашему вниманию **GUI Tools Pack** — набор продвинутых скриптов для [REAPER DAW](https://www.reaper.fm/), написанных на Lua с использованием библиотеки **ReaImGui**. Этот пак создан для того, чтобы ускорить рутинные задачи, улучшить навигацию и добавить новые творческие возможности в ваш процесс сведения и аранжировки.
 Документация постепенно будет дополняться и исправляться, поэтому не стесняйтесь обращаться за помощью или предложениями.
