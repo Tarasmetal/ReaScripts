@@ -1,6 +1,6 @@
 -- @description TRACK RENAME GUI TOOLS
 -- @author Taras Umanskiy
--- @version 4.1
+-- @version 4.2
 -- @provides [main] .
 --  [script] TrackPresets/*.txt
 --  [script] TrackPresets/trs_TrackGUITools_default.lua
@@ -8,6 +8,7 @@
 -- @donation https://vk.com/Tarasmetal
 -- @about Скрипт предоставляет мощный графический интерфейс для управления именами треков, панорамированием и цветами в REAPER. Поддерживает систему пресетов, HEX-коды цветов и удобную навигацию.
 -- @changelog
+--   + Улучшена логика кнопки "LR": теперь окончания L и R проверяются с учетом предшествующего пробела, подчеркивания (_) или дефиса (-).
 --   + Добавлена возможность добавления строки (Insert на основной кнопке) и суффикса (Insert на кнопке суффикса) при наведении мыши.
 --   + Кнопка "Add Row" теперь большая, находится по центру и мигает красно-желтым цветом (для пустых пресетов).
 --   + Кнопка "Add Row" теперь отображается в главном интерфейсе, только если пресет пустой.
@@ -28,7 +29,7 @@ console = false
 function msg(value) if console then r.ShowConsoleMsg(tostring(value) .. "\n") end end
 
 title = 'TRACK RENAME GUI TOOLS'
-ver = '4.1'
+ver = '4.2'
 author = 'Taras Umanskiy'
 about = title .. ' ' .. ver .. ' | by ' .. author
 ListDir = {}
@@ -352,8 +353,7 @@ function renameSelectedTracks()
 end
 
 function hasSuffix(name)
-  local last_char = name:sub(-1) -- Case sensitive check to avoid skipping "Guitar" (ends in r)
-  return last_char == 'L' or last_char == 'R'
+  return name:match("[%s%-_][LR]$") ~= nil
 end
 
 function processDuplicateTracksLR()
@@ -369,7 +369,11 @@ function processDuplicateTracksLR()
   for i = 0, track_count - 1 do
     local track = reaper.GetSelectedTrack(0, i)
     local _, name = reaper.GetSetMediaTrackInfo_String(track, "P_NAME", "", false)
-    local clean_name = name:match("^(.-)%s*[LR]?$"):lower()
+    local clean_name = name:match("^(.-)[%s%-_][LR]$")
+    if not clean_name then
+      clean_name = name
+    end
+    clean_name = clean_name:lower()
 
     if not name_counts[clean_name] then
       name_counts[clean_name] = {count = 0, indices = {}}
