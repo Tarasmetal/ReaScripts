@@ -1,8 +1,10 @@
-[⬅️ На главную (Main)](../README_ru.md) [![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Marker%20GUI%20Tools.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Marker%20GUI%20Tools_ru.md)
+[⬅️ На главную (Main)](../README_ru.md)
+
+[![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Marker%20GUI%20Tools.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Marker%20GUI%20Tools_ru.md)
 
 # 🤖 REAPER — Marker GUI Tools
 
-> **Профессиональный инструмент для работы с маркерами и навигации в проектах REAPER.**  
+> **Профессиональный инструмент для работы с маркерами и навигации в проектах REAPER.**
 > Скрипт позволяет максимально сократить время на разметку проекта, оставляя его красивым и понятным. Не отвлекайтесь от творческого процесса — перемещайтесь в любую точку проекта и ставте маркеры с уже подготовленными именами  за пару секунд.
 
 ![Demo](../img/trs_Marker_GUI_Tools.gif)
