@@ -1,9 +1,11 @@
-[⬅️ На главную (Main)](../README.md)
+[⬅️ Main](../README.md)
+
+[![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_TCP%20MCP%20Visible%20Tools.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_TCP%20MCP%20Visible%20Tools_ru.md)
 
 # trs_TCP MCP Visible Tools
 
-> **Профессиональный менеджер видимости треков для REAPER.**  
-> Мгновенно фильтруйте треки в окне аранжировки (TCP) и микшере (MCP) с помощью настраиваемых кнопок-тегов.
+> **Professional Track Visibility Manager for REAPER.**  
+> Instantly filter tracks in the Arrangement window (TCP) and Mixer (MCP) using customizable tag buttons.
 
 ---
 
@@ -11,73 +13,73 @@
 
 ---
 
-| Информация | Значение |
+| Information | Value |
 | :--- | :--- |
-| **Автор** | Taras Umanskiy |
-| **Версия** | 1.10.1 |
-| **Технология** | Lua, ReaImGui |
-| **Лицензия** | MIT / Proprietary (см. репозиторий) |
-| **Ссылки** | [GitHub](https://github.com/Tarasmetal/ReaScripts) \| [Donation](https://vk.com/Tarasmetal) |
+| **Author** | Taras Umanskiy |
+| **Version** | 1.10.1 |
+| **Technology** | Lua, ReaImGui |
+| **License** | MIT / Proprietary (see repository) |
+| **Links** | [GitHub](https://github.com/Tarasmetal/ReaScripts) \| [Donation](https://vk.com/Tarasmetal) |
 
 ---
 
-## 📖 Описание
+## 📖 Description
 
-Этот скрипт решает проблему навигации в больших проектах. Вместо ручного поиска треков, вы можете создать кнопки для каждой группы инструментов (например, `DRUM`, `BASS`, `VOX`) и мгновенно переключать видимость.
+This script solves the navigation problem in large projects. Instead of manually searching for tracks, you can create buttons for each instrument group (e.g., `DRUM`, `BASS`, `VOX`) and instantly toggle visibility.
 
-Уникальность инструмента заключается в гибком управлении зонами видимости: вы можете оставить барабаны только в микшере, вокал — только в аранжировке, или сфокусироваться на группе полностью, скрыв всё остальное.
+The tool's uniqueness lies in its flexible management of visibility zones: you can leave drums only in the mixer, vocals only in the arrangement, or focus on a group entirely by hiding everything else.
 
-## ✨ Ключевые возможности
+## ✨ Key Features
 
-### 🎯 Умная фильтрация
-*   **Prefix Mode:** Поиск треков, чьи имена *начинаются* с заданного слова (например, "DRUM" найдет "DRUM Kick", "DRUM Snare").
-*   **Suffix Mode:** Поиск треков, чьи имена *заканчиваются* на слово (полезно, если вы именуете треки как "Kick (DRM)", "Snare (DRM)").
+### 🎯 Smart Filtering
+*   **Prefix Mode:** Search for tracks whose names *start* with a given word (e.g., "DRUM" will find "DRUM Kick", "DRUM Snare").
+*   **Suffix Mode:** Search for tracks whose names *end* with a word (useful if you name tracks like "Kick (DRM)", "Snare (DRM)").
 
-### 🖱️ Три режима изоляции (Mouse Logic)
-Скрипт по-разному реагирует на тип клика мышью, позволяя управлять TCP и MCP независимо:
+### 🖱️ Three Isolation Modes (Mouse Logic)
+The script reacts differently to mouse click types, allowing you to manage TCP and MCP independently:
 
-1.  **Левый клик (TCP Mode):**
-    *   Выбранная группа остаётся в **TCP** (Аранжировке). Остальные треки скрываются из TCP.
-    *   В Микшере (MCP) остаются видимы **все** треки.
-2.  **Правый клик (Mixer Mode):**
-    *   Выбранная группа остаётся в **MCP** (Микшере). Остальные треки скрываются из Микшера.
-    *   В TCP остаются видимы **все** треки.
-3.  **Средний клик / Колесо (Both Mode):**
-    *   Выбранная группа изолируется **везде** (и в TCP, и в MCP).
-    *   Все остальные треки полностью скрываются.
+1.  **Left Click (TCP Mode):**
+    *   Selected group stays in **TCP** (Arrangement). Other tracks are hidden from TCP.
+    *   In the Mixer (MCP), **all** tracks remain visible.
+2.  **Right Click (Mixer Mode):**
+    *   Selected group stays in **MCP** (Mixer). Other tracks are hidden from the Mixer.
+    *   In the TCP, **all** tracks remain visible.
+3.  **Middle Click / Wheel (Both Mode):**
+    *   Selected group is isolated **everywhere** (both in TCP and MCP).
+    *   All other tracks are completely hidden.
 
-### 🛠️ Полная кастомизация (Edit Mode)
-Вам не нужно лезть в код, чтобы изменить кнопки. Нажмите клавишу **`E`**, чтобы войти в режим редактирования:
-*   **Переименование:** Правый клик по кнопке -> измените имя.
-*   **Сортировка:** Перетаскивайте кнопки (Drag & Drop) для изменения порядка.
-*   **Добавление/Удаление:** Добавляйте новые теги или удаляйте ненужные через контекстное меню.
-*   Все настройки сохраняются автоматически в файл `trs_TCP MCP Visible Tools.ini`.
+### 🛠️ Full Customization (Edit Mode)
+You don't need to dig into the code to change buttons. Press the **`E`** key to enter edit mode:
+*   **Renaming:** Right-click a button -> change name.
+*   **Sorting:** Drag & Drop buttons to change their order.
+*   **Adding/Removing:** Add new tags or delete unnecessary ones via the context menu.
+*   All settings are saved automatically to the `trs_TCP MCP Visible Tools.ini` file.
 
-## 🎮 Управление и Горячие клавиши
+## 🎮 Controls and Hotkeys
 
-| Клавиша / Действие | Функция |
+| Key / Action | Function |
 | :--- | :--- |
-| **`E`** | Вкл/Выкл режим редактирования кнопок (Edit Mode) |
-| **`M`** | Переключение режима поиска (Prefix ↔ Suffix) |
-| **`Esc`** | Закрыть скрипт |
-| **Удержание `Ctrl`** | Временное переключение в режим Suffix (пока клавиша нажата) |
-| **Удержание `Shift`** | **Режим Мульти-выбора (Multi).** Добавляет группу к уже видимым трекам, не скрывая остальные. |
-| **Удержание `Alt`** | Показать все треки (аналог кнопки ALL) |
+| **`E`** | Toggle Edit Mode for buttons |
+| **`M`** | Toggle search mode (Prefix ↔ Suffix) |
+| **`Esc`** | Close script |
+| **Hold `Ctrl`** | Temporary switch to Suffix mode (while held) |
+| **Hold `Shift`** | **Multi-selection Mode (Multi).** Adds group to already visible tracks without hiding others. |
+| **Hold `Alt`** | Show all tracks (equivalent to the ALL button) |
 
-## ⚙️ Требования
+## ⚙️ Requirements
 
-Для работы скрипта необходимо наличие следующих расширений:
+The following extensions are required for the script to work:
 
-1.  **REAPER** (версия 6.x или 7.x).
-2.  **ReaImGui**: библиотека для отрисовки интерфейса (устанавливается через ReaPack).
+1.  **REAPER** (version 6.x or 7.x).
+2.  **ReaImGui**: UI rendering library (installed via ReaPack).
 
-## 📂 Файловая структура
+## 📂 File Structure
 
-*   `trs_TCP MCP Visible Tools.lua`: Основной файл скрипта.
-*   `trs_TCP MCP Visible Tools.ini`: Файл конфигурации (создается автоматически), где хранится список и порядок ваших кнопок.
+*   `trs_TCP MCP Visible Tools.lua`: Main script file.
+*   `trs_TCP MCP Visible Tools.ini`: Configuration file (created automatically) where your buttons and their order are stored.
 
 ---
 
-## Список изменений (Changelog)
+## Changelog
 * **1.10.1**
-    * Исправлены ссылки и названия файлов.
+    * Fixed links and filenames.

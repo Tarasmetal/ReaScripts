@@ -1,3 +1,7 @@
+[⬅️ Main](../README.md)
+
+[![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Track%20automation%20mode%20toggle.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Track%20automation%20mode%20toggle_ru.md)
+
 # 🤖 Toggle track automation mode v1.3
 
 ![Author](https://img.shields.io/badge/Author-Taras%20Umanskiy-blue)
@@ -5,55 +9,55 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%2F%20macOS-orange)
 ![API](https://img.shields.io/badge/API-Reaper%20%2F%20ReaImGui-red)
 
-## **📖 Описание**
-**Toggle track automation mode** — это современный графический интерфейс для управления режимами автоматизации в REAPER. Скрипт предоставляет быстрый и наглядный доступ ко всем стандартным режимам автоматизации, позволяя мгновенно переключать их для всех выбранных треков одновременно.
+## **📖 Description**
+**Toggle track automation mode** is a modern graphical interface for managing automation modes in REAPER. The script provides quick and visual access to all standard automation modes, allowing you to instantly switch them for all selected tracks simultaneously.
 
-Благодаря использованию **ReaImGui**, интерфейс выглядит профессионально, работает плавно и поддерживает цветовую индикацию, соответствующую стандартам REAPER.
-
----
-
-## **✨ Ключевые возможности**
-- **Полный контроль:** Поддержка всех режимов: `Trim/Read`, `Read`, `Touch`, `Write`, `Latch`, `Latch Preview`.
-- **Цветовая индикация:** Кнопки активных режимов подсвечиваются соответствующими цветами (зеленый для Read, красный для Write и т.д.).
-- **Интеллектуальный статус:** Скрипт показывает текущий режим выбранных треков. Если у треков разные режимы, отображается статус `Mixed`.
-- **Умный Toggle:** Специальная кнопка для быстрого переключения между `Touch` и `Trim/Read` — идеальное решение для живой автоматизации.
-- **Групповое управление:** Изменения применяются ко всем выделенным трекам в один клик.
-- **Undo/Redo:** Все действия корректно записываются в историю отмены REAPER.
+By using **ReaImGui**, the interface looks professional, works smoothly, and supports color indication consistent with REAPER standards.
 
 ---
 
-## **🛠️ Как это работает**
-1. Скрипт в реальном времени отслеживает выделенные треки в проекте.
-2. При нажатии на кнопку режима, скрипт проходит по всем выбранным трекам и применяет к ним соответствующую команду `SetTrackAutomationMode`.
-3. Интерфейс динамически обновляется, подсвечивая кнопку текущего активного режима.
-4. Функция **Toggle** анализирует текущее состояние: если выбран режим `Touch`, она переключает его в `Trim/Read`, в любом другом случае — включает `Touch`.
+## **✨ Key Features**
+- **Full Control:** Support for all modes: `Trim/Read`, `Read`, `Touch`, `Write`, `Latch`, `Latch Preview`.
+- **Color Indication:** Buttons of active modes are highlighted with corresponding colors (green for Read, red for Write, etc.).
+- **Intelligent Status:** The script shows the current mode of selected tracks. If tracks have different modes, it displays the `Mixed` status.
+- **Smart Toggle:** A special button for quick switching between `Touch` and `Trim/Read` — an ideal solution for live automation.
+- **Group Management:** Changes are applied to all selected tracks in one click.
+- **Undo/Redo:** All actions are correctly recorded in REAPER's undo history.
 
 ---
 
-## **🚀 Использование**
-
-### **Шаг 1: Выбор треков**
-Выделите один или несколько треков, режимы автоматизации которых вы хотите изменить.
-
-### **Шаг 2: Выбор режима**
-Просто нажмите на кнопку с нужным режимом в окне скрипта. Текущий активный режим будет подсвечен цветом, а текст статуса в верхней части окна подтвердит изменения.
-
-### **Шаг 3: Быстрое переключение (Toggle)**
-Используйте большую кнопку **"TOGGLE: TOUCH <-> TRIM"** в нижней части окна для оперативной работы. Это особенно удобно при записи автоматизации параметров "на лету", позволяя быстро входить в режим записи и возвращаться к чтению.
+## **🛠️ How It Works**
+1. The script monitors selected tracks in the project in real-time.
+2. When a mode button is pressed, the script iterates through all selected tracks and applies the corresponding `SetTrackAutomationMode` command.
+3. The interface updates dynamically, highlighting the button of the currently active mode.
+4. The **Toggle** function analyzes the current state: if the `Touch` mode is selected, it switches to `Trim/Read`; in any other case, it enables `Touch`.
 
 ---
 
-## **История изменений**
+## **🚀 Usage**
+
+### **Step 1: Select Tracks**
+Select one or more tracks whose automation modes you want to change.
+
+### **Step 2: Choose Mode**
+Simply click the button with the desired mode in the script window. The current active mode will be highlighted in color, and the status text at the top of the window will confirm the changes.
+
+### **Step 3: Quick Switch (Toggle)**
+Use the large **"TOGGLE: TOUCH <-> TRIM"** button at the bottom of the window for rapid workflow. This is especially useful when recording parameter automation "on the fly," allowing you to quickly enter record mode and return to reading.
+
+---
+
+## **Changelog**
 ### **v1.3**
-- ✅ Исправлена совместимость с новыми версиями ReaImGui (замена устаревших функций).
-- ✅ Оптимизация кода и повышение стабильности.
-- ✅ Улучшенная цветовая схема кнопок.
+- ✅ Fixed compatibility with newer versions of ReaImGui (replaced deprecated functions).
+- ✅ Code optimization and improved stability.
+- ✅ Enhanced button color scheme.
 
 ---
 
-## **Контакты и поддержка**
-- **Автор:** Taras Umanskiy
+## **Contact and Support**
+- **Author:** Taras Umanskiy
 - **VK:** [vk.com/tarasmetal](http://vk.com/tarasmetal)
-- **Поддержать проект:** [vk.com/Tarasmetal](https://vk.com/Tarasmetal)
+- **Support the Project:** [vk.com/Tarasmetal](https://vk.com/Tarasmetal)
 
-<p align="center">Разработано с ❤️ для сообщества REAPER</p>
+<p align="center">Developed with ❤️ for the REAPER community</p>

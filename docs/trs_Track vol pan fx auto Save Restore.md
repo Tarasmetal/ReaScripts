@@ -1,9 +1,11 @@
-[⬅️ На главную (Main)](../README.md)
+[⬅️ Main](../README.md)
+
+[![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Track%20vol%20pan%20fx%20auto%20Save%20Restore.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Track%20vol%20pan%20fx%20auto%20Save%20Restore_ru.md)
 
 # trs_Track vol pan fx auto Save Restore
 
-> **Мощный инструмент для управления снимками микса в REAPER.**  
-> Сохраняйте и восстанавливайте настройки громкости, панорамы и эффектов одним кликом.
+> **A powerful tool for managing mix snapshots in REAPER.**  
+> Save and restore volume, pan, and effects settings with a single click.
 
 ---
 
@@ -11,78 +13,78 @@
 
 ---
 
-| Информация | Значение |
+| Information | Value |
 | :--- | :--- |
-| **Автор** | Taras Umanskiy |
-| **Технология** | Lua, ReaImGui |
-| **Лицензия** | MIT / Proprietary (см. репозиторий) |
-| **Ссылки** | [GitHub](https://github.com/Tarasmetal/ReaScripts) \| [Donation](https://vk.com/Tarasmetal) |
+| **Author** | Taras Umanskiy |
+| **Technology** | Lua, ReaImGui |
+| **License** | MIT / Proprietary (see repository) |
+| **Links** | [GitHub](https://github.com/Tarasmetal/ReaScripts) \| [Donation](https://vk.com/Tarasmetal) |
 
 ---
 
-## 📖 Описание
+## 📖 Description
 
-Этот скрипт предназначен для звукорежиссеров и продюсеров, работающих в REAPER. Он позволяет **сохранять текущее состояние микса** (громкость, панорама, статус FX) в файл и **восстанавливать его** в любой момент. 
+This script is designed for mixing engineers and producers working in REAPER. It allows you to **save the current state of your mix** (volume, pan, FX status) to a file and **restore it** at any time.
 
-Это особенно полезно для:
-- **A/B сравнения**: быстрое переключение между текущим миксом и "сброшенным" состоянием.
-- **Подготовки стемов**: временное отключение обработок и выравнивание уровней.
-- **Экспериментов**: сохранение "точки возврата" перед внесением кардинальных изменений.
+This is especially useful for:
+- **A/B Comparison**: Quickly switch between your current mix and a "reset" state.
+- **Stem Preparation**: Temporarily disable processing and level the tracks.
+- **Experiments**: Save a "return point" before making major changes.
 
-Данные сохраняются в текстовый файл `TrackMixSnap.txt`, который создается непосредственно в папке проекта, что обеспечивает переносимость вместе с проектом.
+Data is saved to a `TrackMixSnap.txt` file created directly in the project folder, ensuring portability along with the project.
 
-## ✨ Основные возможности
+## ✨ Key Features
 
-### 🎛️ Управление параметрами
-Скрипт позволяет гибко выбирать, какие именно параметры нужно сохранять и восстанавливать:
+### 🎛️ Parameter Management
+The script allows you to flexibly choose which parameters to save and restore:
 
-*   **Volume (Громкость):** Сохраняет точные значения фейдеров. При нажатии *Save* все треки устанавливаются в заданный пользователем уровень (по умолчанию -3 dB).
-*   **Pan (Панорама):** Сохраняет положение панорамы. При нажатии *Save* панорама сбрасывается в центр (Center).
-*   **FX (Эффекты):** Запоминает состояние каждого плагина на треке (включен/выключен, offline/online). При *Save* эффекты могут быть массово отключены (Bypass) для прослушивания "чистого" сигнала.
-*   **Automation (Автоматизация):** Управление режимом глобальной автоматизации (Global Automation Override).
+*   **Volume:** Saves exact fader values. When clicking *Save*, all tracks are set to a user-defined level (default is -3 dB).
+*   **Pan:** Saves pan positions. When clicking *Save*, pan is reset to Center.
+*   **FX:** Remembers the state of each plugin on the track (Enabled/Bypass, Offline/Online). When clicking *Save*, effects can be bulk bypassed to hear the "raw" signal.
+*   **Automation:** Manage Global Automation Override mode.
 
-### 🖥️ Современный интерфейс (GUI)
-Интерфейс построен на базе библиотеки **ReaImGui**, что обеспечивает:
-- Плавность работы и отзывчивость.
-- Интеграцию с темами операционной системы/REAPER.
-- Компактный размер окна ("Always Auto Resize").
-- Сохранение настроек интерфейса между сессиями.
+### 🖥️ Modern GUI
+The interface is built using the **ReaImGui** library, providing:
+- Smooth performance and responsiveness.
+- Integration with OS/REAPER themes.
+- Compact window size ("Always Auto Resize").
+- Persistence of interface settings between sessions.
 
-## ⚙️ Требования
+## ⚙️ Requirements
 
-Для работы скрипта необходимо наличие следующих расширений:
+The following extensions are required for the script to work:
 
-1.  **REAPER** (версия 6.x или 7.x).
-2.  **ReaImGui**: библиотека для отрисовки интерфейса (устанавливается через ReaPack).
-3.  **SWS Extension**: (опционально, но рекомендуется) используется для расширенных команд управления FX (например, `_SWS_DISMASTERFX`).
+1.  **REAPER** (version 6.x or 7.x).
+2.  **ReaImGui**: UI rendering library (installed via ReaPack).
+3.  **SWS Extension**: (Optional, but recommended) used for advanced FX control commands (e.g., `_SWS_DISMASTERFX`).
 
-> **Примечание:** Если ReaImGui не установлен, скрипт выдаст предупреждение и не запустится.
+> **Note:** If ReaImGui is not installed, the script will display a warning and will not run.
 
-## 🚀 Как использовать
+## 🚀 How to Use
 
-1.  Запустите скрипт из Action List.
-2.  В появившемся окне настройте **галочки** (чекбоксы) для тех параметров, которые вы хотите обрабатывать:
-    -   `[x] Volume` (рядом можно задать уровень сброса, например `-3.0`)
+1.  Launch the script from the Action List.
+2.  In the window that appears, configure the **checkboxes** for the parameters you want to process:
+    -   `[x] Volume` (set the reset level next to it, e.g., `-3.0`)
     -   `[x] Pan`
     -   `[x] FX`
     -   `[x] Automation`
-3.  **Сохранение (Сброс):**
-    -   Нажмите кнопку **Save**.
-    -   Скрипт запишет текущие настройки треков в файл.
-    -   Затем он применит "сброс" (выставит громкость в указанное значение, панораму в центр, отключит FX), позволяя вам услышать исходный материал.
-4.  **Восстановление:**
-    -   Нажмите кнопку **Restore**.
-    -   Скрипт считает данные из файла и вернет все настройки (фейдеры, ручки, плагины) в исходное состояние.
+3.  **Saving (Resetting):**
+    -   Click the **Save** button.
+    -   The script will write current track settings to a file.
+    -   It will then apply the "reset" (set volume to the specified value, pan to center, bypass FX), allowing you to hear the raw material.
+4.  **Restoring:**
+    -   Click the **Restore** button.
+    -   The script will read data from the file and return all settings (faders, knobs, plugins) to their original state.
 
-## 📂 Файловая структура
+## 📂 File Structure
 
-Скрипт создает служебные файлы в корневой директории вашего проекта (`.rpp`):
+The script creates helper files in your project's root directory (`.rpp`):
 
-*   `TrackMixSnap.txt`: Хранит снимок параметров треков (Volume, Pan, FX states).
-*   `TrackMixFlags.txt`: Хранит настройки самого скрипта (состояние галочек и значение целевой громкости).
+*   `TrackMixSnap.txt`: Stores track parameter snapshot (Volume, Pan, FX states).
+*   `TrackMixFlags.txt`: Stores the script's own settings (checkbox states and target volume value).
 
 ---
 
-## Список изменений (Changelog)
+## Changelog
 * **1.2.1**
-    * Исправлены ссылки и названия файлов.
+    * Fixed links and filenames.

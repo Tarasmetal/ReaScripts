@@ -1,89 +1,93 @@
-[⬅️ На главную (Main)](../README.md)
+[⬅️ Main](../README.md)
+
+[![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_VST%20Macro%20Linker.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_VST%20Macro%20Linker_ru.md)
+
 ![Demo](../img/trs_VST_Macro_Linker_demo.png)
-# 🎛️ VST Macro Linker — Документация пользователя
 
-**VST Macro Linker** — это мощный инструмент для REAPER DAW, предназначенный для управления параметрами VST-плагинов через макросы и пады. Скрипт позволяет создавать сложные связи, управлять ими с помощью внешних MIDI-контроллеров и автоматизировать процесс линковки.
+# 🎛️ VST Macro Linker — User Documentation
 
----
-
-## 🚀 Основные возможности
-- **16 Макросов**: Плавное управление параметрами (Knobs/Sliders).
-- **16 Падов**: Управление триггерами и переключателями (Buttons).
-- **Автоматическая линковка**: Режим быстрого назначения параметров "на лету".
-- **Интеллектуальная автоматизация**: Полная интеграция с JSFX-бэкендом для записи автоматизации.
-- **Гибкое управление диапазоном**: Индивидуальные настройки Min/Max, инверсия и смещение (Offset) для каждой связи.
-- **MIDI Learn**: Простая привязка вашего оборудования к интерфейсу скрипта.
-- **Умное окно параметров**: Окно настроек теперь всегда под рукой, прикрепляясь к основному интерфейсу.
+**VST Macro Linker** is a powerful tool for REAPER DAW designed to control VST plugin parameters via macros and pads. The script allows you to create complex links, manage them using external MIDI controllers, and automate the linking process.
 
 ---
 
-## 🛠️ Установка и настройка
-1. Запустите скрипт `trs_VST Macro Linker.lua`.
-2. При первом запуске (или при включении чекбокса **Automation**) скрипт предложит установить JSFX-бэкенд.
-3. В проекте будет создана специальная дорожка `VST Macro Linker` с одноименным плагином. **Не удаляйте её**, если планируете записывать автоматизацию макросов.
+## 🚀 Key Features
+- **16 Macros**: Smooth parameter control (Knobs/Sliders).
+- **16 Pads**: Control triggers and switches (Buttons).
+- **Auto-Linking**: Fast "on-the-fly" parameter assignment mode.
+- **Intelligent Automation**: Full integration with a JSFX backend for recording automation.
+- **Flexible Range Control**: Individual Min/Max settings, inversion, and Offset for each link.
+- **MIDI Learn**: Simple binding of your hardware to the script's interface.
+- **Smart Parameters Window**: The settings window is now always at hand, snapping to the main interface.
 
 ---
 
-## 🔗 Режимы линковки параметров
-
-### 🖱️ Ручной режим
-1. Коснитесь любого параметра в VST-плагине.
-2. Нажмите кнопку **Link** рядом с нужным макросом в окне скрипта.
-
-### ⚡ Авто-линковка (Auto-Link)
-1. Нажмите горячую клавишу **L**. Появится индикатор `● AUTO-LINK ACTIVE`.
-2. Просто крутите параметры в плагинах — они будут автоматически назначаться на свободные макросы.
-3. **Выбор цели**: Нажмите цифры **1-9** на клавиатуре в этом режиме, чтобы зафиксировать линковку на конкретном макросе.
-4. **Средняя кнопка мыши**: Клик по кнопке **Link** или **Pad** устанавливает их как следующую цель для авто-линковки.
+## 🛠️ Installation and Setup
+1. Launch the script `trs_VST Macro Linker.lua`.
+2. Upon first launch (or when enabling the **Automation** checkbox), the script will prompt you to install the JSFX backend.
+3. A special track named `VST Macro Linker` with the corresponding plugin will be created in your project. **Do not delete it** if you plan to record macro automation.
 
 ---
 
-## ⌨️ Горячие клавиши (Hotkeys)
-| Клавиша | Действие |
+## 🔗 Parameter Linking Modes
+
+### 🖱️ Manual Mode
+1. Touch any parameter in a VST plugin.
+2. Click the **Link** button next to the desired macro in the script window.
+
+### ⚡ Auto-Link
+1. Press the **L** hotkey. The `● AUTO-LINK ACTIVE` indicator will appear.
+2. Simply turn parameters in plugins — they will be automatically assigned to free macros.
+3. **Target Selection**: Press numbers **1-9** on your keyboard in this mode to lock linking to a specific macro.
+4. **Middle Mouse Button**: Clicking the **Link** or **Pad** button sets it as the next target for auto-linking.
+
+---
+
+## ⌨️ Hotkeys
+| Key | Action |
 | :--- | :--- |
-| **L** | Включить/выключить режим Авто-линковки |
-| **H** | Показать/скрыть окно настроек связей (Linked Parameters) |
-| **1 - 9** | Выбрать целевой макрос в режиме Авто-линковки |
-| **Ctrl + R-Click** | Включить/выключить MIDI Learn для выбранного Пада |
+| **L** | Toggle Auto-Link mode |
+| **H** | Show/hide the Linked Parameters window |
+| **1 - 9** | Select target macro in Auto-Link mode |
+| **Ctrl + R-Click** | Toggle MIDI Learn for the selected Pad |
 
 ---
 
-## 🖱️ Действия мышью
-- **Левый клик (Link)**: Привязать последний затронутый параметр к макросу.
-- **Средний клик (Link/Pad)**: Установить как цель для авто-линковки.
-- **Правый клик (Link)**: Удалить все привязанные параметры с этого макроса.
-- **Кнопка 'M' (Learn)**: Включить MIDI Learn для макроса (ожидание MIDI CC или Note).
+## 🖱️ Mouse Actions
+- **Left Click (Link)**: Bind the last touched parameter to the macro.
+- **Middle Click (Link/Pad)**: Set as target for auto-linking.
+- **Right Click (Link)**: Remove all bound parameters from this macro.
+- **'M' Button (Learn)**: Enable MIDI Learn for the macro (waiting for MIDI CC or Note).
 
 ---
 
-## ⚙️ Окно Linked Parameters
-Это окно позволяет детально настроить поведение каждого привязанного параметра:
-- **Min / Max**: Установка диапазона движения параметра.
-- **Invert**: Инвертирование направления (например, макрос вверх — параметр вниз).
-- **Offset**: Смещение диапазона модуляции (только для макросов).
-- **X**: Удаление конкретной связи.
-- **L / S**: Загрузка и сохранение конфигурации связей в файл `.ini`.
+## ⚙️ Linked Parameters Window
+This window allows you to fine-tune the behavior of each bound parameter:
+- **Min / Max**: Set the range of parameter movement.
+- **Invert**: Invert the direction (e.g., macro up — parameter down).
+- **Offset**: Shift the modulation range (macros only).
+- **X**: Remove a specific link.
+- **L / S**: Load and save link configurations to an `.ini` file.
 
-> 💡 **Совет**: Окно автоматически примагничивается к правой стороне основного окна для удобства организации рабочего пространства.
-
----
-
-## 🤖 Автоматизация
-Скрипт поддерживает стандартные режимы автоматизации REAPER для макросов:
-- **Read**: Чтение записанной автоматизации.
-- **Touch / Latch**: Запись движений макросов.
-- **Write**: Полная перезапись автоматизации.
-
-Кнопки выбора режима находятся в верхней части интерфейса.
+> 💡 **Tip**: The window automatically snaps to the right side of the main window for better workspace organization.
 
 ---
 
-## 📂 Сохранение данных
-- **Пресеты MIDI**: Сохраняются в папку `MacroPresets` внутри директории скрипта.
-- **Данные проекта**: Все связи параметров сохраняются автоматически рядом с файлом проекта в формате `ИмяПроекта_ML.ini`.
+## 🤖 Automation
+The script supports standard REAPER automation modes for macros:
+- **Read**: Read recorded automation.
+- **Touch / Latch**: Record macro movements.
+- **Write**: Complete overwrite of automation.
+
+Mode selection buttons are located at the top of the interface.
+
+---
+
+## 📂 Data Saving
+- **MIDI Presets**: Saved in the `MacroPresets` folder within the script directory.
+- **Project Data**: All parameter links are saved automatically next to the project file in `ProjectName_ML.ini` format.
 
 ---
 
 <p align="center">
-Разработано с ❤️ для сообщества REAPER
+Developed with ❤️ for the REAPER community
 </p>
