@@ -1,6 +1,6 @@
 [⬅️ Main](../README.md)
 
-[en English](trs_Label%20GUI%20Tools.md) | [🇷🇺 Русский](trs_Label%20GUI%20Tools_ru.md)
+[![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Label%20GUI%20Tools.md) | [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Label%20GUI%20Tools_ru.md)
 
 # GUI Tools: trs_Label GUI Tools
 
