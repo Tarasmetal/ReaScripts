@@ -1,70 +1,70 @@
-[⬅️ На главную (Main)](../README.md)
+[⬅️ Main](../README.md) | [Русский](trs_Routing%20Tools_ru.md)
 
 # trs_Routing Tools (SendBox) | MODDED by Taras Umanskiy
 
-## Описание
-Скрипт **SendBox** предназначен для автоматизации создания и управления маршрутизацией (sends/receives) треков в Reaper DAW. Он предоставляет удобный графический интерфейс (GUI) на базе ReaImGui для быстрого создания посылов между выбранными треками и треками в дереве скрипта, с возможностью гибкой настройки каналов и режимов отбора сигнала.
+## Description
+The **SendBox** script is designed to automate the creation and management of routing (sends/receives) for tracks in Reaper DAW. It provides a convenient Graphical User Interface (GUI) based on ReaImGui to quickly create sends between selected tracks in REAPER and tracks selected within the script's tree, with flexible channel and routing mode settings.
 
-## Основные возможности
-*   **Режимы маршрутизации**:
-    *   **Send (Посыл)**: Создает посылы от треков, выбранных в REAPER, к трекам, выбранным в интерфейсе скрипта.
-    *   **Receive (Прием)**: Создает приемы (receives) на треки, выбранные в REAPER, от треков, выбранных в интерфейсе скрипта.
-*   **Точки отбора сигнала (Send Position)**:
-    *   Post-Fader (Пост-фейдер)
-    *   Pre-Fader (Пре-фейдер)
-    *   Pre-FX (Пре-эффекты)
-*   **Управление каналами**:
-    *   Выбор каналов источника (Source Channels).
-    *   Выбор канала назначения (Destination Channel).
-    *   Поддержка маршрутизации до 64 каналов.
-    *   Автоматическое увеличение количества каналов на треках, если это необходимо для выбранной маршрутизации.
-*   **Интерфейс выбора треков**:
-    *   Отображение дерева треков проекта с учетом вложенности папок.
-    *   Поиск треков по названию.
-    *   Отображение цветов треков.
-    *   Кнопки для быстрого сворачивания/разворачивания дерева треков.
-*   **Быстрое действие**: Двойной клик по треку в списке мгновенно создает маршрутизацию и закрывает скрипт.
-*   **Сохранение настроек**: Скрипт запоминает последний выбранный режим и точку отбора сигнала.
+## Main Features
+*   **Routing Modes**:
+    *   **Send**: Creates sends from the tracks selected in REAPER to the tracks selected in the script interface.
+    *   **Receive**: Creates receives on the tracks selected in REAPER from the tracks selected in the script interface.
+*   **Send Position (Tap Point)**:
+    *   Post-Fader
+    *   Pre-Fader
+    *   Pre-FX
+*   **Channel Management**:
+    *   Source Channels selection.
+    *   Destination Channel selection.
+    *   Support for routing up to 64 channels.
+    *   Automatic increase of the number of track channels if required for the selected routing.
+*   **Track Selection Interface**:
+    *   Displays the project track tree, taking folder nesting into account.
+    *   Track search by name.
+    *   Displays track colors.
+    *   Buttons to quickly collapse/expand the track tree.
+*   **Quick Action**: Double-clicking a track in the list instantly creates the routing and closes the script.
+*   **Settings Persistence**: The script remembers the last selected mode and send position.
 
-## Требования
-Для работы скрипта необходимы следующие расширения:
+## Requirements
+The following extensions are required for the script to work:
 1.  **SWS Extensions**: [https://www.sws-extension.org](https://www.sws-extension.org)
-2.  **ReaImGui**: Доступно для установки через ReaPack.
+2.  **ReaImGui**: Available for installation via ReaPack.
 
-## Использование
+## Usage
 
-### 1. Подготовка
-Выберите в основном окне REAPER один или несколько треков, с которыми вы хотите работать (создать посылы *от* них или приемы *на* них).
+### 1. Preparation
+Select one or more tracks in the main REAPER window that you want to work with (create sends *from* them or receives *to* them).
 
-### 2. Настройка параметров
-В верхней панели меню скрипта выберите:
-*   **Mode**: Send или Receive.
-*   **FX** (Точка отбора): Post-Fader, Pre-Fader или Pre-FX.
-*   **Channels**: Нажмите кнопку `Channels`, чтобы открыть окно настройки каналов. Выберите исходные каналы (Source) и канал назначения (Destination).
+### 2. Parameter Setup
+In the top menu bar of the script, select:
+*   **Mode**: Send or Receive.
+*   **FX** (Tap Point): Post-Fader, Pre-Fader, or Pre-FX.
+*   **Channels**: Click the `Channels` button to open the channel configuration window. Select the Source channels and the Destination channel.
 
-### 3. Выбор целевых треков
-В списке треков скрипта отметьте галочками те треки, которые будут второй стороной маршрутизации.
-*   Используйте поле **Search** для фильтрации списка.
-*   Кнопки со стрелками позволяют свернуть или развернуть все папки.
-*   Кнопка **Clear** (красная) сбрасывает выбор треков в списке скрипта.
+### 3. Target Track Selection
+In the script's track list, check the boxes for the tracks that will be the other side of the routing.
+*   Use the **Search** field to filter the list.
+*   The arrow buttons allow you to collapse or expand all folders.
+*   The **Clear** button (red) resets the track selection in the script's list.
 
-### 4. Создание маршрутизации
-*   Нажмите зеленую кнопку **RUN** (в меню или в окне каналов) для создания посылов/приемов.
-*   **Альтернатива**: Двойной клик левой кнопкой мыши по треку в списке скрипта автоматически создаст маршрутизацию для этого трека и закроет скрипт.
+### 4. Creating Routing
+*   Click the green **RUN** button (in the menu or in the channels window) to create sends/receives.
+*   **Alternative**: Double-clicking the left mouse button on a track in the script's list will automatically create the routing for that track and close the script.
 
-## Конфигурация
-Настройки режима и точки отбора сохраняются в файл `SendBoxConfig.txt` в папке ресурсов REAPER и восстанавливаются при следующем запуске.
+## Configuration
+The mode and tap point settings are saved to the `SendBoxConfig.txt` file in the REAPER resource folder and restored on the next launch.
 
-## Информация
-*   **Автор**: Taras Umanskiy
-*   **Версия**: 1.1.1
-*   **Ссылки**:
+## Information
+*   **Author**: Taras Umanskiy
+*   **Version**: 1.1.1
+*   **Links**:
     *   [VK](http://vk.com/tarasmetal)
     *   [Donation (PayPal)](https://paypal.me/Tarasmetal)
     *   [Donation (VK)](https://vk.com/Tarasmetal)
 
 ---
 
-## Список изменений (Changelog)
+## Changelog
 * **1.1.1**
-    * Исправлены ссылки и названия файлов.
+    * Fixed links and file names.
