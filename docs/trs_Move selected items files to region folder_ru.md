@@ -1,4 +1,4 @@
-[⬅️ На главную (Main)](../README_ru.md) | [![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Move%20selected%20items%20files%20to%20region%20folder.md) | [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Move%20selected%20items%20files%20to%20region%20folder_ru.md)
+[⬅️ На главную (Main)](../README_ru.md) [![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Move%20selected%20items%20files%20to%20region%20folder.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Move%20selected%20items%20files%20to%20region%20folder_ru.md)
 
 # 🤖 Move selected items files to region folder v1.2
 

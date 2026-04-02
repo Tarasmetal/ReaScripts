@@ -1,6 +1,6 @@
 [⬅️ Main](../README.md)
 
-[![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.md) | [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Action%20List%20Script%20Path%20Scan%20and%20Fix_ru.md)
+[![English](https://img.shields.io/badge/en-English-blue.svg?style=for-the-badge)](trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.md) [![Русский](https://img.shields.io/badge/ru-Русский-red.svg?style=for-the-badge)](trs_Action%20List%20Script%20Path%20Scan%20and%20Fix_ru.md)
 
 # 🤖 Action List Script Path Scan and Fix
 
