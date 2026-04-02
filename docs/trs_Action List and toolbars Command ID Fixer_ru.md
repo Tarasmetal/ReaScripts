@@ -1,4 +1,4 @@
-[🇬🇧 English](trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.md) | [🇷🇺 Русский](trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer_ru.md)
+[en English](trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.md) | [🇷🇺 Русский](trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer_ru.md)
 
 [⬅️ На главную (Main)](../README_ru.md)
 # 🤖 Action List and toolbars Command ID name Fixer v1.6

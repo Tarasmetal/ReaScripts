@@ -1,4 +1,4 @@
-[⬅️ Main](../README.md) | [🇬🇧 English](trs_Marker%20GUI%20Tools.md) | [🇷🇺 Русский](trs_Marker%20GUI%20Tools_ru.md)
+[⬅️ Main](../README.md) | [en English](trs_Marker%20GUI%20Tools.md) | [🇷🇺 Русский](trs_Marker%20GUI%20Tools_ru.md)
 
 # 🤖 REAPER — Marker GUI Tools
 

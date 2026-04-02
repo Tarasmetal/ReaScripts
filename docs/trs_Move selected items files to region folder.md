@@ -1,4 +1,4 @@
-[⬅️ Main](../README.md) | [🇬🇧 English](trs_Move%20selected%20items%20files%20to%20region%20folder.md) | [🇷🇺 Русский](trs_Move%20selected%20items%20files%20to%20region%20folder_ru.md)
+[⬅️ Main](../README.md) | [en English](trs_Move%20selected%20items%20files%20to%20region%20folder.md) | [🇷🇺 Русский](trs_Move%20selected%20items%20files%20to%20region%20folder_ru.md)
 
 # 🤖 Move selected items files to region folder v1.2
 
