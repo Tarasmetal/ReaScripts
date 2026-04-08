@@ -1,6 +1,6 @@
 -- @description Script Launcher - File manager for launching REAPER scripts
 -- @author Taras Umanskiy
--- @version 2.8
+-- @version 2.9
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
@@ -26,12 +26,13 @@
 --   + v2.6: Добавлена возможность изменения размера главного окна, адаптивная верстка
 --   + v2.7: Папки, добавленные в избранное, теперь отображаются белым цветом везде
 --   + v2.8: Выбор любого диска
+--   + v2.9: Добавлена система тегов для скриптов и папок
 
 package.path = reaper.ImGui_GetBuiltinPath() .. '/?.lua'
 local ImGui = require 'imgui' '0.9.2'
 
 local ctx = ImGui.CreateContext('Script Launcher')
-local VERSION = "2.8"
+local VERSION = "2.9"
 local SCRIPT_NAME = "Script Launcher "
 
 local SCRIPT_EXTENSIONS = {
@@ -54,7 +55,8 @@ local ICONS = {
     drive = "💻",
     search = "🔍",
     history = "🕐",
-    refresh = "🔄"
+    refresh = "🔄",
+    tag = "🏷️"
 }
 
 local colors = {
@@ -206,7 +208,17 @@ local state = {
     last_recursive_search = false,
     last_search_path = "",
     search_timer = 0,
-    needs_search_update = false
+    needs_search_update = false,
+    tags = {}, -- { "Tag1", "Tag2" }
+    item_tags = {}, -- { ["path/to/item"] = { ["Tag1"] = true } }
+    filter_tag = nil,
+    show_manage_tags = false,
+    new_tag_name = "",
+    tag_to_edit = nil,
+    edit_tag_name = "",
+    show_assign_tags_modal = false,
+    assign_tags_path = nil,
+    last_filter_tag = nil
 }
 
 local SCRIPT_PATH = select(2, reaper.get_action_context())
@@ -222,6 +234,27 @@ local function SaveConfig()
         file:write("window_w=" .. tostring(state.window_w) .. "\n")
         file:write("window_h=" .. tostring(state.window_h) .. "\n")
         file:write("tree_width=" .. tostring(state.tree_width) .. "\n")
+        
+        file:write("tags=")
+        for i, tag in ipairs(state.tags) do
+            if i > 1 then file:write("|") end
+            file:write(tag)
+        end
+        file:write("\n")
+
+        file:write("item_tags=")
+        local first_item = true
+        for path, tags in pairs(state.item_tags) do
+            local tag_list = {}
+            for tag, _ in pairs(tags) do table.insert(tag_list, tag) end
+            if #tag_list > 0 then
+                if not first_item then file:write("|") end
+                file:write(path .. ">" .. table.concat(tag_list, ","))
+                first_item = false
+            end
+        end
+        file:write("\n")
+
         file:write("favorites=")
         for i, fav in ipairs(state.favorites) do
             if i > 1 then file:write("|") end
@@ -258,6 +291,22 @@ local function LoadConfig()
                     state.window_h = tonumber(value) or 600
                 elseif key == "tree_width" then
                     state.tree_width = tonumber(value) or 200
+                elseif key == "tags" and value ~= "" then
+                    state.tags = {}
+                    for tag in value:gmatch("[^|]+") do
+                        table.insert(state.tags, tag)
+                    end
+                elseif key == "item_tags" and value ~= "" then
+                    state.item_tags = {}
+                    for item in value:gmatch("[^|]+") do
+                        local path, tags_str = item:match("^(.-)>(.*)$")
+                        if path and tags_str then
+                            state.item_tags[path] = {}
+                            for tag in tags_str:gmatch("[^,]+") do
+                                state.item_tags[path][tag] = true
+                            end
+                        end
+                    end
                 elseif key == "favorites" and value ~= "" then
                     state.favorites = {}
                     for fav in value:gmatch("[^|]+") do
@@ -280,6 +329,11 @@ local function IsFavorite(filepath)
         if fav == filepath then return true end
     end
     return false
+end
+
+local function HasTag(path, tag)
+    if not state.item_tags[path] then return false end
+    return state.item_tags[path][tag] == true
 end
 
 local function ToggleFavorite(filepath)
@@ -415,9 +469,18 @@ local function EditScript(filepath)
     end
 end
 
-local function MatchesSearch(name)
-    if state.search_text == "" then return true end
-    return name:lower():find(state.search_text:lower(), 1, true) ~= nil
+local function MatchesSearch(name, path)
+    if state.search_text ~= "" then
+        if not name:lower():find(state.search_text:lower(), 1, true) then
+            return false
+        end
+    end
+    if state.filter_tag then
+        if not HasTag(path, state.filter_tag) then
+            return false
+        end
+    end
+    return true
 end
 
 local function GetRecursiveScripts(path, search_text, results)
@@ -425,8 +488,8 @@ local function GetRecursiveScripts(path, search_text, results)
     repeat
         local file = reaper.EnumerateFiles(path, i)
         if file then
-            if IsScriptFile(file) and file:lower():find(search_text:lower(), 1, true) then
-                local filepath = path .. "/" .. file
+            local filepath = path .. "/" .. file
+            if IsScriptFile(file) and MatchesSearch(file, filepath) then
                 table.insert(results, {
                     path = filepath,
                     name = file,
@@ -442,7 +505,11 @@ local function GetRecursiveScripts(path, search_text, results)
     repeat
         local folder = reaper.EnumerateSubdirectories(path, i)
         if folder then
-            GetRecursiveScripts(path .. "/" .. folder, search_text, results)
+            local folder_path = path .. "/" .. folder
+            -- If folder itself matches search/tag, we might want to include it?
+            -- But GetRecursiveScripts usually returns files. 
+            -- The existing logic only added files.
+            GetRecursiveScripts(folder_path, search_text, results)
         end
         i = i + 1
     until not folder
@@ -501,6 +568,10 @@ local function DrawMenuBar()
         if ImGui.BeginMenu(ctx, "File") then
             if ImGui.MenuItem(ctx, ICONS.refresh .. " Refresh", "F5") then
                 ScanDirectory(state.current_path)
+            end
+            ImGui.Separator(ctx)
+            if ImGui.MenuItem(ctx, ICONS.tag .. " Manage Tags...") then
+                state.show_manage_tags = true
             end
             ImGui.Separator(ctx)
             if ImGui.MenuItem(ctx, "Settings...") then
@@ -704,7 +775,7 @@ local function DrawFileList(list_height)
         if mode == "favorites" then
             for i, filepath in ipairs(state.favorites) do
                 local filename = GetFileName(filepath)
-                if filename and MatchesSearch(filename) then
+                if filename and MatchesSearch(filename, filepath) then
                     table.insert(visible_items, {
                         path = filepath,
                         name = filename,
@@ -716,7 +787,7 @@ local function DrawFileList(list_height)
         elseif mode == "history" then
             for _, filepath in ipairs(state.run_history) do
                 local filename = GetFileName(filepath)
-                if filename and MatchesSearch(filename) then
+                if filename and MatchesSearch(filename, filepath) then
                     table.insert(visible_items, {
                         path = filepath,
                         name = filename,
@@ -724,12 +795,155 @@ local function DrawFileList(list_height)
                     })
                 end
             end
+        elseif state.filter_tag then
+            -- Глобальный поиск по тегу (независимо от пути)
+            local search_changed = state.filter_tag ~= state.last_filter_tag or
+                                 state.search_text ~= state.last_search_text
+            
+            if search_changed or state.needs_search_update then
+                state.search_results = {}
+                for path, tags in pairs(state.item_tags) do
+                    if tags[state.filter_tag] then
+                        local filename = GetFileName(path)
+                        if not state.search_text or state.search_text == "" or (filename and filename:lower():find(state.search_text:lower(), 1, true)) then
+                            table.insert(state.search_results, {
+                                path = path,
+                                name = filename or path,
+                                is_dir = IsDirectory(path),
+                                info = not IsDirectory(path) and GetFileInfo(path) or nil
+                            })
+                        end
+                    end
+                end
+                -- Сортировка результатов
+                table.sort(state.search_results, function(a, b)
+                    if a.is_dir ~= b.is_dir then return a.is_dir end
+                    return a.name:lower() < b.name:lower()
+                end)
+                state.last_filter_tag = state.filter_tag
+                state.last_search_text = state.search_text
+                state.needs_search_update = false
+            end
+            visible_items = state.search_results
+
+            ImGui.TextColored(ctx, colors.selected, ICONS.tag .. " Tag: " .. state.filter_tag)
+            ImGui.Separator(ctx)
+
+            if ImGui.BeginTable(ctx, "TagsTable", 6, ImGui.TableFlags_Resizable + ImGui.TableFlags_RowBg + ImGui.TableFlags_ScrollY) then
+                ImGui.TableSetupColumn(ctx, "Name", ImGui.TableColumnFlags_WidthStretch)
+                ImGui.TableSetupColumn(ctx, "Tags", ImGui.TableColumnFlags_WidthStretch)
+                ImGui.TableSetupColumn(ctx, "Size", ImGui.TableColumnFlags_WidthFixed, 80)
+                ImGui.TableSetupColumn(ctx, "Description", ImGui.TableColumnFlags_WidthStretch)
+                ImGui.TableSetupColumn(ctx, "Path", ImGui.TableColumnFlags_WidthStretch)
+                ImGui.TableSetupColumn(ctx, "", ImGui.TableColumnFlags_WidthFixed, 30)
+                ImGui.TableHeadersRow(ctx)
+
+                for i, item in ipairs(visible_items) do
+                    ImGui.TableNextRow(ctx)
+                    ImGui.TableNextColumn(ctx)
+
+                    local is_selected = (i == state.selected_index)
+                    local is_fav = IsFavorite(item.path)
+
+                    local icon, color
+                    if item.is_dir then
+                        icon = ICONS.folder
+                        color = is_fav and 0xFFFFFFFF or colors.folder
+                    else
+                        icon = GetIconForFile(item.name)
+                        color = GetColorForFile(item.name)
+                    end
+
+                    ImGui.PushStyleColor(ctx, ImGui.Col_Text, color)
+                    local flags = ImGui.SelectableFlags_AllowDoubleClick + ImGui.SelectableFlags_SpanAllColumns
+
+                    local display_name = icon .. " " .. item.name
+                    if is_fav then display_name = display_name .. " " .. ICONS.favorite end
+
+                    if ImGui.Selectable(ctx, display_name .. "##tag_item" .. i, is_selected, flags) then
+                        state.selected_index = i
+                        state.selected_file = item.path
+                        state.script_info = item.info
+
+                        if ImGui.IsMouseDoubleClicked(ctx, 0) then
+                            if item.is_dir then
+                                NavigateTo(item.path)
+                                state.filter_tag = nil
+                            else
+                                RunScript(item.path)
+                            end
+                        end
+                    end
+                    ImGui.PopStyleColor(ctx)
+
+                    if is_selected and (ImGui.IsKeyPressed(ctx, ImGui.Key_UpArrow) or ImGui.IsKeyPressed(ctx, ImGui.Key_DownArrow)) then
+                        ImGui.SetScrollHereY(ctx)
+                    end
+
+                    if ImGui.BeginPopupContextItem(ctx) then
+                        if item.is_dir then
+                            if ImGui.MenuItem(ctx, ICONS.folder_open .. " Open") then 
+                                NavigateTo(item.path)
+                                state.filter_tag = nil
+                            end
+                        else
+                            if ImGui.MenuItem(ctx, ICONS.run .. " Run") then RunScript(item.path) end
+                            if ImGui.MenuItem(ctx, ICONS.edit .. " Edit") then EditScript(item.path) end
+                        end
+                        ImGui.Separator(ctx)
+                        if ImGui.MenuItem(ctx, is_fav and "Remove from Favorites" or "Add to Favorites") then
+                            ToggleFavorite(item.path)
+                        end
+                        ImGui.Separator(ctx)
+                        if ImGui.MenuItem(ctx, ICONS.tag .. " Assign Tags...") then
+                            state.assign_tags_path = item.path
+                            state.show_assign_tags_modal = true
+                        end
+                        ImGui.EndPopup(ctx)
+                    end
+
+                    ImGui.TableNextColumn(ctx)
+                    ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.breadcrumb)
+                    if state.item_tags[item.path] then
+                        local tags = {}
+                        for t, _ in pairs(state.item_tags[item.path]) do table.insert(tags, t) end
+                        if #tags > 0 then
+                            table.sort(tags)
+                            ImGui.Text(ctx, table.concat(tags, ", "))
+                        end
+                    end
+                    ImGui.PopStyleColor(ctx)
+
+                    ImGui.TableNextColumn(ctx)
+                    ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.size)
+                    if item.info then
+                        ImGui.Text(ctx, FormatFileSize(item.info.size))
+                    end
+                    ImGui.PopStyleColor(ctx)
+
+                    ImGui.TableNextColumn(ctx)
+                    ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.date)
+                    if item.info and item.info.description ~= "" then
+                        ImGui.Text(ctx, item.info.description)
+                    end
+                    ImGui.PopStyleColor(ctx)
+
+                    ImGui.TableNextColumn(ctx)
+                    ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.size)
+                    ImGui.Text(ctx, item.path)
+                    ImGui.PopStyleColor(ctx)
+
+                    ImGui.TableNextColumn(ctx)
+                end
+                ImGui.EndTable(ctx)
+            end
         else -- browser
             -- Обновление кешированного поиска
             local current_time = reaper.time_precise()
             local search_changed = state.search_text ~= state.last_search_text or
                                  state.recursive_search ~= state.last_recursive_search or
-                                 state.current_path ~= state.last_search_path
+                                 state.current_path ~= state.last_search_path or
+                                 state.filter_tag ~= state.last_filter_tag
 
             if search_changed or state.needs_search_update then
                 if state.search_timer <= current_time then
@@ -738,7 +952,7 @@ local function DrawFileList(list_height)
                         GetRecursiveScripts(state.current_path, state.search_text, state.search_results)
                     else
                         for _, folder in ipairs(state.folders) do
-                            if MatchesSearch(folder.name) then
+                            if MatchesSearch(folder.name, folder.path) then
                                 table.insert(state.search_results, {
                                     path = folder.path,
                                     name = folder.name,
@@ -747,7 +961,7 @@ local function DrawFileList(list_height)
                             end
                         end
                         for _, file in ipairs(state.files) do
-                            if MatchesSearch(file.name) then
+                            if MatchesSearch(file.name, file.path) then
                                 table.insert(state.search_results, {
                                     path = file.path,
                                     name = file.name,
@@ -760,6 +974,7 @@ local function DrawFileList(list_height)
                     state.last_search_text = state.search_text
                     state.last_recursive_search = state.recursive_search
                     state.last_search_path = state.current_path
+                    state.last_filter_tag = state.filter_tag
                     state.needs_search_update = false
                 end
             end
@@ -892,8 +1107,25 @@ local function DrawFileList(list_height)
                         end
                         ImGui.Separator(ctx)
                         if ImGui.MenuItem(ctx, "Remove from Favorites") then ToggleFavorite(item.path) end
+                        ImGui.Separator(ctx)
+                        if ImGui.MenuItem(ctx, ICONS.tag .. " Assign Tags...") then
+                            state.assign_tags_path = item.path
+                            state.show_assign_tags_modal = true
+                        end
                         ImGui.EndPopup(ctx)
                     end
+
+                    ImGui.TableNextColumn(ctx)
+                    ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.breadcrumb)
+                    if state.item_tags[item.path] then
+                        local tags = {}
+                        for t, _ in pairs(state.item_tags[item.path]) do table.insert(tags, t) end
+                        if #tags > 0 then
+                            table.sort(tags)
+                            ImGui.Text(ctx, table.concat(tags, ", "))
+                        end
+                    end
+                    ImGui.PopStyleColor(ctx)
 
                     ImGui.TableNextColumn(ctx)
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.size)
@@ -947,6 +1179,11 @@ local function DrawFileList(list_height)
                         if ImGui.MenuItem(ctx, is_fav and "Remove from Favorites" or "Add to Favorites") then
                             ToggleFavorite(item.path)
                         end
+                        ImGui.Separator(ctx)
+                        if ImGui.MenuItem(ctx, ICONS.tag .. " Assign Tags...") then
+                            state.assign_tags_path = item.path
+                            state.show_assign_tags_modal = true
+                        end
                         ImGui.EndPopup(ctx)
                     end
 
@@ -959,8 +1196,9 @@ local function DrawFileList(list_height)
             end
 
         else -- browser
-            if ImGui.BeginTable(ctx, "FilesTable", 5, ImGui.TableFlags_Resizable + ImGui.TableFlags_RowBg + ImGui.TableFlags_ScrollY) then
+            if ImGui.BeginTable(ctx, "FilesTable", 6, ImGui.TableFlags_Resizable + ImGui.TableFlags_RowBg + ImGui.TableFlags_ScrollY) then
                 ImGui.TableSetupColumn(ctx, "Name", ImGui.TableColumnFlags_WidthStretch)
+                ImGui.TableSetupColumn(ctx, "Tags", ImGui.TableColumnFlags_WidthStretch)
                 ImGui.TableSetupColumn(ctx, "Size", ImGui.TableColumnFlags_WidthFixed, 80)
                 ImGui.TableSetupColumn(ctx, "Description", ImGui.TableColumnFlags_WidthStretch)
                 ImGui.TableSetupColumn(ctx, "Path", ImGui.TableColumnFlags_WidthStretch)
@@ -1019,8 +1257,25 @@ local function DrawFileList(list_height)
                         if ImGui.MenuItem(ctx, is_fav and "Remove from Favorites" or "Add to Favorites") then
                             ToggleFavorite(item.path)
                         end
+                        ImGui.Separator(ctx)
+                        if ImGui.MenuItem(ctx, ICONS.tag .. " Assign Tags...") then
+                            state.assign_tags_path = item.path
+                            state.show_assign_tags_modal = true
+                        end
                         ImGui.EndPopup(ctx)
                     end
+
+                    ImGui.TableNextColumn(ctx)
+                    ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.breadcrumb)
+                    if state.item_tags[item.path] then
+                        local tags = {}
+                        for t, _ in pairs(state.item_tags[item.path]) do table.insert(tags, t) end
+                        if #tags > 0 then
+                            table.sort(tags)
+                            ImGui.Text(ctx, table.concat(tags, ", "))
+                        end
+                    end
+                    ImGui.PopStyleColor(ctx)
 
                     ImGui.TableNextColumn(ctx)
                     ImGui.PushStyleColor(ctx, ImGui.Col_Text, colors.size)
@@ -1066,6 +1321,17 @@ local function DrawInfoPanel()
             ImGui.Text(ctx, "Version: " .. state.script_info.version)
         end
         ImGui.Text(ctx, "Size: " .. FormatFileSize(state.script_info.size))
+
+        -- Show tags
+        if state.item_tags[state.selected_file] then
+            local tags = {}
+            for t, _ in pairs(state.item_tags[state.selected_file]) do table.insert(tags, t) end
+            if #tags > 0 then
+                table.sort(tags)
+                ImGui.Text(ctx, "Tags: " .. table.concat(tags, ", "))
+            end
+        end
+
         ImGui.Spacing(ctx)
         if ImGui.Button(ctx, ICONS.run .. " Run Script") then
             RunScript(state.selected_file)
@@ -1079,6 +1345,168 @@ local function DrawInfoPanel()
         if ImGui.Button(ctx, is_fav and "Remove ⭐" or "Add ⭐") then
             ToggleFavorite(state.selected_file)
         end
+    end
+end
+
+local function DrawManageTagsWindow()
+    if state.show_manage_tags then
+        local visible, open = ImGui.Begin(ctx, "Manage Tags", true, ImGui.WindowFlags_AlwaysAutoResize)
+        if visible then
+            ImGui.Text(ctx, "Create New Tag:")
+            ImGui.SetNextItemWidth(ctx, 200)
+            local changed, new_val = ImGui.InputText(ctx, "##new_tag", state.new_tag_name)
+            if changed then 
+                -- Remove forbidden characters
+                state.new_tag_name = new_val:gsub("[:|,]", "") 
+            end
+            ImGui.SameLine(ctx)
+            if ImGui.Button(ctx, "Add") and state.new_tag_name ~= "" then
+                -- Check if tag already exists
+                local exists = false
+                for _, t in ipairs(state.tags) do
+                    if t == state.new_tag_name then exists = true break end
+                end
+                if not exists then
+                    table.insert(state.tags, state.new_tag_name)
+                    table.sort(state.tags)
+                    state.new_tag_name = ""
+                    SaveConfig()
+                end
+            end
+
+            ImGui.Separator(ctx)
+            ImGui.Text(ctx, "Existing Tags:")
+            
+            local tag_to_remove = nil
+            for i, tag in ipairs(state.tags) do
+                if state.tag_to_edit == tag then
+                    ImGui.SetNextItemWidth(ctx, 150)
+                    local changed_edit, new_edit = ImGui.InputText(ctx, "##edit_tag" .. i, state.edit_tag_name)
+                    if changed_edit then 
+                        state.edit_tag_name = new_edit:gsub("[:|,]", "") 
+                    end
+                    ImGui.SameLine(ctx)
+                    if ImGui.Button(ctx, "OK##ok" .. i) then
+                        if state.edit_tag_name ~= "" and state.edit_tag_name ~= tag then
+                            -- Update all items using this tag
+                            for path, tags in pairs(state.item_tags) do
+                                if tags[tag] then
+                                    tags[tag] = nil
+                                    tags[state.edit_tag_name] = true
+                                end
+                            end
+                            state.tags[i] = state.edit_tag_name
+                            table.sort(state.tags)
+                            SaveConfig()
+                        end
+                        state.tag_to_edit = nil
+                    end
+                    ImGui.SameLine(ctx)
+                    if ImGui.Button(ctx, "Cancel##cancel" .. i) then
+                        state.tag_to_edit = nil
+                    end
+                else
+                    ImGui.Text(ctx, tag)
+                    ImGui.SameLine(ctx, 200)
+                    if ImGui.Button(ctx, "Edit##edit" .. i) then
+                        state.tag_to_edit = tag
+                        state.edit_tag_name = tag
+                    end
+                    ImGui.SameLine(ctx)
+                    if ImGui.Button(ctx, "Delete##del" .. i) then
+                        tag_to_remove = i
+                    end
+                end
+            end
+
+            if tag_to_remove then
+                local deleted_tag = table.remove(state.tags, tag_to_remove)
+                -- Remove from all items
+                for path, tags in pairs(state.item_tags) do
+                    tags[deleted_tag] = nil
+                end
+                if state.filter_tag == deleted_tag then state.filter_tag = nil end
+                SaveConfig()
+            end
+
+            ImGui.Separator(ctx)
+            if ImGui.Button(ctx, "Close") then
+                state.show_manage_tags = false
+            end
+            ImGui.End(ctx)
+        end
+        if not open then state.show_manage_tags = false end
+    end
+end
+
+local function DrawAssignTagsModal()
+    if state.show_assign_tags_modal then
+        ImGui.OpenPopup(ctx, "Assign Tags")
+        state.show_assign_tags_modal = false
+    end
+
+    local center = {ImGui.Viewport_GetCenter(ImGui.GetMainViewport(ctx))}
+    ImGui.SetNextWindowPos(ctx, center[1], center[2], ImGui.Cond_Appearing, 0.5, 0.5)
+
+    if ImGui.BeginPopupModal(ctx, "Assign Tags", true, ImGui.WindowFlags_AlwaysAutoResize) then
+        if state.assign_tags_path then
+            ImGui.Text(ctx, "Assign tags to: " .. GetFileName(state.assign_tags_path))
+            ImGui.Separator(ctx)
+
+            if #state.tags == 0 then
+                ImGui.TextDisabled(ctx, "No tags created yet. Use 'File > Manage Tags...' first.")
+            else
+                if not state.item_tags[state.assign_tags_path] then
+                    state.item_tags[state.assign_tags_path] = {}
+                end
+
+                for _, tag in ipairs(state.tags) do
+                    local is_assigned = state.item_tags[state.assign_tags_path][tag] or false
+                    local changed, checked = ImGui.Checkbox(ctx, tag, is_assigned)
+                    if changed then
+                        state.item_tags[state.assign_tags_path][tag] = checked or nil
+                        SaveConfig()
+                    end
+                end
+            end
+        end
+
+        ImGui.Separator(ctx)
+        if ImGui.Button(ctx, "Done", 120) then
+            ImGui.CloseCurrentPopup(ctx)
+        end
+        ImGui.EndPopup(ctx)
+    end
+end
+
+local function DrawTagsBar()
+    if #state.tags == 0 then return end
+    
+    ImGui.Text(ctx, "Tags: ")
+    ImGui.SameLine(ctx)
+    
+    -- "All" button to clear filter
+    local all_active = (state.filter_tag == nil)
+    if all_active then ImGui.PushStyleColor(ctx, ImGui.Col_Button, colors.selected) end
+    if ImGui.Button(ctx, "All##tag_all") then
+        state.filter_tag = nil
+        state.needs_search_update = true
+    end
+    if all_active then ImGui.PopStyleColor(ctx) end
+    
+    for _, tag in ipairs(state.tags) do
+        ImGui.SameLine(ctx)
+        local is_active = (state.filter_tag == tag)
+        if is_active then ImGui.PushStyleColor(ctx, ImGui.Col_Button, colors.selected) end
+        if ImGui.Button(ctx, tag .. "##tag_btn_" .. tag) then
+            if state.filter_tag == tag then
+                state.filter_tag = nil
+            else
+                state.filter_tag = tag
+            end
+            state.needs_search_update = true
+        end
+        if is_active then ImGui.PopStyleColor(ctx) end
     end
 end
 
@@ -1179,6 +1607,8 @@ local function MainLoop()
         DrawMenuBar()
         DrawToolbar()
         ImGui.Spacing(ctx)
+        DrawTagsBar()
+        ImGui.Spacing(ctx)
         DrawBreadcrumbs()
         ImGui.Spacing(ctx)
         DrawSearchBar()
@@ -1197,8 +1627,10 @@ local function MainLoop()
         ImGui.End(ctx)
     end
     DrawSettingsWindow()
+    DrawManageTagsWindow()
     if open then
         DrawAddCustomPathModal()
+        DrawAssignTagsModal()
         reaper.defer(MainLoop)
     else
         SaveConfig()
