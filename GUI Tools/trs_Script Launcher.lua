@@ -1,6 +1,6 @@
 -- @description Script Launcher - File manager for launching REAPER scripts
 -- @author Taras Umanskiy
--- @version 2.9
+-- @version 2.9.2
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
@@ -27,12 +27,14 @@
 --   + v2.7: Папки, добавленные в избранное, теперь отображаются белым цветом везде
 --   + v2.8: Выбор любого диска
 --   + v2.9: Добавлена система тегов для скриптов и папок
+--   + v2.9.1: Управление тегами перенесено в контекстное меню (чекбоксы)
+--   + v2.9.2: Панель тегов интегрирована в тулбар
 
 package.path = reaper.ImGui_GetBuiltinPath() .. '/?.lua'
 local ImGui = require 'imgui' '0.9.2'
 
 local ctx = ImGui.CreateContext('Script Launcher')
-local VERSION = "2.9"
+local VERSION = "2.9.2"
 local SCRIPT_NAME = "Script Launcher "
 
 local SCRIPT_EXTENSIONS = {
@@ -216,8 +218,6 @@ local state = {
     new_tag_name = "",
     tag_to_edit = nil,
     edit_tag_name = "",
-    show_assign_tags_modal = false,
-    assign_tags_path = nil,
     last_filter_tag = nil
 }
 
@@ -334,6 +334,21 @@ end
 local function HasTag(path, tag)
     if not state.item_tags[path] then return false end
     return state.item_tags[path][tag] == true
+end
+
+local function DrawTagAssignmentMenu(item_path)
+    if #state.tags == 0 then return end
+    
+    if not state.item_tags[item_path] then
+        state.item_tags[item_path] = {}
+    end
+    for _, tag in ipairs(state.tags) do
+        local is_assigned = state.item_tags[item_path][tag] or false
+        if ImGui.MenuItem(ctx, tag, nil, is_assigned) then
+            state.item_tags[item_path][tag] = not is_assigned or nil
+            SaveConfig()
+        end
+    end
 end
 
 local function ToggleFavorite(filepath)
@@ -570,10 +585,6 @@ local function DrawMenuBar()
                 ScanDirectory(state.current_path)
             end
             ImGui.Separator(ctx)
-            if ImGui.MenuItem(ctx, ICONS.tag .. " Manage Tags...") then
-                state.show_manage_tags = true
-            end
-            ImGui.Separator(ctx)
             if ImGui.MenuItem(ctx, "Settings...") then
                 state.show_settings = true
             end
@@ -681,6 +692,9 @@ local function DrawToolbar()
     end
     ImGui.PopStyleColor(ctx)
     if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Run History") end
+    
+    ImGui.SameLine(ctx)
+    ImGui.Text(ctx, "|")
 end
 
 local function DrawSearchBar()
@@ -717,6 +731,8 @@ local function DrawFolderTree(list_height)
                 if ImGui.MenuItem(ctx, root_is_fav and "Remove from Favorites" or "Add to Favorites") then
                     ToggleFavorite(root_path)
                 end
+                ImGui.Separator(ctx)
+                DrawTagAssignmentMenu(root_path)
                 ImGui.EndPopup(ctx)
             end
 
@@ -741,6 +757,8 @@ local function DrawFolderTree(list_height)
                             if ImGui.MenuItem(ctx, is_fav and "Remove from Favorites" or "Add to Favorites") then
                                 ToggleFavorite(folder_path)
                             end
+                            ImGui.Separator(ctx)
+                            DrawTagAssignmentMenu(folder_path)
                             ImGui.EndPopup(ctx)
                         end
 
@@ -895,10 +913,7 @@ local function DrawFileList(list_height)
                             ToggleFavorite(item.path)
                         end
                         ImGui.Separator(ctx)
-                        if ImGui.MenuItem(ctx, ICONS.tag .. " Assign Tags...") then
-                            state.assign_tags_path = item.path
-                            state.show_assign_tags_modal = true
-                        end
+                        DrawTagAssignmentMenu(item.path)
                         ImGui.EndPopup(ctx)
                     end
 
@@ -1108,10 +1123,7 @@ local function DrawFileList(list_height)
                         ImGui.Separator(ctx)
                         if ImGui.MenuItem(ctx, "Remove from Favorites") then ToggleFavorite(item.path) end
                         ImGui.Separator(ctx)
-                        if ImGui.MenuItem(ctx, ICONS.tag .. " Assign Tags...") then
-                            state.assign_tags_path = item.path
-                            state.show_assign_tags_modal = true
-                        end
+                        DrawTagAssignmentMenu(item.path)
                         ImGui.EndPopup(ctx)
                     end
 
@@ -1180,10 +1192,7 @@ local function DrawFileList(list_height)
                             ToggleFavorite(item.path)
                         end
                         ImGui.Separator(ctx)
-                        if ImGui.MenuItem(ctx, ICONS.tag .. " Assign Tags...") then
-                            state.assign_tags_path = item.path
-                            state.show_assign_tags_modal = true
-                        end
+                        DrawTagAssignmentMenu(item.path)
                         ImGui.EndPopup(ctx)
                     end
 
@@ -1258,10 +1267,7 @@ local function DrawFileList(list_height)
                             ToggleFavorite(item.path)
                         end
                         ImGui.Separator(ctx)
-                        if ImGui.MenuItem(ctx, ICONS.tag .. " Assign Tags...") then
-                            state.assign_tags_path = item.path
-                            state.show_assign_tags_modal = true
-                        end
+                        DrawTagAssignmentMenu(item.path)
                         ImGui.EndPopup(ctx)
                     end
 
@@ -1439,50 +1445,14 @@ local function DrawManageTagsWindow()
     end
 end
 
-local function DrawAssignTagsModal()
-    if state.show_assign_tags_modal then
-        ImGui.OpenPopup(ctx, "Assign Tags")
-        state.show_assign_tags_modal = false
-    end
-
-    local center = {ImGui.Viewport_GetCenter(ImGui.GetMainViewport(ctx))}
-    ImGui.SetNextWindowPos(ctx, center[1], center[2], ImGui.Cond_Appearing, 0.5, 0.5)
-
-    if ImGui.BeginPopupModal(ctx, "Assign Tags", true, ImGui.WindowFlags_AlwaysAutoResize) then
-        if state.assign_tags_path then
-            ImGui.Text(ctx, "Assign tags to: " .. GetFileName(state.assign_tags_path))
-            ImGui.Separator(ctx)
-
-            if #state.tags == 0 then
-                ImGui.TextDisabled(ctx, "No tags created yet. Use 'File > Manage Tags...' first.")
-            else
-                if not state.item_tags[state.assign_tags_path] then
-                    state.item_tags[state.assign_tags_path] = {}
-                end
-
-                for _, tag in ipairs(state.tags) do
-                    local is_assigned = state.item_tags[state.assign_tags_path][tag] or false
-                    local changed, checked = ImGui.Checkbox(ctx, tag, is_assigned)
-                    if changed then
-                        state.item_tags[state.assign_tags_path][tag] = checked or nil
-                        SaveConfig()
-                    end
-                end
-            end
-        end
-
-        ImGui.Separator(ctx)
-        if ImGui.Button(ctx, "Done", 120) then
-            ImGui.CloseCurrentPopup(ctx)
-        end
-        ImGui.EndPopup(ctx)
-    end
-end
-
 local function DrawTagsBar()
-    if #state.tags == 0 then return end
-    
-    ImGui.Text(ctx, "Tags: ")
+    -- Manage Tags button
+    if ImGui.Button(ctx, "Manage Tags##manage_tags") then
+        state.show_manage_tags = not state.show_manage_tags
+    end
+    if ImGui.IsItemHovered(ctx) then ImGui.SetTooltip(ctx, "Manage Tags (Add/Edit/Delete)") end
+    ImGui.SameLine(ctx)
+    ImGui.Text(ctx, "|")
     ImGui.SameLine(ctx)
     
     -- "All" button to clear filter
@@ -1606,7 +1576,7 @@ local function MainLoop()
         end
         DrawMenuBar()
         DrawToolbar()
-        ImGui.Spacing(ctx)
+        ImGui.SameLine(ctx)
         DrawTagsBar()
         ImGui.Spacing(ctx)
         DrawBreadcrumbs()
@@ -1630,7 +1600,6 @@ local function MainLoop()
     DrawManageTagsWindow()
     if open then
         DrawAddCustomPathModal()
-        DrawAssignTagsModal()
         reaper.defer(MainLoop)
     else
         SaveConfig()
