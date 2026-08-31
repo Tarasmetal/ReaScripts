@@ -1,11 +1,15 @@
 -- @description SendBox | MODDED by Taras Umanskiy
 -- @author smandrap
--- @version 1.3
+-- @version 1.7
 -- @provides [main] .
 -- @link http://vk.com/tarasmetal
 -- @donation https://paypal.me/Tarasmetal
 -- @about Этот скрипт, "SendBox", предназначен для автоматизации создания и управления track sends в Reaper DAW.  Он позволяет быстро создавать маршруты между треками, настраивать режимы (send/receive), выбирать каналы источника и назначения, а также сохранять и загружать настройки.
 -- @changelog
+--  + Tooltip for Multi Out checkbox is now in English
+--  + Добавлена всплывающая подсказка для чекбокса Multi Out
+--  + Чекбокс Multi Out теперь сохраняет состояние и выделен желтым цветом
+--  + Добавлен чекбокс "Multi Out" для последовательного назначения каналов (1/2, 3/4, 5/6...)
 --  + Имя файла настроек теперь соответствует имени скрипта
 --  + Настройки теперь сохраняются в папку со скриптом
 --  + Code optimizations
@@ -17,11 +21,12 @@ dofile(reaper.GetResourcePath() .. '/Scripts/ReaTeam Extensions/API/imgui.lua') 
 local script_path, script_name = debug.getinfo(1).source:match("@?(.*[\\|/])(.-)%.lua$")
 local config_file = script_path .. script_name .. '.txt'
 
-local function save_config(mode, send_position)
+local function save_config(mode, send_position, multi_out)
     local file = io.open(config_file, "w")
     if file then
-        file:write(mode .. "\n")
-        file:write(send_position .. "\n")
+        file:write(tostring(mode) .. "\n")
+        file:write(tostring(send_position) .. "\n")
+        file:write(tostring(multi_out) .. "\n")
         file:close()
     end
 end
@@ -31,10 +36,12 @@ local function load_config()
     if file then
         local mode = tonumber(file:read("*line"))
         local send_position = tonumber(file:read("*line"))
+        local multi_out_str = file:read("*line")
+        local multi_out = multi_out_str == "true"
         file:close()
-        return mode, send_position
+        return mode or 0, send_position or 0, multi_out
     end
-    return 0, 0 -- default values if config file doesn't exist
+    return 0, 0, false -- default values if config file doesn't exist
 end
 
 local function init()
@@ -104,7 +111,7 @@ local GuiData = {
     selectedInTree = {}
 }
 
-local mode, send_position = load_config()
+local mode, send_position, multi_out = load_config()
 
 local dst_channel = 0
 local src_channels = {}
@@ -156,30 +163,64 @@ local function StartSendCreation()
     for i = 0, sel_track_count - 1 do
         local current = r.GetSelectedTrack(0, i)
 
-        for _, v in ipairs(dest_tracks) do
+        for dest_idx, v in ipairs(dest_tracks) do
             local dest = r.GetTrack(0, v)
 
             if mode == 0 then
                 -- SEND MODE
-                SetSrcTrackChannels(current, chan_ids)
-                SetDstTrackChannels(dest, dst_channel)
-
-                for _, src in ipairs(chan_ids) do
+                if multi_out then
+                    -- Логика Multi Out для SEND: 1-й посыл 1/2, 2-й 3/4 и т.д.
+                    -- Используем индекс в списке назначений (dest_idx) для определения каналов
+                    local src_chan = (dest_idx - 1) * 2
+                    local required_channels = src_chan + 2
+                    local current_channels = r.GetMediaTrackInfo_Value(current, 'I_NCHAN')
+                    if current_channels < required_channels then
+                        r.SetMediaTrackInfo_Value(current, 'I_NCHAN', required_channels)
+                    end
+                    
                     local send_idx = r.CreateTrackSend(current, dest)
-                    r.BR_GetSetTrackSendInfo(current, 0, send_idx, 'I_SRCCHAN', true, src)
+                    r.BR_GetSetTrackSendInfo(current, 0, send_idx, 'I_SRCCHAN', true, src_chan)
                     r.BR_GetSetTrackSendInfo(current, 0, send_idx, 'I_DSTCHAN', true, dst_channel)
                     r.BR_GetSetTrackSendInfo(current, 0, send_idx, 'I_SENDMODE', true, send_position)
+                else
+                    -- Обычный режим
+                    SetSrcTrackChannels(current, chan_ids)
+                    SetDstTrackChannels(dest, dst_channel)
+
+                    for _, src in ipairs(chan_ids) do
+                        local send_idx = r.CreateTrackSend(current, dest)
+                        r.BR_GetSetTrackSendInfo(current, 0, send_idx, 'I_SRCCHAN', true, src)
+                        r.BR_GetSetTrackSendInfo(current, 0, send_idx, 'I_DSTCHAN', true, dst_channel)
+                        r.BR_GetSetTrackSendInfo(current, 0, send_idx, 'I_SENDMODE', true, send_position)
+                    end
                 end
             else
                 -- RECEIVE MODE
-                SetSrcTrackChannels(dest, chan_ids)
-                SetDstTrackChannels(current, dst_channel)
+                if multi_out then
+                    -- Логика Multi Out для RECEIVE: 1-я дорожка 1/2, 2-я 3/4 и т.д.
+                    -- Используем индекс выделенного трека (i)
+                    local src_chan = i * 2
+                    local required_channels = src_chan + 2
+                    local current_channels = r.GetMediaTrackInfo_Value(dest, 'I_NCHAN')
+                    if current_channels < required_channels then
+                        r.SetMediaTrackInfo_Value(dest, 'I_NCHAN', required_channels)
+                    end
 
-                for _, src in ipairs(chan_ids) do
                     local send_idx = r.CreateTrackSend(dest, current)
-                    r.BR_GetSetTrackSendInfo(dest, 0, send_idx, 'I_SRCCHAN', true, src)
+                    r.BR_GetSetTrackSendInfo(dest, 0, send_idx, 'I_SRCCHAN', true, src_chan)
                     r.BR_GetSetTrackSendInfo(dest, 0, send_idx, 'I_DSTCHAN', true, dst_channel)
                     r.BR_GetSetTrackSendInfo(dest, 0, send_idx, 'I_SENDMODE', true, send_position)
+                else
+                    -- Обычный режим
+                    SetSrcTrackChannels(dest, chan_ids)
+                    SetDstTrackChannels(current, dst_channel)
+
+                    for _, src in ipairs(chan_ids) do
+                        local send_idx = r.CreateTrackSend(dest, current)
+                        r.BR_GetSetTrackSendInfo(dest, 0, send_idx, 'I_SRCCHAN', true, src)
+                        r.BR_GetSetTrackSendInfo(dest, 0, send_idx, 'I_DSTCHAN', true, dst_channel)
+                        r.BR_GetSetTrackSendInfo(dest, 0, send_idx, 'I_SENDMODE', true, send_position)
+                    end
                 end
             end
         end
@@ -265,6 +306,15 @@ local function GUI_DrawMenuBar()
         end
 
         r.ImGui_EndMenu(GuiData.ctx)
+    end
+
+    r.ImGui_SameLine(GuiData.ctx)
+    local rv
+    r.ImGui_PushStyleColor(GuiData.ctx, r.ImGui_Col_Text(), 0xFFFF00FF) -- Желтый цвет (RGBA)
+    rv, multi_out = r.ImGui_Checkbox(GuiData.ctx, 'Multi Out', multi_out)
+    r.ImGui_PopStyleColor(GuiData.ctx)
+    if r.ImGui_IsItemHovered(GuiData.ctx) then
+        r.ImGui_SetTooltip(GuiData.ctx, "Sequential channel assignment:\nSend: 1st send 1/2, 2nd 3/4, etc.\nReceive: 1st receive 1/2, 2nd 3/4, etc.")
     end
 
     r.ImGui_SameLine(GuiData.ctx)
@@ -392,7 +442,7 @@ local function GUI_DrawTrackTree(open_action)
 end
 
 local function frame()
-    r.ImGui_SetNextWindowSize(GuiData.ctx, 390, 400, r.ImGui_Cond_Always())
+    r.ImGui_SetNextWindowSize(GuiData.ctx, 420, 400, r.ImGui_Cond_Always())
     local visible, open = r.ImGui_Begin(GuiData.ctx, 'SendBox | MODDED by Taras Umanskiy', true, r.ImGui_WindowFlags_MenuBar())
 
     if visible then
@@ -413,7 +463,7 @@ local function frame()
     if not GuiData.selectionMade and open then
         r.defer(frame)
     else
-        save_config(mode, send_position)
+        save_config(mode, send_position, multi_out)
         r.ImGui_DestroyContext(GuiData.ctx)
     end
 end
