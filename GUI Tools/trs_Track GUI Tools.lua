@@ -1,13 +1,20 @@
 -- @description TRACK RENAME GUI TOOLS
 -- @author Taras Umanskiy
--- @version 4.2
+-- @version 4.8
 -- @provides [main] .
---  [script] TrackPresets/*.txt
 --  [script] TrackPresets/trs_TrackGUITools_default.lua
 -- @link http://vk.com/tarasmetal
 -- @donation https://vk.com/Tarasmetal
 -- @about Скрипт предоставляет мощный графический интерфейс для управления именами треков, панорамированием и цветами в REAPER. Поддерживает систему пресетов, HEX-коды цветов и удобную навигацию.
 -- @changelog
+--   + ПКМ на кнопке панорамы открывает поле InputInt прямо на месте кнопок; Enter/клик мимо — сохранение и выход, Escape — выход без сохранения.
+--   + Убрана кнопка "+ Add" из окна панорамирования (добавление строки теперь через Insert).
+--   + В окне панорамирования клавиши Insert и Delete работают на обеих кнопках (-val и val) по аналогии с главным окном.
+--   + В подсказку кнопки "P" добавлено описание горячих клавиш Insert/Delete.
+--   + Панорамирование убрано из основного окна и теперь редактируется только в отдельном окне Pan.
+--   + Добавлено отдельное окно панорамирования с магнитным прилипанием (лево/право от основного).
+--   + Добавлена кнопка "Pan" рядом с Clone для показа/скрытия окна панорамирования (ПКМ — переключение стороны).
+--   + Добавлены всплывающие подсказки на кнопках Index, LR и Clone.
 --   + Улучшена логика кнопки "LR": теперь окончания L и R проверяются с учетом предшествующего пробела, подчеркивания (_) или дефиса (-).
 --   + Добавлена возможность добавления строки (Insert на основной кнопке) и суффикса (Insert на кнопке суффикса) при наведении мыши.
 --   + Кнопка "Add Row" теперь большая, находится по центру и мигает красно-желтым цветом (для пустых пресетов).
@@ -29,7 +36,7 @@ console = false
 function msg(value) if console then r.ShowConsoleMsg(tostring(value) .. "\n") end end
 
 title = 'TRACK RENAME GUI TOOLS'
-ver = '4.2'
+ver = '4.8'
 author = 'Taras Umanskiy'
 about = title .. ' ' .. ver .. ' | by ' .. author
 ListDir = {}
@@ -87,6 +94,9 @@ end
 local currentPresetIndex = 1
 local allPresetFiles = {}
 
+-- Глобальный массив панорамирования (независим от track_set)
+pan_set = {}
+
 function SavePreset(saveFile, track_set)
   local file = io.open(saveFile, "w")
   if file then
@@ -95,18 +105,15 @@ function SavePreset(saveFile, track_set)
       for i = 1, 5 do
         line = line .. "," .. (set["text_add_" .. i] or "")
       end
-      local pan_value = ""
-      if type(set.pan) == "number" then
-        pan_value = tostring(set.pan)
-      elseif set.pan == false then
-        pan_value = "false"
-      end
-      line = line .. "," .. pan_value
-
+      -- pan и color
       local color_value = ColorToHex(set.color)
-      line = line .. "," .. color_value
-
+      line = line .. ",false," .. color_value
       file:write(line .. "\n")
+    end
+    -- Секция панорамирования
+    file:write("##PAN##\n")
+    for _, val in ipairs(pan_set) do
+      file:write(tostring(val) .. "\n")
     end
     file:close()
     msg("Preset saved to: " .. saveFile)
@@ -174,37 +181,53 @@ end
 
 function LoadPreset(saveFile)
   local loaded_track_set = {}
+  local loaded_pan_set = {}
+  local in_pan_section = false
+  local legacy_pan = {}
   local file = io.open(saveFile, "r")
   if file then
     for line in file:lines() do
-      local parts = {}
-      for part in line:gmatch("([^,]*),?") do
-        table.insert(parts, part)
-      end
-
-      local set = {}
-      set.text = parts[1] or ""
-      for i = 1, 5 do
-        set["text_add_" .. i] = parts[i + 1] or ""
-      end
-
-      local pan_str = parts[7]
-      if pan_str == "false" then
-        set.pan = false
+      if line == "##PAN##" then
+        in_pan_section = true
+      elseif in_pan_section then
+        -- Строки секции панорамирования: по одному значению
+        local val = tonumber(line)
+        if val then table.insert(loaded_pan_set, val) end
       else
-        set.pan = tonumber(pan_str) or 'false' -- Default to 0 if not a number
-      end
+        local parts = {}
+        for part in line:gmatch("([^,]*),?") do
+          table.insert(parts, part)
+        end
 
-      local color_str = parts[8]
-      if color_str and color_str ~= "false" and color_str ~= "" then
-        set.color = HexToColor(color_str)
-      else
-        set.color = false
-      end
+        local set = {}
+        set.text = parts[1] or ""
+        for i = 1, 5 do
+          set["text_add_" .. i] = parts[i + 1] or ""
+        end
 
-      table.insert(loaded_track_set, set)
+        -- Колонка 7 больше не хранит pan (зарезервировано), мигрируем старые файлы
+        local pan_str = parts[7]
+        if pan_str and pan_str ~= "false" and pan_str ~= "" then
+          local num = tonumber(pan_str)
+          if num then table.insert(legacy_pan, num) end
+        end
+
+        local color_str = parts[8]
+        if color_str and color_str ~= "false" and color_str ~= "" then
+          set.color = HexToColor(color_str)
+        else
+          set.color = false
+        end
+
+        table.insert(loaded_track_set, set)
+      end
     end
     file:close()
+    -- Если секции ##PAN## не было — используем значения из старых файлов
+    if #loaded_pan_set == 0 and #legacy_pan > 0 then
+      loaded_pan_set = legacy_pan
+    end
+    pan_set = loaded_pan_set
     msg("Preset loaded from: " .. saveFile)
     return loaded_track_set
   else
@@ -416,6 +439,11 @@ function processDuplicateTracksLR()
   end
 end
 
+-- Pan window state
+local showPanWindow = (reaper.GetExtState("trs_TrackGUITools", "showPanWindow") == "1")
+local panWindowSide = reaper.GetExtState("trs_TrackGUITools", "panWindowSide")
+if panWindowSide ~= "left" and panWindowSide ~= "right" then panWindowSide = "right" end
+
 local ctx = r.ImGui_CreateContext(windowTitle)
 local size = 12
 local font = reaper.ImGui_CreateFont('Arial-Regular', size)
@@ -590,12 +618,18 @@ local function myWindow()
       if r.ImGui_Button(ctx, " Index", 50, 0) then
         renameSelectedTracks()
       end
+      if r.ImGui_IsItemHovered(ctx) then
+        r.ImGui_SetTooltip(ctx, "Пронумеровать дубликаты выделенных треков\n(добавляет индекс к одинаковым именам)")
+      end
       r.ImGui_PopStyleColor(ctx, 1)
 
       r.ImGui_SameLine(ctx)
       r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
       if r.ImGui_Button(ctx, "LR", 50, 0) then
         processDuplicateTracksLR()
+      end
+      if r.ImGui_IsItemHovered(ctx) then
+        r.ImGui_SetTooltip(ctx, "Переименовать дубликаты выделенных треков\n(добавляет суффиксы L и R к парным трекам)")
       end
       r.ImGui_PopStyleColor(ctx, 1)
 
@@ -604,8 +638,27 @@ local function myWindow()
       if r.ImGui_Button(ctx, "Clone", 50, 0) then
         cloneSelectedTracksToSet(false)
       end
+      if r.ImGui_IsItemHovered(ctx) then
+        r.ImGui_SetTooltip(ctx, "ЛКМ — клонировать имена выделенных треков в пресет\nПКМ — клонировать с разделением на префикс и суффиксы")
+      end
       if r.ImGui_IsItemClicked(ctx, r.ImGui_MouseButton_Right()) then
         cloneSelectedTracksToSet(true)
+      end
+      r.ImGui_PopStyleColor(ctx, 1)
+
+      r.ImGui_SameLine(ctx)
+      local panBtnColor = showPanWindow and 0x4A7C59FF or color_4
+      r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), panBtnColor)
+      if r.ImGui_Button(ctx, "P", 25, 0) then
+        showPanWindow = not showPanWindow
+        reaper.SetExtState("trs_TrackGUITools", "showPanWindow", showPanWindow and "1" or "0", true)
+      end
+      if r.ImGui_IsItemHovered(ctx) then
+        r.ImGui_SetTooltip(ctx, "Показать/скрыть окно панорамирования\nПКМ — переключить сторону прилипания (лево/право)\nInsert — добавить строку после наведённой\nDelete — удалить наведённую строку")
+      end
+      if r.ImGui_IsItemClicked(ctx, r.ImGui_MouseButton_Right()) then
+        panWindowSide = (panWindowSide == "right") and "left" or "right"
+        reaper.SetExtState("trs_TrackGUITools", "panWindowSide", panWindowSide, true)
       end
       r.ImGui_PopStyleColor(ctx, 1)
 
@@ -613,21 +666,21 @@ local function myWindow()
       if #track_set == 0 then
         local window_w = r.ImGui_GetWindowSize(ctx)
         local btn_w, btn_h = 70, 45
-        
+
         -- Center horizontally
         r.ImGui_SetCursorPosX(ctx, (window_w - btn_w) / 2)
         -- Add some vertical space
         r.ImGui_SetCursorPosY(ctx, r.ImGui_GetCursorPosY(ctx) + 20)
-        
+
         -- Flashing color: Red (1,0,0) to Yellow (1,1,0)
         local time = r.time_precise()
         local phase = (math.sin(time * 8) + 1) / 2 -- Pulsing frequency 8
         local flash_color = r.ImGui_ColorConvertDouble4ToU32(1.0, phase, 0.0, 0.3)
-        
+
         r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), flash_color)
         r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonHovered(), flash_color)
         r.ImGui_PushStyleColor(ctx, r.ImGui_Col_ButtonActive(), flash_color)
-        
+
         if r.ImGui_Button(ctx, "START", btn_w, btn_h) then
           table.insert(track_set, {text = "New", pan = false})
           SavePreset(allPresetFiles[currentPresetIndex], track_set)
@@ -700,29 +753,6 @@ local function myWindow()
       if changed then set.text = new_text end
       if r.ImGui_IsItemDeactivatedAfterEdit(ctx) then
         SavePreset(allPresetFiles[currentPresetIndex], track_set)
-      end
-
-      r.ImGui_Separator(ctx)
-      r.ImGui_Text(ctx, "Pan Settings")
-      local is_pan_enabled = (type(set.pan) == "number")
-      local rv, new_enabled = r.ImGui_Checkbox(ctx, "Enable Pan", is_pan_enabled)
-      if rv then
-        if new_enabled then
-          set.pan = 0
-        else
-          set.pan = false
-        end
-        SavePreset(allPresetFiles[currentPresetIndex], track_set)
-      end
-
-      if type(set.pan) == "number" then
-        local changed_pan, new_pan = r.ImGui_InputInt(ctx, "Pan Value", set.pan)
-        if changed_pan then
-          set.pan = new_pan
-        end
-        if r.ImGui_IsItemDeactivatedAfterEdit(ctx) then
-          SavePreset(allPresetFiles[currentPresetIndex], track_set)
-        end
       end
 
       r.ImGui_Separator(ctx)
@@ -892,37 +922,6 @@ local function myWindow()
       end
     end
 
-    -- Кнопки панорамирования
-    if type(set.pan) == "number" then
-      r.ImGui_SameLine(ctx)
-      local panValue = set.pan / 100.0 -- Преобразуем значение pan в диапазон от 0.0 до 1.0
-      -- Кнопка для панорамирования влево
-       r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_3)
-      if r.ImGui_Button(ctx, " -" .. set.pan .. "##pan_L_" .. _, btnWidth / 2.1, 0) then
-        local track_count = r.CountSelectedTracks(0)
-        for i = 0, track_count - 1 do
-          local track = r.GetSelectedTrack(0, i)
-          if track then
-            r.SetMediaTrackInfo_Value(track, "D_PAN", -panValue)
-          end
-        end
-      end
-      r.ImGui_PopStyleColor(ctx, 1)
-      r.ImGui_SameLine(ctx)
-
-      -- Кнопка для панорамирования вправо
-       r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
-      if r.ImGui_Button(ctx, " " .. set.pan .. "##pan_R_" .. _, btnWidth / 2.1, 0) then
-        local track_count = r.CountSelectedTracks(0)
-        for i = 0, track_count - 1 do
-          local track = r.GetSelectedTrack(0, i)
-          if track then
-            r.SetMediaTrackInfo_Value(track, "D_PAN", panValue)
-          end
-        end
-      end
-      r.ImGui_PopStyleColor(ctx, 1)
-    end
   end
 
   if item_to_delete then
@@ -934,15 +933,144 @@ local function myWindow()
 
 end
 
+-- Переменные для хранения позиции и размера основного окна
+local mainWinX, mainWinY, mainWinW, mainWinH = 0, 0, 0, 0
+
+local pan_edit_idx = nil
+local pan_edit_focused = false
+
+local function panWindow()
+  if not showPanWindow then return end
+
+  -- Магнитное прилипание: позиционируем окно рядом с основным
+  local snapMargin = 4
+  local posX, posY
+  if panWindowSide == "right" then
+    posX = mainWinX + mainWinW + snapMargin
+  else
+    -- Ширина pan-окна ~92px, вычтем при позиционировании слева
+    posX = mainWinX - 92 - snapMargin
+  end
+  posY = mainWinY
+  r.ImGui_SetNextWindowPos(ctx, posX, posY, r.ImGui_Cond_Always())
+  r.ImGui_SetNextWindowSizeConstraints(ctx, 0, 0, 999999, 999999)
+
+  local panTitle = "Pan##panwin"
+  local pvis, popen = r.ImGui_Begin(ctx, panTitle, true,
+    r.ImGui_WindowFlags_AlwaysAutoResize() | r.ImGui_WindowFlags_NoTitleBar())
+  if pvis then
+    local pan_to_delete = nil
+    for idx, val in ipairs(pan_set) do
+      if pan_edit_idx == idx then
+        -- Режим редактирования: InputInt на месте кнопок
+        r.ImGui_SetNextItemWidth(ctx, 76)
+        if not pan_edit_focused then
+          r.ImGui_SetKeyboardFocusHere(ctx)
+          pan_edit_focused = true
+        end
+        local changed, new_val = r.ImGui_InputInt(ctx, "##pan_edit_" .. idx, val, 0, 0)
+        if changed then
+          pan_set[idx] = new_val
+        end
+        -- Выход из режима редактирования: Enter, клик мимо или Escape
+        if r.ImGui_IsItemDeactivatedAfterEdit(ctx) then
+          SavePreset(allPresetFiles[currentPresetIndex], track_set)
+        end
+        if r.ImGui_IsItemDeactivated(ctx) or r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Escape()) then
+          pan_edit_idx = nil
+          pan_edit_focused = false
+        end
+      else
+        local panValue = val / 100.0
+        r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_3)
+        if r.ImGui_Button(ctx, " -" .. val .. "##panW_L_" .. idx, 34, 0) then
+          local tc = r.CountSelectedTracks(0)
+          for i = 0, tc - 1 do
+            local track = r.GetSelectedTrack(0, i)
+            if track then r.SetMediaTrackInfo_Value(track, "D_PAN", -panValue) end
+          end
+        end
+        r.ImGui_PopStyleColor(ctx, 1)
+
+        -- Удаление по Delete при наведении (левая кнопка)
+        if r.ImGui_IsItemHovered(ctx) and r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Delete()) then
+          pan_to_delete = idx
+        end
+        -- Вставка по Insert при наведении (левая кнопка)
+        if r.ImGui_IsItemHovered(ctx) and r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Insert()) then
+          table.insert(pan_set, idx + 1, 0)
+          SavePreset(allPresetFiles[currentPresetIndex], track_set)
+        end
+        -- ПКМ на левой кнопке — переход в режим редактирования
+        if r.ImGui_IsItemClicked(ctx, r.ImGui_MouseButton_Right()) then
+          pan_edit_idx = idx
+          pan_edit_focused = false
+        end
+
+        r.ImGui_SameLine(ctx)
+        r.ImGui_PushStyleColor(ctx, r.ImGui_Col_Button(), color_4)
+        if r.ImGui_Button(ctx, " " .. val .. "##panW_R_" .. idx, 34, 0) then
+          local tc = r.CountSelectedTracks(0)
+          for i = 0, tc - 1 do
+            local track = r.GetSelectedTrack(0, i)
+            if track then r.SetMediaTrackInfo_Value(track, "D_PAN", panValue) end
+          end
+        end
+        r.ImGui_PopStyleColor(ctx, 1)
+
+        -- Удаление по Delete при наведении (правая кнопка)
+        if r.ImGui_IsItemHovered(ctx) and r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Delete()) then
+          pan_to_delete = idx
+        end
+        -- Вставка по Insert при наведении (правая кнопка)
+        if r.ImGui_IsItemHovered(ctx) and r.ImGui_IsKeyPressed(ctx, r.ImGui_Key_Insert()) then
+          table.insert(pan_set, idx + 1, 0)
+          SavePreset(allPresetFiles[currentPresetIndex], track_set)
+        end
+        -- ПКМ на правой кнопке — переход в режим редактирования
+        if r.ImGui_IsItemClicked(ctx, r.ImGui_MouseButton_Right()) then
+          pan_edit_idx = idx
+          pan_edit_focused = false
+        end
+      end
+    end
+
+    if pan_to_delete then
+      table.remove(pan_set, pan_to_delete)
+      SavePreset(allPresetFiles[currentPresetIndex], track_set)
+    end
+
+    if #pan_set == 0 then
+      if r.ImGui_Button(ctx, "+ Add##pan_add_first", 76, 0) then
+        table.insert(pan_set, 0)
+        SavePreset(allPresetFiles[currentPresetIndex], track_set)
+      end
+    end
+
+    r.ImGui_End(ctx)
+  end
+  if not popen then
+    showPanWindow = false
+    reaper.SetExtState("trs_TrackGUITools", "showPanWindow", "0", true)
+  end
+end
+
 local function loop()
   reaper.ImGui_PushFont(ctx, font, size)
 
   reaper.ImGui_SetNextWindowSizeConstraints(ctx, 100, 100, 999999, 999999)
   local visible, open = reaper.ImGui_Begin(ctx, windowTitle, true, reaper.ImGui_WindowFlags_AlwaysAutoResize())
   if visible then
+    -- Запоминаем позицию и размер основного окна для магнита
+    mainWinX, mainWinY = r.ImGui_GetWindowPos(ctx)
+    mainWinW, mainWinH = r.ImGui_GetWindowSize(ctx)
     myWindow()
     reaper.ImGui_End(ctx)
   end
+
+  -- Рисуем pan-окно поверх основного
+  panWindow()
+
   reaper.ImGui_PopFont(ctx)
 
     -- Обработка нажатия клавиши 'w' для перехода к следующему треку
@@ -955,7 +1083,6 @@ local function loop()
       reaper.Main_OnCommand(reaper.NamedCommandLookup("_XENAKIOS_SELNEXTTRACK"), 0)
     end
 
-  -- if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Escape()) or reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_LeftAlt()) or reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_RightAlt()) then
   if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Escape()) then
     open = false
   end
