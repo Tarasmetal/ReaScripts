@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playback Playlist</title>
+<style>
+:root{color-scheme:dark;--bg:#171b1a;--panel:#222826;--line:#39413d;--text:#e9eee9;--muted:#9ca9a1;--accent:#ebd359;--green:#70bea2}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.4 'Segoe UI',sans-serif}button,input{font:inherit}button{cursor:pointer;color:inherit;background:#303936;border:1px solid #4b5650;border-radius:4px;min-height:36px;padding:6px 12px}button:hover{background:#42514a}button:disabled{opacity:.4;cursor:default}button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}header{height:66px;padding:0 clamp(16px,3vw,40px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:12px}h1{font-size:19px;margin:0;font-weight:650}header small{display:block;color:var(--muted);font-size:11px;letter-spacing:.1em;text-transform:uppercase}#connection{color:var(--muted);font-size:12px;white-space:nowrap}#connection.online{color:var(--green)}main{max-width:1320px;margin:auto;padding:24px clamp(16px,3vw,40px)}.toolbar,.actions,.heading,.row,.region-row{display:flex;align-items:center;gap:8px}.toolbar{justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}.tabs{display:flex;gap:4px;overflow-x:auto;max-width:100%;padding:0 0 6px}.tab{white-space:nowrap;background:transparent;border-color:transparent;border-bottom:2px solid transparent;border-radius:0}.tab.active{color:var(--accent);border-bottom-color:var(--accent)}.actions{flex-wrap:wrap}.primary{background:var(--accent);border-color:var(--accent);color:#171b1a;font-weight:700}.primary:hover{background:#f9e78b}.layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px}.panel{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}.heading{padding:16px 18px;justify-content:space-between;border-bottom:1px solid var(--line);min-height:64px}.heading h2{font-size:15px;margin:0;font-weight:650}.heading span,.hint{color:var(--muted);font-size:12px}.controls{padding:14px 18px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}.controls label{display:flex;align-items:center;gap:8px;margin-left:auto;white-space:nowrap}.controls input{accent-color:var(--accent);width:17px;height:17px}#rename{width:min(100%,230px);background:#141817;color:var(--text);border:1px solid var(--line);border-radius:4px;padding:7px 10px}.list{padding:7px 0;min-height:180px}.row,.region-row{min-height:49px;padding:5px 18px;border-bottom:1px solid #343c38}.row:last-child,.region-row:last-child{border-bottom:0}.row.playing{background:#3a392b}.row.playing .name{color:var(--accent)}.num{color:var(--muted);width:25px;font-variant-numeric:tabular-nums;flex:none}.name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.name.missing{color:#df8a82}.icon{padding:0;width:32px;height:32px;min-height:32px;flex:none;display:inline-grid;place-items:center}.row.playing .play{background:var(--accent);color:#181b19;border-color:var(--accent)}.duration{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}.empty{padding:36px 18px;text-align:center;color:var(--muted)}.error{color:#f2a49d;min-height:22px;margin:0 0 8px}.region-row .name{font-size:13px}.region-row .duration{margin-left:auto}.muted{color:var(--muted)}#regions .list{max-height:65vh;overflow:auto}.drag-handle{cursor:grab;touch-action:none;user-select:none}.drag-handle:active{cursor:grabbing}.dragging{opacity:.45}.drop-target{box-shadow:inset 0 2px var(--accent);background:#343b32}#project{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45vw}@media(max-width:800px){.layout{grid-template-columns:1fr}#regions .list{max-height:320px}.controls label{margin-left:0}header{height:60px}}
+</style>
+<style>
+.seek-panel{padding:12px 18px 16px;border-bottom:1px solid var(--line)}
+.seek-times{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+#seek{width:100%;margin:10px 0;accent-color:var(--accent);cursor:pointer}
+#seek:disabled{cursor:default;opacity:.45}
+</style>
+</head>
+<body>
+<header><div><small>REAPER / WEB REMOTE</small><h1>Playback Playlist</h1></div><div id="connection">Подключение...</div></header>
+<main>
+<div class="toolbar"><div id="tabs" class="tabs" role="tablist"></div><div class="actions"><button id="new">+ Плейлист</button><button id="toggle-regions" aria-pressed="true">Регионы проекта</button></div></div>
+<div id="error" class="error" role="alert"></div>
+<div class="layout"><section class="panel"><div class="heading"><div><h2 id="project">Плейлист</h2><span id="count"></span></div><span id="transport"></span></div><div class="controls"><input id="rename" aria-label="Имя плейлиста" placeholder="Название плейлиста"><button id="delete" title="Удалить плейлист">Удалить</button><button id="clear" title="Очистить плейлист">Очистить</button><button id="play" class="primary">▶ Воспроизвести</button><label><input type="checkbox" id="consecutive">Последовательно</label></div><div class="seek-panel"><div class="seek-times"><span id="seek-current">0:00</span><span id="seek-total">0:00</span></div><input id="seek" type="range" min="0" max="1000" value="0" disabled aria-label="Позиция в текущем регионе"></div><div id="entries" class="list"></div></section><aside id="regions" class="panel"><div class="heading"><h2>Регионы проекта</h2><button id="add-all" title="Добавить все регионы">+ Все</button></div><div id="region-list" class="list"></div></aside></div>
+</main>
+<script src="/main.js"></script>
+<script>
+(() => {
+  'use strict';
+  const section = 'TRS_PlaybackPlaylistWeb';
+  const $ = id => document.getElementById(id);
+  let state = null, regions = [], transport = null, seenAt = 0, sequence = 0;
+  let pending = [], dragging = null, lastProject = '', scrubbing = false;
+  const text = (parent, tag, value, cls) => { const el = document.createElement(tag); el.textContent = value; if(cls) el.className = cls; parent.append(el); return el; };
+  const button = (parent, label, title, action, cls) => { const el = text(parent,'button',label,cls); el.type = 'button'; el.title = title; el.addEventListener('click', action); return el; };
+  function send(op, arg = '') {
+    if (!state || Date.now() - seenAt > 4000 || !state.saved && op !== 'select') return;
+    const command = `${Date.now()}${++sequence}|${op}|${encodeURIComponent(arg)}`;
+    pending.push(command);
+    flush();
+  }
+  function flush() {
+    if (!pending.length || flush.busy) return;
+    flush.busy = true;
+    wwr_req(`SET/EXTSTATE/${section}/command/${encodeURIComponent(pending.shift())}`);
+    setTimeout(() => { flush.busy = false; flush(); }, 220);
+  }
+  function parseState(raw) {
+    const lines = raw.split('~').map(line => line.split('|'));
+    const s = lines.shift();
+    if (!s || s[0] !== 'S') return;
+    return { revision:+s[1], selected:+s[2], consecutive:s[3]==='1', playingId:+s[4], step:+s[5], error:decodeURIComponent(s[6]||''), saved:s[7]==='1', project:decodeURIComponent(s[8]||''), heartbeat:+s[9], playlists:lines.filter(line=>line[0]==='P').map(line=>({id:+line[1],name:decodeURIComponent(line[2]),items:line[3]?line[3].split(',').map(Number):[]})) };
+  }
+  function duration(seconds) { const s=Math.max(0,Math.round(seconds)); return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }
+  function activeRegion() {
+    if (!state || !state.playingId) return null;
+    const playlist = state.playlists.find(p => p.id === state.playingId);
+    return playlist && regions.find(r => r.id === playlist.items[state.step - 1]) || null;
+  }
+  function updateSeek() {
+    const region = activeRegion(), length = region && region.end - region.start;
+    const ready = Date.now() - seenAt < 4000 && length > 0 && transport && (+transport[1] & 1);
+    $('seek').disabled = !ready;
+    $('seek-total').textContent = ready ? duration(length) : '0:00';
+    if (!scrubbing) {
+      const elapsed = ready ? Math.max(0, Math.min(length, +transport[2] - region.start)) : 0;
+      $('seek').value = ready ? Math.round(elapsed / length * 1000) : 0;
+      $('seek-current').textContent = duration(elapsed);
+    }
+  }
+  function render() {
+    const online = state && Date.now()-seenAt < 4000;
+    $('connection').textContent = online ? '● Мост подключён' : '○ Запустите Lua-мост в REAPER';
+    $('connection').classList.toggle('online',!!online);
+    $('error').textContent = online ? state.error || (!state.saved ? 'Сохраните проект REAPER для работы с плейлистами.' : '') : '';
+    const playlist = online && state.playlists[state.selected-1];
+    $('tabs').replaceChildren();
+    if(online) state.playlists.forEach(p=>{const tab=button($('tabs'),p.name,p.name,()=>send('select',p.id),'tab'+(playlist===p?' active':''));tab.setAttribute('role','tab');tab.setAttribute('aria-selected',String(playlist===p));});
+    $('new').disabled = !online || !state.saved;
+    ['rename','delete','clear','play','consecutive','add-all'].forEach(id=>$(id).disabled=!playlist);
+    if (document.activeElement !== $('rename')) $('rename').value = playlist ? playlist.name : '';
+    $('project').textContent = playlist ? playlist.name : (online ? 'Нет плейлистов' : 'Ожидание подключения');
+    $('count').textContent = playlist ? `${playlist.items.length} позиций · повторы разрешены` : '';
+    $('transport').textContent = transport && +transport[1]&1 ? duration(+transport[2]) : '';
+    $('play').textContent = state && state.playingId ? '\u25a0 \u0421\u0442\u043e\u043f' : '\u25b6 \u0412\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0441\u0442\u0438';
+    $('consecutive').checked = !!(state && state.consecutive);
+    updateSeek();
+    $('entries').replaceChildren();
+    if(!playlist || !playlist.items.length) text($('entries'),'div',playlist?'\u041f\u043b\u0435\u0439\u043b\u0438\u0441\u0442 \u043f\u0443\u0441\u0442. \u0414\u043e\u0431\u0430\u0432\u044c\u0442\u0435 \u0440\u0435\u0433\u0438\u043e\u043d\u044b \u0441\u043f\u0440\u0430\u0432\u0430.':'\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u043b\u0438 \u0441\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u043f\u043b\u0435\u0439\u043b\u0438\u0441\u0442.','empty');
+    if(playlist) playlist.items.forEach((id,i)=>{
+      const region=regions.find(r=>r.id===id), active=state.playingId===playlist.id && state.step===i+1;
+      const row=document.createElement('div');row.className='row'+(active?' playing':'');row.dataset.index=i;
+      text(row,'span',String(i+1).padStart(2,'0'),'num');
+      button(row,active?'\u00bb':'\u25b6','Play this region',()=>send('entry',i+1),'icon play');
+      text(row,'span',region?(region.name||`?????? ${id}`):`??????????? ?????? ${id}`,'name'+(region?'':' missing'));
+      if(region)text(row,'span',duration(region.end-region.start),'duration');
+      const handle=button(row,'\u2630','Drag to reorder',()=>{},'icon drag-handle');
+      handle.setAttribute('aria-label','Move region');
+      handle.addEventListener('pointerdown',e=>{
+        if(e.button!==0 || dragging!==null)return;
+        e.preventDefault();
+        dragging={from:i,to:i,pointerId:e.pointerId};
+        handle.setPointerCapture(e.pointerId);
+        row.classList.add('dragging');
+      });
+      handle.addEventListener('pointermove',e=>{
+        if(!dragging || dragging.pointerId!==e.pointerId)return;
+        const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('#entries .row');
+        document.querySelectorAll('#entries .drop-target').forEach(el=>el.classList.remove('drop-target'));
+        if(target){dragging.to=Number(target.dataset.index);if(target!==row)target.classList.add('drop-target');}
+      });
+      const finish=e=>{
+        if(!dragging || dragging.pointerId!==e.pointerId)return;
+        const {from,to}=dragging;dragging=null;
+        row.classList.remove('dragging');
+        document.querySelectorAll('#entries .drop-target').forEach(el=>el.classList.remove('drop-target'));
+        if(e.type==='pointerup' && from!==to)send('move',`${from+1},${to+1}`);
+        render();
+      };
+      handle.addEventListener('pointerup',finish);
+      handle.addEventListener('pointercancel',finish);
+      button(row,'\u00d7','Remove from playlist',()=>send('remove',i+1),'icon');
+      $('entries').append(row);
+    });
+    $('region-list').replaceChildren();
+    if(!regions.length)text($('region-list'),'div','В проекте нет регионов.','empty');
+    regions.forEach(region=>{const row=document.createElement('div');row.className='region-row';button(row,'+','Добавить регион в плейлист',()=>send('add',region.id),'icon').disabled=!playlist;text(row,'span',region.name||'Без названия','name');text(row,'span',duration(region.end-region.start),'duration');$('region-list').append(row);});
+  }
+  function unescapeRemote(value) { return value.replace(/\\([nt\\])/g,(_,c)=>c==='n'?'\n':c==='t'?'\t':'\\'); }
+  window.wwr_onreply = function(reply) {
+    let list = null;
+    for(const line of reply.split('\n')) {
+      const tok=line.split('\t');
+      if(tok[0]==='EXTSTATE' && tok[1]===section && tok[2]==='state') {
+        try { const next=parseState(unescapeRemote(tok.slice(3).join('\t'))); if(next){ if(lastProject && lastProject!==next.project) regions=[]; lastProject=next.project; if(!state || next.heartbeat!==state.heartbeat) seenAt=Date.now(); state=next; } } catch(e){console.error('Invalid bridge state',e);}
+      } else if(tok[0]==='REGION_LIST') list=[];
+      else if(tok[0]==='REGION' && list) list.push({name:unescapeRemote(tok[1]),id:+tok[2],start:+tok[3],end:+tok[4]});
+      else if(tok[0]==='REGION_LIST_END' && list) { regions=list.sort((a,b)=>a.start-b.start); list=null; }
+      else if(tok[0]==='TRANSPORT') transport=tok;
+    }
+    if(dragging===null)render();
+  };
+  $('new').onclick=()=>send('new');
+  $('delete').onclick=()=>{if(confirm('Удалить этот плейлист?'))send('delete');};
+  $('clear').onclick=()=>{if(confirm('Очистить плейлист?'))send('clear');};
+  $('play').onclick=()=>send(state&&state.playingId?'stop':'play');
+  $('consecutive').onchange=e=>send('mode',e.target.checked?'1':'0');
+  $('rename').addEventListener('change',e=>{if(e.target.value.trim())send('rename',e.target.value);});
+  $('add-all').onclick=()=>send('all');
+  $('seek').addEventListener('pointerdown', () => { if (!$('seek').disabled) scrubbing = true; });
+  $('seek').addEventListener('input', () => {
+    const region = activeRegion();
+    if (region) $('seek-current').textContent = duration((region.end - region.start) * $('seek').value / 1000);
+  });
+  $('seek').addEventListener('change', () => {
+    const region = activeRegion();
+    if (region && !$('seek').disabled) {
+      const position = region.start + (region.end - region.start) * Math.min(0.999, $('seek').value / 1000);
+      send('seek', position.toFixed(6));
+    }
+    scrubbing = false;
+  });
+  $('seek').addEventListener('pointercancel', () => { scrubbing = false; updateSeek(); });
+  $('toggle-regions').onclick=()=>{const hidden=$('regions').hidden=!$('regions').hidden;$('toggle-regions').setAttribute('aria-pressed',String(!hidden));document.querySelector('.layout').style.gridTemplateColumns=hidden?'1fr':'';};
+  wwr_req_recur(`GET/EXTSTATE/${section}/state;REGION;TRANSPORT`,500);
+  wwr_start();
+  setInterval(()=>{if(dragging===null)render();},1500);
+})();
+</script>
+</body>
+</html>
