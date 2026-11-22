@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="78e742d99b4001f36b4ee65284d0c5a206db31ef">
+<index version="1" name="Taras Scripts" commit="4df06c47bdf5b9b9f0a473aeb5be2266b9fe7062">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
       <metadata>
@@ -803,6 +803,30 @@ v.4.8
 + Pads: Toggle MIDI Learn mode on/off with Ctrl+R-Click]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/45093e7300adcf956ec53f03a939a0b0664f1b42/GUI%20Tools/trs_VST%20Macro%20Linker.lua</source>
         <source type="script" file="trs_VST Macro Linker.jsfx">https://github.com/Tarasmetal/ReaScripts/raw/45093e7300adcf956ec53f03a939a0b0664f1b42/GUI%20Tools/trs_VST%20Macro%20Linker.jsfx</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="Web Interfaces">
+    <reapack name="trs_Playback Playlist Web.www" type="webinterface" desc="Taras Playback Playlist: project region playlists (ReaImGui)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 A web interface (adapted from fancier.html) that can fully* control Reaper. Includes project save/load, basic track management, time selection controls and various bugfixes over the original.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 NOTE: This is almost certainly not compatible with your existing workflow. It's designed to be the ONLY input method for a HEADLESS install of Reaper, specialized towards multitracking audio, and tested primarily on Raspberry Pi (Linux). This means significant caveats, including the need for a fairly specific project file structure. I have no intention of supporting midi in any form and I think it's unlikely the interface will work on Windows.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 INSTALL INSTRUCTIONS: You need to set your default project path in reaper-extstate.ini, in the form:\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \f1 [Fanciest]\line
+ProjectFolder=/path/to/folder/\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Include the slash at the end.\par}
+}
+]]></description>
+      </metadata>
+      <version name="0.1.0" author="Taras Umanskiy" time="2026-11-22T04:59:56Z">
+        <changelog><![CDATA[Requires ReaImGui. Playlists are stored in PlaybackList beside the project file.]]></changelog>
+        <source main="main" type="script" file="trs_Playback Playlist.lua">https://github.com/Tarasmetal/ReaScripts/raw/4df06c47bdf5b9b9f0a473aeb5be2266b9fe7062/Web%20Interfaces/trs_Playback%20Playlist.lua</source>
+        <source main="main" type="script" file="trs_Playback Playlist Web.lua">https://github.com/Tarasmetal/ReaScripts/raw/4df06c47bdf5b9b9f0a473aeb5be2266b9fe7062/Web%20Interfaces/trs_Playback%20Playlist%20Web.lua</source>
+        <source file="trs_Playback_Playlist.html">https://github.com/Tarasmetal/ReaScripts/raw/4df06c47bdf5b9b9f0a473aeb5be2266b9fe7062/Web%20Interfaces/trs_Playback_Playlist.html</source>
       </version>
     </reapack>
   </category>
