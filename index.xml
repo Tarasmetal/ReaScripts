@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="4df06c47bdf5b9b9f0a473aeb5be2266b9fe7062">
+<index version="1" name="Taras Scripts" commit="b9a657cba9c758174036a056e1a403b425deae8b">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
       <metadata>
@@ -461,6 +461,44 @@ v.1.0.0 + Первая версия скрипта]]></changelog>
 + v2.9.8: Добавлена настройка скрытия иконок файлов (View > Show File Icons)]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/d7b8a92c886bb64f2727453320f3f920cc7832b6/GUI%20Tools/trs_Script%20Launcher.lua</source>
       </version>
+      <version name="2.9.14" author="Taras Umanskiy" time="2025-11-28T08:38:32Z">
+        <changelog><![CDATA[+ Первый релиз
++ Полнофункциональный файловый менеджер
++ v1.1: Папки тоже можно добавлять в избранное
++ v1.2: Добавлена возможность добавления кастомных путей в избранное
++ v1.3: Исправлена проверка путей папок (регистронезависимая)
++ v1.4: Папки в избранном теперь отображаются белым цветом
++ v1.5: Настройки теперь сохраняются в .ini файл рядом со скриптом
++ v1.6: Скрипт теперь запоминает и открывает последнюю посещенную папку
++ v1.7: Добавлено контекстное меню для дерева папок (добавление в избранное)
++ v1.8: Скрипты теперь запускаются без добавления в Action List (без следов)
++ v1.9: Добавлена колонка Path в раздел Favorites
++ v2.0: Добавра возможность менять порядок элементов в избранном (Drag & Drop)
++ v2.1: Добавлен чекбокс "Recursive Search" для поиска файлов во всех подпапках
++ v2.2: Оптимизирован поиск: добавлено кеширование результатов и дебаунсинг (задержка)
++ v2.3: Исправлено добавление кастомных путей с завершающим слэшем
++ v2.4: Добавлена колонка Path в раздел History
++ v2.5: Исправлено отображение размера и описания в поиске, добавлена колонка Path в браузер
++ v2.6: Добавлена возможность изменения размера главного окна, адаптивная верстка
++ v2.7: Папки, добавленные в избранное, теперь отображаются белым цветом везде
++ v2.8: Выбор любого диска
++ v2.9: Добавлена система тегов для скриптов и папок
++ v2.9.1: Управление тегами перенесено в контекстное меню (чекбоксы)
++ v2.9.2: Панель тегов интегрирована в тулбар
++ v2.9.3: Добавлена кнопка "?" (About) в менюбар с ссылками на автора и донаты
++ v2.9.4: Исправлен лишний пробел в названии, оптимизирована кнопка помощи
++ v2.9.5: Добавлена ссылка на GitHub репозиторий в окно About
++ v2.9.6: Кнопки Home и Drive перемещены в начало тулбара
++ v2.9.7: Исправлено отображение путей и тегов в разделах Favorites и History
++ v2.9.8: Добавлена настройка скрытия иконок файлов (View > Show File Icons)
++ v2.9.9: Цветные эмодзи на Windows и macOS через talagan_EmojImGui (ReaImGui 0.10+)
++ v2.9.10: Выравнивание эмодзи по фактическим метрикам шрифта и отступам элементов
++ v2.9.11: Исправлена ошибка сравнения числа с nil при измерении ширины пробела для эмодзи
++ v2.9.12: Исправлена обрезка цветных иконок: отсечение перенесено в draw list
++ v2.9.13: Увеличена вертикальная область отрисовки цветных иконок
++ v2.9.14: Иконки немного подняты для выравнивания по вертикали]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/b9a657cba9c758174036a056e1a403b425deae8b/GUI%20Tools/trs_Script%20Launcher.lua</source>
+      </version>
     </reapack>
     <reapack name="trs_TCP MCP Visible Tools.lua" type="script" desc="Track Visible Tools">
       <metadata>
@@ -827,6 +865,12 @@ ProjectFolder=/path/to/folder/\par}
         <source main="main" type="script" file="trs_Playback Playlist.lua">https://github.com/Tarasmetal/ReaScripts/raw/4df06c47bdf5b9b9f0a473aeb5be2266b9fe7062/Web%20Interfaces/trs_Playback%20Playlist.lua</source>
         <source main="main" type="script" file="trs_Playback Playlist Web.lua">https://github.com/Tarasmetal/ReaScripts/raw/4df06c47bdf5b9b9f0a473aeb5be2266b9fe7062/Web%20Interfaces/trs_Playback%20Playlist%20Web.lua</source>
         <source file="trs_Playback_Playlist.html">https://github.com/Tarasmetal/ReaScripts/raw/4df06c47bdf5b9b9f0a473aeb5be2266b9fe7062/Web%20Interfaces/trs_Playback_Playlist.html</source>
+      </version>
+      <version name="0.2.0" author="Taras Umanskiy" time="2025-11-28T08:38:32Z">
+        <changelog><![CDATA[Requires ReaImGui. Playlists are stored in PlaybackList beside the project file.]]></changelog>
+        <source main="main" type="script" file="trs_Playback Playlist.lua">https://github.com/Tarasmetal/ReaScripts/raw/b9a657cba9c758174036a056e1a403b425deae8b/Web%20Interfaces/trs_Playback%20Playlist.lua</source>
+        <source main="main" type="script" file="trs_Playback Playlist Web.lua">https://github.com/Tarasmetal/ReaScripts/raw/b9a657cba9c758174036a056e1a403b425deae8b/Web%20Interfaces/trs_Playback%20Playlist%20Web.lua</source>
+        <source file="trs_Playback_Playlist.html">https://github.com/Tarasmetal/ReaScripts/raw/b9a657cba9c758174036a056e1a403b425deae8b/Web%20Interfaces/trs_Playback_Playlist.html</source>
       </version>
     </reapack>
   </category>
