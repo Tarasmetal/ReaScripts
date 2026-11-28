@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Taras Scripts" commit="b9a657cba9c758174036a056e1a403b425deae8b">
+<index version="1" name="Taras Scripts" commit="ebbdf0c49c771ea560f0642e2cb2f29c6c91b294">
   <category name="GUI Tools">
     <reapack name="trs_Action List and toolbars Command ID Fixer.lua" type="script" desc="Action List and toolbars Command ID Fixer">
       <metadata>
@@ -29,13 +29,13 @@
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/45093e7300adcf956ec53f03a939a0b0664f1b42/GUI%20Tools/trs_Action%20List%20and%20toolbars%20Command%20ID%20Fixer.lua</source>
       </version>
     </reapack>
-    <reapack name="trs_Action List Script Path Scan and Fix.lua" type="script" desc="Action List Script Path Scan and Fix">
+    <reapack name="trs_Action List Script Path Scan and Fix.lua" type="script" desc="Action List Script Path Scan, Duplicate Detection and Fix">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \u1052?\u1086?\u1097?\u1085?\u1099?\u1081? \u1080?\u1085?\u1089?\u1090?\u1088?\u1091?\u1084?\u1077?\u1085?\u1090? \u1076?\u1083?\u1103? \u1087?\u1086?\u1083?\u1100?\u1079?\u1086?\u1074?\u1072?\u1090?\u1077?\u1083?\u1077?\u1081? REAPER, \u1082?\u1086?\u1090?\u1086?\u1088?\u1099?\u1081? \u1087?\u1086?\u1084?\u1086?\u1075?\u1072?\u1077?\u1090? \u1087?\u1086?\u1076?\u1076?\u1077?\u1088?\u1078?\u1080?\u1074?\u1072?\u1090?\u1100? \u1095?\u1080?\u1089?\u1090?\u1086?\u1090?\u1091? \u1074? Action List, \u1074?\u1099?\u1103?\u1074?\u1083?\u1103?\u1103? \u1080? \u1091?\u1089?\u1090?\u1088?\u1072?\u1085?\u1103?\u1103? "\u1073?\u1080?\u1090?\u1099?\u1077?" \u1089?\u1089?\u1099?\u1083?\u1082?\u1080? \u1085?\u1072? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1099?.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \u1048?\u1085?\u1089?\u1090?\u1088?\u1091?\u1084?\u1077?\u1085?\u1090? \u1076?\u1083?\u1103? REAPER: \u1087?\u1086?\u1080?\u1089?\u1082? \u1080? \u1086?\u1095?\u1080?\u1089?\u1090?\u1082?\u1072? \u1073?\u1080?\u1090?\u1099?\u1093? \u1089?\u1089?\u1099?\u1083?\u1086?\u1082? \u1085?\u1072? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1099?, \u1086?\u1073?\u1085?\u1072?\u1088?\u1091?\u1078?\u1077?\u1085?\u1080?\u1077? \u1087?\u1086?\u1074?\u1090?\u1086?\u1088?\u1085?\u1099?\u1093? \u1088?\u1077?\u1075?\u1080?\u1089?\u1090?\u1088?\u1072?\u1094?\u1080?\u1081? \u1089?\u1082?\u1088?\u1080?\u1087?\u1090?\u1086?\u1074? \u1074? Action List \u1080? \u1087?\u1088?\u1086?\u1089?\u1084?\u1086?\u1090?\u1088? \u1079?\u1072?\u1087?\u1080?\u1089?\u1077?\u1081? \u1087?\u1086? \u1089?\u1077?\u1082?\u1094?\u1080?\u1103?\u1084?.\par}
 }
 ]]></description>
         <link rel="website">http://vk.com/tarasmetal</link>
@@ -51,6 +51,21 @@
 + Changed: Обновлена логика удаления (удаляются только выбранные элементы).
 + Changed: Обновлена версия до 1.9.1.]]></changelog>
         <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/45093e7300adcf956ec53f03a939a0b0664f1b42/GUI%20Tools/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.lua</source>
+      </version>
+      <version name="1.10.0" author="Taras Umanskiy" time="2025-11-28T13:03:57Z">
+        <changelog><![CDATA[+ Added: Отдельная вкладка поиска повторных регистраций скриптов по пути.
++ Added: Переключатель для включения совпадений между секциями Action List (выключен по умолчанию).
++ Added: Проверка существования файлов и безопасное удаление выбранных невалидных записей с резервной копией reaper-kb.ini.
++ Added: Переход к скрипту в Action List по нажатию на Command ID.
++ Changed: Раскрашены результаты сканирования в GUI (Broken scripts - желтый, Filtered - зеленый).
++ Changed: Чекбоксы выбора скриптов теперь выключены по умолчанию после сканирования.
++ Changed: Кнопки "Выделить все" и "Снять выделение" теперь действуют только на отфильтрованные скрипты.
++ Added: Фильтр для поиска скриптов в списке.
++ Added: Чекбоксы для выбора конкретных скриптов для удаления.
++ Added: Кнопки "Выделить все" и "Снять выделение".
++ Changed: Обновлена логика удаления (удаляются только выбранные элементы).
++ Changed: Обновлена версия до 1.9.1.]]></changelog>
+        <source main="main">https://github.com/Tarasmetal/ReaScripts/raw/ebbdf0c49c771ea560f0642e2cb2f29c6c91b294/GUI%20Tools/trs_Action%20List%20Script%20Path%20Scan%20and%20Fix.lua</source>
       </version>
     </reapack>
     <reapack name="trs_Kontakt MIDI in Routing Multi.lua" type="script" desc="Multi-channel MIDI Tracks Generator &amp; Router to Selected Track">
